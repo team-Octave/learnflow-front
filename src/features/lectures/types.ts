@@ -41,7 +41,7 @@ export interface Lecture {
   studentCount: number;
   thumbnail: string;
   category: string;
-  level: Level; 
+  level: Level;
   createdAt: string;
   description: string;
   curriculum: Chapter[]; // 챕터 단위로 구성
