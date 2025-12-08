@@ -12,57 +12,82 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // JWT exp 파싱 (실패해도 전체 앱이 죽지 않도록 방어)
+  const decodeExp = (token: string): Date | null => {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      if (!payload.exp) return null;
+      return new Date(payload.exp * 1000);
+    } catch {
+      return null;
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
+
     setError("");
 
-    // 공백 체크
-    if (!email || !password) {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    // 공백 + 공백 문자열까지 포함한 체크
+    if (!trimmedEmail || !trimmedPassword) {
       setError("이메일과 비밀번호를 모두 입력해주세요.");
       return;
     }
+
+    setIsLoading(true);
 
     try {
       const res = await fetch("http://localhost:8080/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: trimmedEmail, password: trimmedPassword }),
       });
 
       const data = await res.json();
 
-      if (!res.ok || data.success === false) {
+      // data.data 존재 여부까지 함께 체크
+      if (!res.ok || data.success === false || !data.data) {
         setError(data.message || "이메일 또는 비밀번호가 틀렸습니다.");
         return;
       }
 
-      const { accessToken, refreshToken } = data.data;
-
-      // JWT exp 파싱 함수
-      const decodeExp = (token: string) => {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        return new Date(payload.exp * 1000);
+      const { accessToken, refreshToken } = data.data as {
+        accessToken: string;
+        refreshToken: string;
       };
 
       const accessExp = decodeExp(accessToken);
       const refreshExp = decodeExp(refreshToken);
 
-      // 쿠키 저장
-      document.cookie = `accessToken=${accessToken}; path=/; expires=${accessExp.toUTCString()}; Secure; SameSite=Lax`;
-      document.cookie = `refreshToken=${refreshToken}; path=/; expires=${refreshExp.toUTCString()}; Secure; SameSite=Lax`;
+      // expires는 있을 때만 추가해서, 파싱 실패 시에도 로그인은 되도록 처리
+      const accessExpires = accessExp
+        ? `; expires=${accessExp.toUTCString()}`
+        : "";
+      const refreshExpires = refreshExp
+        ? `; expires=${refreshExp.toUTCString()}`
+        : "";
+
+      document.cookie = `accessToken=${accessToken}; path=/${accessExpires}; Secure; SameSite=Lax`;
+      document.cookie = `refreshToken=${refreshToken}; path=/${refreshExpires}; Secure; SameSite=Lax`;
 
       router.push("/");
     } catch (err) {
       console.error(err);
       setError("로그인 중 문제가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-md bg-[#18181B]/50 border border-[#27272A] rounded-xl p-8 shadow-lg">
-
         {/* 제목 */}
         <h1 className="text-center text-2xl font-semibold mb-2">로그인</h1>
         <p className="text-center text-sm text-[#A1A1AA] mb-6">
@@ -71,8 +96,7 @@ export default function LoginPage() {
 
         {/* 폼 */}
         <form onSubmit={handleLogin} noValidate className="space-y-4">
-
-          {/* 이메일 입력 (type=email → type=text 로 변경) */}
+          {/* 이메일 입력 */}
           <Input
             type="text"
             placeholder="name@example.com"
@@ -100,9 +124,10 @@ export default function LoginPage() {
           {/* 로그인 버튼 */}
           <Button
             type="submit"
-            className="w-full bg-white text-black font-semibold hover:bg-gray-200"
+            disabled={isLoading}
+            className="w-full bg-white text-black font-semibold hover:bg-gray-200 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            로그인
+            {isLoading ? "로그인 중..." : "로그인"}
           </Button>
         </form>
 
