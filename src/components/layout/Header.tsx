@@ -1,22 +1,6 @@
-import { cookies } from 'next/headers';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import Link from 'next/link';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Book, LogOut, PresentationIcon, User } from 'lucide-react';
+import MyDropdown from './MyDropdown';
 
 export default async function Header() {
   // 로그인 여부를 쿠키 값을 보고 알 수 있음!
@@ -42,47 +26,7 @@ export default async function Header() {
       </Link>
       <div>
         {isLoggined ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer">
-                <AvatarImage alt="S" />
-                <AvatarFallback>S</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 bg-zinc-900" align="end">
-              <DropdownMenuLabel>
-                <div>{user.nickname}</div>
-                <div className="text-xs text-zinc-400">{user.userEmail}</div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <Link href="/mypage">
-                  <DropdownMenuItem>
-                    <User />내 정보
-                  </DropdownMenuItem>
-                </Link>
-                <Link href="/mylearning">
-                  <DropdownMenuItem>
-                    <Book />내 학습
-                  </DropdownMenuItem>
-                </Link>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <Link href="/creator">
-                  <DropdownMenuItem>
-                    <PresentationIcon />
-                    강의 관리
-                  </DropdownMenuItem>
-                </Link>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-500 hover:text-red-500">
-                <LogOut className="text-red-500" />
-                <span className="text-red-500">로그아웃</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <MyDropdown user={user} />
         ) : (
           <Link href={'/login'}>
             <Button
