@@ -19,7 +19,7 @@ export const getLectureById = (id: string): Lecture | undefined => {
 
 // 카테고리별 강의 가져오기
 export const getLecturesByCategory = (category: string): Lecture[] => {
-  if (category === 'all') return lectures;
+  if (category === 'ALL') return lectures;
   return lectures.filter((lecture) => lecture.category === category);
 };
 
@@ -36,6 +36,6 @@ export const searchLectures = (keyword: string): Lecture[] => {
   return lectures.filter(
     (lecture) =>
       lecture.title.toLowerCase().includes(lower) ||
-      lecture.creatorName.toLowerCase().includes(lower)
+      lecture.creatorName.toLowerCase().includes(lower),
   );
 };

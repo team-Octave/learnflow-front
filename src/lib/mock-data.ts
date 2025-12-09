@@ -24,7 +24,7 @@ export const currentUser = {
 
 // categories도 위의 카테고리 타입에 맞게 수정.
 export const categories = [
-  { id: 'c1', name: '전체', value: 'all' },
+  { id: 'c1', name: '전체', value: 'ALL' },
   { id: 'c2', name: '프론트엔드', value: 'FRONTEND' },
   { id: 'c3', name: '백엔드', value: 'BACKEND' },
   { id: 'c4', name: 'AI', value: 'AI' },
@@ -38,7 +38,7 @@ export const lectures: Lecture[] = [
     title: 'Next.js 15 완벽 가이드: 프로덕션 레벨 앱 만들기',
     creatorId: 'inst-1',
     creatorName: '이영희',
-    price: 129000,
+    price: 0,
     rating: 4.9,
     enrollmentCount: 3420,
     thumbnail:
@@ -115,7 +115,7 @@ export const lectures: Lecture[] = [
     title: 'UI/UX 디자인 마스터 클래스: 피그마 기초부터 심화까지',
     creatorId: 'inst-2',
     creatorName: '박지성',
-    price: 89000,
+    price: 0,
     rating: 4.8,
     enrollmentCount: 2150,
     thumbnail:
@@ -132,7 +132,7 @@ export const lectures: Lecture[] = [
     title: '실전 마케팅 전략: 0원으로 시작하는 그로스 해킹',
     creatorId: 'inst-3',
     creatorName: '최민수',
-    price: 150000,
+    price: 0,
     rating: 4.7,
     enrollmentCount: 1890,
     thumbnail:
@@ -149,7 +149,7 @@ export const lectures: Lecture[] = [
     title: '타입스크립트 핸드북: 안전한 자바스크립트 작성하기',
     creatorId: 'creator-4',
     creatorName: '김철수',
-    price: 55000,
+    price: 0,
     rating: 4.9,
     enrollmentCount: 5600,
     thumbnail:
@@ -167,7 +167,7 @@ export const lectures: Lecture[] = [
     title: '비즈니스 영어 이메일 작성법',
     creatorId: 'creator-5',
     creatorName: 'Sarah Kim',
-    price: 45000,
+    price: 0,
     rating: 4.6,
     enrollmentCount: 1200,
     thumbnail:
@@ -185,7 +185,7 @@ export const lectures: Lecture[] = [
     title: '실전 리액트 프로그래밍: 리덕스부터 MobX까지',
     creatorId: 'creator-6',
     creatorName: '김태희',
-    price: 110000,
+    price: 0,
     rating: 4.7,
     enrollmentCount: 1500,
     thumbnail:
@@ -203,7 +203,7 @@ export const lectures: Lecture[] = [
     title: '파이썬으로 시작하는 데이터 분석',
     creatorId: 'creator-7',
     creatorName: '박준형',
-    price: 75000,
+    price: 0,
     rating: 4.5,
     enrollmentCount: 2300,
     thumbnail:
@@ -221,7 +221,7 @@ export const lectures: Lecture[] = [
     title: '브랜드 디자인의 모든 것',
     creatorId: 'creator-8',
     creatorName: '최수진',
-    price: 95000,
+    price: 0,
     rating: 4.8,
     enrollmentCount: 1200,
     thumbnail:
@@ -239,7 +239,7 @@ export const lectures: Lecture[] = [
     title: '인스타그램 마케팅 완전 정복',
     creatorId: 'creator-9',
     creatorName: '정민수',
-    price: 60000,
+    price: 0,
     rating: 4.6,
     enrollmentCount: 3000,
     thumbnail:
@@ -256,7 +256,7 @@ export const lectures: Lecture[] = [
     title: '스타트업 투자 유치 가이드',
     creatorId: 'creator-10',
     creatorName: '이준호',
-    price: 150000,
+    price: 0,
     rating: 4.9,
     enrollmentCount: 800,
     thumbnail:
@@ -273,7 +273,7 @@ export const lectures: Lecture[] = [
     title: '스프링 부트 3.0 핵심 가이드',
     creatorId: 'creator-11',
     creatorName: '김영한',
-    price: 130000,
+    price: 0,
     rating: 4.9,
     enrollmentCount: 5000,
     thumbnail:
@@ -291,7 +291,7 @@ export const lectures: Lecture[] = [
     title: '모션 그래픽 기초: 애프터 이펙트',
     creatorId: 'creator-12',
     creatorName: '한소희',
-    price: 85000,
+    price: 0,
     rating: 4.7,
     enrollmentCount: 1800,
     thumbnail:
@@ -308,7 +308,7 @@ export const lectures: Lecture[] = [
     title: '구글 애널리틱스 4 (GA4) 실전 활용',
     creatorId: 'creator-13',
     creatorName: '박성훈',
-    price: 70000,
+    price: 0,
     rating: 4.5,
     enrollmentCount: 2500,
     thumbnail:
@@ -325,7 +325,7 @@ export const lectures: Lecture[] = [
     title: '성공적인 협상을 위한 커뮤니케이션 스킬',
     creatorId: 'creator-14',
     creatorName: '최지우',
-    price: 55000,
+    price: 0,
     rating: 4.4,
     enrollmentCount: 1500,
     thumbnail:
@@ -342,7 +342,7 @@ export const lectures: Lecture[] = [
     title: '도커와 쿠버네티스 완전 정복',
     creatorId: 'creator-15',
     creatorName: '정재훈',
-    price: 140000,
+    price: 0,
     rating: 4.8,
     enrollmentCount: 2700,
     thumbnail:
@@ -362,7 +362,7 @@ export const reviews = [
     id: 'r1',
     lectureId: 'lecture-1',
     userId: 'u2',
-    userName: '박지민',
+    nickname: '박지민',
     rating: 5,
     createdAt: '2024-03-20',
     content:
@@ -372,7 +372,7 @@ export const reviews = [
     id: 'r2',
     lectureId: 'lecture-1',
     userId: 'u3',
-    userName: '최현우',
+    nickname: '최현우',
     rating: 4,
     createdAt: '2024-03-18',
     content:
@@ -382,7 +382,7 @@ export const reviews = [
     id: 'r3',
     lectureId: 'lecture-2',
     userId: 'u4',
-    userName: '이지은',
+    nickname: '이지은',
     rating: 5,
     createdAt: '2024-02-15',
     content:

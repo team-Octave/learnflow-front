@@ -55,7 +55,7 @@ export interface Review {
   id: string;
   lectureId: string;
   userId: string;
-  userName: string;
+  nickname: string;
   rating: number;
   createdAt: string; // 변경됨 — date → createdAt
   content: string;
