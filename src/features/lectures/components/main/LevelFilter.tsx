@@ -25,8 +25,16 @@ export default function LevelFilter({
   const router = useRouter();
   const pathname = usePathname();
 
-  const options = [
-    { value: 'ALL', label: '난이도' },
+  // 🔹 Trigger에 표시할 텍스트(ALL이면 '난이도')
+  const labelMap: Record<string, string> = {
+    ALL: '난이도',
+    BEGINNER: '초급',
+    INTERMEDIATE: '중급',
+    ADVANCED: '고급',
+  };
+
+  // 🔹 Dropdown에는 ALL 넣지 않음 (초급/중급/고급만)
+  const levelOptions = [
     { value: 'BEGINNER', label: '초급' },
     { value: 'INTERMEDIATE', label: '중급' },
     { value: 'ADVANCED', label: '고급' },
@@ -41,7 +49,7 @@ export default function LevelFilter({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="h-10 w-36 rounded-md border border-input bg-background px-3 py-2 text-sm flex items-center justify-between">
-        <span>{options.find((o) => o.value === selectedLevel)?.label}</span>
+        <span>{labelMap[selectedLevel] ?? '난이도'}</span>
         <ChevronDown className="w-4 h-4 text-muted-foreground" />
       </DropdownMenuTrigger>
 
@@ -51,14 +59,14 @@ export default function LevelFilter({
           onValueChange={handleSelect}
           className="flex flex-col"
         >
-          {options.map((option) => (
+          {levelOptions.map((option) => (
             <DropdownMenuRadioItem
               key={option.value}
               value={option.value}
               className="
                 px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10
-                pl-3  /* 기본 pl-8 덮어쓰기 */
-                [&>span]:hidden  /* 왼쪽 동그라미 span 숨기기 */
+                pl-3
+                [&>span]:hidden
               "
             >
               {option.label}
