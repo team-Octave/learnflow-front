@@ -1,4 +1,5 @@
 'use client';
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -7,52 +8,44 @@ import {
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
 
-interface SortProps {
-  selectedSort: string;
+interface Props {
   category: string;
   level: string;
+  sort: string;
 }
 
-export default function Sort({ selectedSort, category, level }: SortProps) {
-  const options = [
-    { value: 'POPULAR', label: '인기 순' },
-    { value: 'NEWEST', label: '최신 순' },
-    { value: 'RATING', label: '별점 높은 순' },
-  ];
+export default function Sort({ category, level, sort }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const handleSelect = (value: string) => {
+  const update = (value: string) => {
     const params = new URLSearchParams({
       category,
       level,
       sort: value,
       page: '1',
     });
-    window.location.href = `/?${params.toString()}`;
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="h-10 w-36 rounded-md border border-input bg-background px-3 py-2 text-sm flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-        <span>{options.find((o) => o.value === selectedSort)?.label}</span>
-        <ChevronDown className="w-4 h-4 text-muted-foreground" />
+      <DropdownMenuTrigger className="h-10 w-36 border rounded-md px-3 py-2 text-sm flex items-center justify-between">
+        {sort === 'POPULAR'
+          ? '인기순'
+          : sort === 'NEWEST'
+          ? '최신순'
+          : '별점순'}
+        <ChevronDown />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-40 bg-background border border-border rounded-md shadow-md p-1">
-        <DropdownMenuRadioGroup
-          value={selectedSort}
-          onValueChange={handleSelect}
-          className="flex flex-col"
-        >
-          {options.map((option) => (
-            <DropdownMenuRadioItem
-              key={option.value}
-              value={option.value}
-              className="px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10 focus:bg-primary/20 [&>span]:hidden"
-            >
-              {option.label}
-            </DropdownMenuRadioItem>
-          ))}
+      <DropdownMenuContent>
+        <DropdownMenuRadioGroup value={sort} onValueChange={update}>
+          <DropdownMenuRadioItem value="POPULAR">인기순</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="NEWEST">최신순</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="RATING">별점순</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

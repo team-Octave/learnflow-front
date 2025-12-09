@@ -1,21 +1,17 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 
-interface CategoryProps {
-  id: string;
+interface Props {
   name: string;
   value: string;
   selected: boolean;
   onClick: () => void;
 }
 
-export default function Category({ name, selected, onClick }: CategoryProps) {
+export default function Category({ name, selected, onClick }: Props) {
   return (
-    <Button
-      variant={selected ? 'default' : 'secondary'}
-      className="px-4 py-2 text-sm cursor-pointer transition-opacity hover:opacity-80"
-      onClick={onClick}
-    >
+    <Button variant={selected ? 'default' : 'secondary'} onClick={onClick}>
       {name}
     </Button>
   );

@@ -1,7 +1,5 @@
-// src/features/lectures/components/main/MainPagination.tsx
-
 'use client';
-import * as React from 'react';
+
 import {
   Pagination,
   PaginationContent,
@@ -9,18 +7,15 @@ import {
   PaginationLink,
   PaginationPrevious,
   PaginationNext,
-  PaginationEllipsis,
 } from '@/components/ui/pagination';
-import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
-interface MainPaginationProps {
+interface Props {
   currentPage: number;
   totalPages: number;
   category: string;
   level: string;
   sort: string;
-  maxVisiblePages?: number;
 }
 
 export default function MainPagination({
@@ -29,93 +24,84 @@ export default function MainPagination({
   category,
   level,
   sort,
-  maxVisiblePages = 5,
-}: MainPaginationProps) {
-  const router = useRouter();
+}: Props) {
   const pathname = usePathname();
 
-  // 페이지 번호 계산
-  const generatePageNumbers = () => {
-    const pages: (number | 'ellipsis')[] = [];
-    const half = Math.floor(maxVisiblePages / 2);
-    let start = Math.max(currentPage - half, 1);
-    let end = Math.min(start + maxVisiblePages - 1, totalPages);
+  const makeHref = (page: number) =>
+    `${pathname}?category=${category}&level=${level}&sort=${sort}&page=${page}`;
 
-    if (end - start < maxVisiblePages - 1)
-      start = Math.max(end - maxVisiblePages + 1, 1);
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-    if (start > 1) {
-      pages.push(1);
-      if (start > 2) pages.push('ellipsis');
-    }
+  const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+  const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
 
-    for (let i = start; i <= end; i++) pages.push(i);
-
-    if (end < totalPages) {
-      if (end < totalPages - 1) pages.push('ellipsis');
-      pages.push(totalPages);
-    }
-
-    return pages;
-  };
-
-  const pageNumbers = generatePageNumbers();
-
-  // SPA 클릭 시 router.push()로 URL 업데이트
-  const goToPage = (page: number) => {
-    const params = new URLSearchParams({
-      category,
-      level,
-      sort,
-      page: page.toString(),
-    });
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  const isPrevDisabled = currentPage === 1;
+  const isNextDisabled = currentPage === totalPages;
 
   return (
-    <Pagination className="flex justify-center items-center gap-2 mt-6">
-      <PaginationPrevious
-        onClick={() => goToPage(Math.max(currentPage - 1, 1))}
-        className="border rounded w-9 h-9 flex items-center justify-center hover:bg-zinc-800 transition-colors"
-        aria-disabled={currentPage === 1}
-      >
-        <ChevronLeft className="w-4 h-4" />
-      </PaginationPrevious>
+    <Pagination className="flex justify-center items-center gap-2 mt-12">
+      <PaginationContent className="flex items-center gap-2">
+        {/* PREVIOUS */}
+        <PaginationItem>
+          <PaginationPrevious
+            href={isPrevDisabled ? '#' : makeHref(prevPage)}
+            aria-disabled={isPrevDisabled}
+            tabIndex={isPrevDisabled ? -1 : 0}
+            className={`
+              w-9 h-9 flex items-center justify-center rounded border
+              border-zinc-800 
+              [&>span]:hidden [&>svg]:block
 
-      <PaginationContent className="flex gap-1">
-        {pageNumbers.map((page, idx) =>
-          page === 'ellipsis' ? (
-            <PaginationEllipsis
-              key={idx}
-              className="w-9 h-9 flex items-center justify-center text-muted-foreground"
+              ${
+                isPrevDisabled
+                  ? 'opacity-40 pointer-events-none'
+                  : 'hover:bg-zinc-800 hover:text-white'
+              }
+            `}
+          />
+        </PaginationItem>
+
+        {/* PAGE NUMBERS */}
+        {pages.map((p) => (
+          <PaginationItem key={p}>
+            <PaginationLink
+              href={makeHref(p)}
+              isActive={p === currentPage}
+              className="
+                w-9 h-9 flex items-center justify-center rounded border text-sm
+
+                data-[active=true]:bg-primary
+                data-[active=true]:text-primary-foreground
+                data-[active=true]:border-primary
+
+                border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-white
+              "
             >
-              <MoreHorizontal className="w-4 h-4" />
-            </PaginationEllipsis>
-          ) : (
-            <PaginationItem key={page}>
-              <PaginationLink
-                isActive={page === currentPage}
-                onClick={() => goToPage(page as number)}
-                className={`w-9 h-9 flex items-center justify-center border rounded transition-colors ${
-                  page === currentPage
-                    ? 'bg-indigo-600 text-white border-indigo-600'
-                    : 'bg-background text-foreground border-border hover:bg-zinc-800'
-                }`}
-              >
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-          ),
-        )}
-      </PaginationContent>
+              {p}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
 
-      <PaginationNext
-        onClick={() => goToPage(Math.min(currentPage + 1, totalPages))}
-        className="border rounded w-9 h-9 flex items-center justify-center hover:bg-zinc-800 transition-colors"
-        aria-disabled={currentPage === totalPages}
-      >
-        <ChevronRight className="w-4 h-4" />
-      </PaginationNext>
+        {/* NEXT */}
+        <PaginationItem>
+          <PaginationNext
+            href={isNextDisabled ? '#' : makeHref(nextPage)}
+            aria-disabled={isNextDisabled}
+            tabIndex={isNextDisabled ? -1 : 0}
+            className={`
+              w-9 h-9 flex items-center justify-center rounded border
+              border-zinc-800 
+              [&>span]:hidden [&>svg]:block
+
+              ${
+                isNextDisabled
+                  ? 'opacity-40 pointer-events-none'
+                  : 'hover:bg-zinc-800 hover:text-white'
+              }
+            `}
+          />
+        </PaginationItem>
+      </PaginationContent>
     </Pagination>
   );
 }

@@ -1,27 +1,24 @@
+// src/features/lectures/components/main/Categories.tsx
 'use client';
-import Category from './Category';
-import { useRouter, usePathname } from 'next/navigation';
 
-interface CategoriesProps {
+import { useRouter, usePathname } from 'next/navigation';
+import Category from './Category';
+
+interface Props {
   categories: { id: string; name: string; value: string }[];
-  selectedCategory: string;
-  selectedLevel: string;
-  selectedSort: string;
+  category: string;
+  level: string;
+  sort: string;
 }
 
-export default function Categories({
-  categories,
-  selectedCategory,
-  selectedLevel,
-  selectedSort,
-}: CategoriesProps) {
+export default function Categories({ categories, category }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleClick = (category: string) => {
-    router.push(
-      `${pathname}?category=${category}&level=${selectedLevel}&sort=${selectedSort}&page=1`
-    );
+  const update = (value: string) => {
+    const query = new URLSearchParams();
+    query.set('category', value); //  카테고리만 세팅
+    router.push(`${pathname}?${query.toString()}`);
   };
 
   return (
@@ -29,11 +26,10 @@ export default function Categories({
       {categories.map((item) => (
         <Category
           key={item.id}
-          id={item.id}
           name={item.name}
           value={item.value}
-          selected={selectedCategory === item.value}
-          onClick={() => handleClick(item.value)}
+          selected={category === item.value.toUpperCase()}
+          onClick={() => update(item.value.toUpperCase())}
         />
       ))}
     </div>
