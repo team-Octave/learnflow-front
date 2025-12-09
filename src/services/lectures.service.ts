@@ -2,40 +2,81 @@
 import { lectures, reviews } from '@/lib/mock-data';
 import type { Lecture, Review } from '@/features/lectures/types';
 
-/*
-4. src/services/lectures.service.ts
-  - 위에서 언급했듯이 lecturesServices에 모두 담아서 export하지말고, 개별 함수로 작성 후 개별 export하도록 수정.
- */
+export const getAllLectures = (): Lecture[] => lectures;
 
-// 모든 강의 가져오기
-export const getAllLectures = (): Lecture[] => {
-  return lectures;
-};
+export const getLectureById = (id: string): Lecture | undefined =>
+  lectures.find((lecture) => lecture.id === id);
 
-// 강의 상세 가져오기
-export const getLectureById = (id: string): Lecture | undefined => {
-  return lectures.find((lecture) => lecture.id === id);
-};
-
-// 카테고리별 강의 가져오기
 export const getLecturesByCategory = (category: string): Lecture[] => {
   if (category === 'ALL') return lectures;
   return lectures.filter((lecture) => lecture.category === category);
 };
 
-// 특정 강의 리뷰 가져오기
-export const getReviewsByLectureId = (lectureId: string): Review[] => {
-  return reviews.filter((review) => review.lectureId === lectureId);
-};
+export const getReviewsByLectureId = (lectureId: string): Review[] =>
+  reviews.filter((review) => review.lectureId === lectureId);
 
-// 키워드 검색 (title, creatorName 기준)
 export const searchLectures = (keyword: string): Lecture[] => {
   const lower = keyword.trim().toLowerCase();
   if (!lower) return lectures;
-
   return lectures.filter(
     (lecture) =>
       lecture.title.toLowerCase().includes(lower) ||
       lecture.creatorName.toLowerCase().includes(lower),
   );
+};
+
+/**
+ * URL 쿼리 기반으로 강의 가져오기
+ */
+export interface QueryOptions {
+  category?: string;
+  level?: string;
+  sort?: string;
+  page?: number;
+  limit?: number;
+}
+
+export const getLecturesByQuery = async ({
+  category = 'ALL',
+  level = 'all',
+  sort = 'popular',
+  page = 1,
+  limit = 16,
+}: QueryOptions): Promise<{ items: Lecture[]; totalCount: number }> => {
+  let result = [...lectures];
+
+  // 카테고리 필터
+  if (category !== 'ALL') {
+    result = result.filter((lecture) => lecture.category === category);
+  }
+
+  // 난이도 필터
+  if (level !== 'all') {
+    result = result.filter((lecture) => lecture.level === level);
+  }
+
+  // 정렬
+  switch (sort) {
+    case 'popular':
+      result.sort((a, b) => b.enrollmentCount - a.enrollmentCount);
+      break;
+    case 'newest':
+      result.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+      break;
+    case 'rating':
+      result.sort((a, b) => b.rating - a.rating);
+      break;
+  }
+
+  const totalCount = result.length;
+
+  // 페이지네이션
+  const start = (page - 1) * limit;
+  const end = page * limit;
+  const items = result.slice(start, end);
+
+  return { items, totalCount };
 };
