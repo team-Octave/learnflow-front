@@ -12,37 +12,54 @@ interface PageProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
+// 기본 값 상수
+const DEFAULT_CATEGORY = 'ALL';
+const DEFAULT_LEVEL = 'ALL';
+const DEFAULT_SORT = 'POPULAR';
+const ITEMS_PER_PAGE = 16;
+
+// 공통: 쿼리 스트링에서 첫 번째 값만 뽑고, 없으면 기본값 사용 + 대문자 변환
+function normalizeQueryParam(
+  raw: string | string[] | undefined,
+  defaultValue: string,
+) {
+  if (!raw) return defaultValue;
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  if (!value) return defaultValue;
+  return value.toUpperCase();
+}
+
+// page 전용: 숫자 파싱 + 최소 1 보장
+function parsePageParam(raw: string | string[] | undefined): number {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  const num = parseInt(value || '1', 10);
+  if (Number.isNaN(num) || num < 1) return 1;
+  return num;
+}
+
 // 서버 컴포넌트
 export default async function MainPage({ searchParams }: PageProps) {
-  const params = searchParams || {};
+  const params = searchParams ?? {};
 
-  const categoryParam = Array.isArray(params.category)
-    ? params.category[0].toUpperCase()
-    : (params.category || 'ALL').toUpperCase();
+  // 쿼리스트링이 없으면 기본값, 있으면 그 값을 사용 (대문자로 통일)
+  const categoryParam = normalizeQueryParam(params.category, DEFAULT_CATEGORY);
+  const levelParam = normalizeQueryParam(params.level, DEFAULT_LEVEL);
+  const sortParam = normalizeQueryParam(params.sort, DEFAULT_SORT);
+  const pageParam = parsePageParam(params.page);
 
-  const levelParam = Array.isArray(params.level)
-    ? params.level[0].toUpperCase()
-    : (params.level || 'ALL').toUpperCase();
-
-  const sortParam = Array.isArray(params.sort)
-    ? params.sort[0].toUpperCase()
-    : (params.sort || 'POPULAR').toUpperCase();
-
-  const pageParam = Array.isArray(params.page)
-    ? parseInt(params.page[0], 10)
-    : parseInt(params.page || '1', 10);
-
-  const ITEMS_PER_PAGE = 16;
-
+  // API 요청: 카테고리 / 난이도 / 정렬 / 페이지네이션 정보 전달
   const lectures = await getLecturesByQuery({
-    category: categoryParam,
-    level: levelParam,
-    sort: sortParam,
-    page: pageParam,
-    limit: ITEMS_PER_PAGE,
+    category: categoryParam, // 'ALL' | 'DEVELOPMENT' 같은 형태
+    level: levelParam,       // 'ALL' | 'BEGINNER' 등
+    sort: sortParam,         // 'POPULAR' 등
+    page: pageParam,         // 현재 페이지
+    limit: ITEMS_PER_PAGE,   // 한 페이지 강의 개수
   });
 
-  const totalPages = Math.ceil(lectures.totalCount / ITEMS_PER_PAGE);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(lectures.totalCount / ITEMS_PER_PAGE),
+  );
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -58,6 +75,7 @@ export default async function MainPage({ searchParams }: PageProps) {
               selectedLevel={levelParam}
               selectedSort={sortParam}
             />
+
             <div className="flex items-center gap-4">
               <LevelFilter
                 selectedLevel={levelParam}
