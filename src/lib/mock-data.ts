@@ -356,3 +356,36 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
 ];
+
+export const reviews = [
+  {
+    id: 'r1',
+    lectureId: 'lecture-1',
+    userId: 'u2',
+    userName: '박지민',
+    rating: 5,
+    createdAt: '2024-03-20',
+    content:
+      'Next.js 15의 새로운 기능을 정말 잘 설명해주십니다. 실무에 바로 적용할 수 있을 것 같아요!',
+  },
+  {
+    id: 'r2',
+    lectureId: 'lecture-1',
+    userId: 'u3',
+    userName: '최현우',
+    rating: 4,
+    createdAt: '2024-03-18',
+    content:
+      '내용이 알차고 좋습니다. 다만 초보자가 듣기에는 조금 어려울 수 있습니다.',
+  },
+  {
+    id: 'r3',
+    lectureId: 'lecture-2',
+    userId: 'u4',
+    userName: '이지은',
+    rating: 5,
+    createdAt: '2024-02-15',
+    content:
+      '피그마를 처음 써보는데 강사님이 차근차근 알려주셔서 이해하기 쉬웠어요.',
+  },
+];

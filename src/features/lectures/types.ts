@@ -57,6 +57,6 @@ export interface Review {
   userId: string;
   userName: string;
   rating: number;
-  createdAt: string; // 🔄 변경됨 — date → createdAt
+  createdAt: string; // 변경됨 — date → createdAt
   content: string;
 }

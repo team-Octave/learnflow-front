@@ -1,27 +1,41 @@
-import { courses } from "@/lib/mock-data";
-import { Lecture } from "@/features/lectures/types";
+// src/services/lectures.service.ts
+import { lectures, reviews } from '@/lib/mock-data';
+import type { Lecture, Review } from '@/features/lectures/types';
 
-export const lecturesService = {
-  getAll(): Lecture[] {
-    return courses;
-  },
+/*
+4. src/services/lectures.service.ts
+  - 위에서 언급했듯이 lecturesServices에 모두 담아서 export하지말고, 개별 함수로 작성 후 개별 export하도록 수정.
+ */
 
-  getById(id: string): Lecture | undefined {
-    return courses.find((c) => c.id === id);
-  },
+// 모든 강의 가져오기
+export const getAllLectures = (): Lecture[] => {
+  return lectures;
+};
 
-  getByCategory(category: string): Lecture[] {
-    if (category === "all") return courses;
-    return courses.filter((c) => c.category === category);
-  },
+// 강의 상세 가져오기
+export const getLectureById = (id: string): Lecture | undefined => {
+  return lectures.find((lecture) => lecture.id === id);
+};
 
-  getByDifficulty(level: string): Lecture[] {
-    if (level === "all") return courses;
-    return courses.filter((c) => c.difficulty === level);
-  },
+// 카테고리별 강의 가져오기
+export const getLecturesByCategory = (category: string): Lecture[] => {
+  if (category === 'all') return lectures;
+  return lectures.filter((lecture) => lecture.category === category);
+};
 
-  search(keyword: string): Lecture[] {
-    const key = keyword.toLowerCase();
-    return courses.filter((c) => c.title.toLowerCase().includes(key));
-  },
+// 특정 강의 리뷰 가져오기
+export const getReviewsByLectureId = (lectureId: string): Review[] => {
+  return reviews.filter((review) => review.lectureId === lectureId);
+};
+
+// 키워드 검색 (title, creatorName 기준)
+export const searchLectures = (keyword: string): Lecture[] => {
+  const lower = keyword.trim().toLowerCase();
+  if (!lower) return lectures;
+
+  return lectures.filter(
+    (lecture) =>
+      lecture.title.toLowerCase().includes(lower) ||
+      lecture.creatorName.toLowerCase().includes(lower)
+  );
 };
