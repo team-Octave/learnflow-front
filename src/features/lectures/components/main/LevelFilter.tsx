@@ -1,6 +1,4 @@
-// src/features/lectures/components/main/LevelFilter.tsx
 'use client';
-
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -9,11 +7,12 @@ import {
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface LevelFilterProps {
   selectedLevel: string;
-  category: string; // 현재 선택된 카테고리 (쿼리 유지용)
-  sort: string; // 현재 선택된 정렬 (쿼리 유지용)
+  category: string;
+  sort: string;
 }
 
 export default function LevelFilter({
@@ -21,6 +20,9 @@ export default function LevelFilter({
   category,
   sort,
 }: LevelFilterProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const options = [
     { value: 'ALL', label: '난이도' },
     { value: 'BEGINNER', label: '초급' },
@@ -29,34 +31,20 @@ export default function LevelFilter({
   ];
 
   const handleSelect = (value: string) => {
-    const params = new URLSearchParams({
-      category,
-      level: value,
-      sort,
-      page: '1', // 필터 변경 시 항상 1페이지로
-    });
-    window.location.href = `/lectures?${params.toString()}`;
+    router.push(`${pathname}?category=${category}&level=${value}&sort=${sort}&page=1`);
   };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="h-10 w-36 rounded-md border border-input bg-background px-3 py-2 text-sm flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+      <DropdownMenuTrigger className="h-10 w-36 rounded-md border border-input bg-background px-3 py-2 text-sm flex items-center justify-between">
         <span>{options.find((o) => o.value === selectedLevel)?.label}</span>
         <ChevronDown className="w-4 h-4 text-muted-foreground" />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-40 bg-background border border-border rounded-md shadow-md p-1">
-        <DropdownMenuRadioGroup
-          value={selectedLevel}
-          onValueChange={handleSelect}
-          className="flex flex-col"
-        >
+        <DropdownMenuRadioGroup value={selectedLevel} onValueChange={handleSelect} className="flex flex-col">
           {options.map((option) => (
-            <DropdownMenuRadioItem
-              key={option.value}
-              value={option.value}
-              className="px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10 focus:bg-primary/20 [&>span]:hidden"
-            >
+            <DropdownMenuRadioItem key={option.value} value={option.value} className="px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10">
               {option.label}
             </DropdownMenuRadioItem>
           ))}

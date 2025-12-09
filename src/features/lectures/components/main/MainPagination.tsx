@@ -1,6 +1,4 @@
-// src/features/lectures/components/main/MainPagination.tsx
 'use client';
-
 import * as React from 'react';
 import {
   Pagination,
@@ -12,41 +10,44 @@ import {
   PaginationEllipsis,
 } from '@/components/ui/pagination';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface MainPaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  category: string;
+  level: string;
+  sort: string;
   maxVisiblePages?: number;
 }
 
 export default function MainPagination({
   currentPage,
   totalPages,
-  onPageChange,
+  category,
+  level,
+  sort,
   maxVisiblePages = 5,
 }: MainPaginationProps) {
-  if (totalPages <= 1) return null;
+  const router = useRouter();
+  const pathname = usePathname();
 
-  // 페이지 번호 생성
+  // 페이지 번호 계산
   const generatePageNumbers = () => {
     const pages: (number | 'ellipsis')[] = [];
     const half = Math.floor(maxVisiblePages / 2);
     let start = Math.max(currentPage - half, 1);
     let end = Math.min(start + maxVisiblePages - 1, totalPages);
 
-    if (end - start < maxVisiblePages - 1) {
+    if (end - start < maxVisiblePages - 1)
       start = Math.max(end - maxVisiblePages + 1, 1);
-    }
 
     if (start > 1) {
       pages.push(1);
       if (start > 2) pages.push('ellipsis');
     }
 
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
+    for (let i = start; i <= end; i++) pages.push(i);
 
     if (end < totalPages) {
       if (end < totalPages - 1) pages.push('ellipsis');
@@ -58,11 +59,21 @@ export default function MainPagination({
 
   const pageNumbers = generatePageNumbers();
 
+  // SPA 클릭 시 router.push()로 URL 업데이트
+  const goToPage = (page: number) => {
+    const params = new URLSearchParams({
+      category,
+      level,
+      sort,
+      page: page.toString(),
+    });
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <Pagination className="flex justify-center items-center gap-2 mt-6">
-      {/* 이전 버튼 */}
       <PaginationPrevious
-        onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+        onClick={() => goToPage(Math.max(currentPage - 1, 1))}
         className="border rounded w-9 h-9 flex items-center justify-center hover:bg-zinc-800 transition-colors"
         aria-disabled={currentPage === 1}
       >
@@ -82,14 +93,12 @@ export default function MainPagination({
             <PaginationItem key={page}>
               <PaginationLink
                 isActive={page === currentPage}
-                onClick={() => onPageChange(page as number)}
-                className={`w-9 h-9 flex items-center justify-center border rounded transition-colors
-                  ${
-                    page === currentPage
-                      ? 'bg-indigo-600 text-white border-indigo-600'
-                      : 'bg-background text-foreground border-border hover:bg-zinc-800'
-                  }
-                `}
+                onClick={() => goToPage(page as number)}
+                className={`w-9 h-9 flex items-center justify-center border rounded transition-colors ${
+                  page === currentPage
+                    ? 'bg-indigo-600 text-white border-indigo-600'
+                    : 'bg-background text-foreground border-border hover:bg-zinc-800'
+                }`}
               >
                 {page}
               </PaginationLink>
@@ -98,9 +107,8 @@ export default function MainPagination({
         )}
       </PaginationContent>
 
-      {/* 다음 버튼 */}
       <PaginationNext
-        onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
+        onClick={() => goToPage(Math.min(currentPage + 1, totalPages))}
         className="border rounded w-9 h-9 flex items-center justify-center hover:bg-zinc-800 transition-colors"
         aria-disabled={currentPage === totalPages}
       >

@@ -1,13 +1,13 @@
 // lxp3/src/features/lectures/types.ts
 
 // 강의 난이도 레벨
-export type Level = 'beginner' | 'intermediate' | 'advanced';
+export type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 
 // 카테고리 타입 추가
 export type Category = 'FRONTEND' | 'BACKEND' | 'AI' | 'GAME';
 
 // 레슨 타입 (영상 또는 퀴즈)
-export type LessonType = 'video' | 'quiz';
+export type LessonType = 'VIDEO' | 'QUIZ';
 
 // O/X 퀴즈 문제
 export interface Question {

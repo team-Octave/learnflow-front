@@ -38,8 +38,8 @@ export interface QueryOptions {
 
 export const getLecturesByQuery = async ({
   category = 'ALL',
-  level = 'all',
-  sort = 'popular',
+  level = 'ALL',
+  sort = 'POPULAR',
   page = 1,
   limit = 16,
 }: QueryOptions): Promise<{ items: Lecture[]; totalCount: number }> => {
@@ -51,7 +51,7 @@ export const getLecturesByQuery = async ({
   }
 
   // 난이도 필터
-  if (level !== 'all') {
+  if (level !== 'ALL') {
     result = result.filter((lecture) => lecture.level === level);
   }
 

@@ -44,7 +44,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop',
     category: 'FRONTEND',
-    level: 'intermediate',
+    level: 'INTERMEDIATE',
     createdAt: '2024-03-15T09:00:00Z',
     updatedAt: '2024-03-20T09:00:00Z',
     description:
@@ -58,13 +58,13 @@ export const lectures: Lecture[] = [
             id: 'l-1-1',
             title: 'Next.js란 무엇인가?',
             duration: '10:00',
-            type: 'video',
+            type: 'VIDEO',
           },
           {
             id: 'l-1-2',
             title: '개발 환경 설정하기',
             duration: '15:30',
-            type: 'video',
+            type: 'VIDEO',
           },
         ],
       },
@@ -76,18 +76,18 @@ export const lectures: Lecture[] = [
             id: 'l-2-1',
             title: 'Routing 기본',
             duration: '12:45',
-            type: 'video',
+            type: 'VIDEO',
           },
           {
             id: 'l-2-2',
             title: 'Layouts & Templates',
             duration: '18:20',
-            type: 'video',
+            type: 'VIDEO',
           },
           {
             id: 'l-2-3',
             title: '퀴즈: App Router 이해도 확인',
-            type: 'quiz',
+            type: 'QUIZ',
             questions: [
               {
                 id: 'q1',
@@ -121,7 +121,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop',
     category: 'GAME', // design → 임시로 GAME
-    level: 'beginner',
+    level: 'BEGINNER',
     createdAt: '2024-02-10T14:30:00Z',
     updatedAt: '2024-02-11T14:30:00Z',
     description: '피그마 툴 사용법부터 앱 디자인 프로젝트까지 진행합니다.',
@@ -138,7 +138,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2074&auto=format&fit=crop',
     category: 'AI', // marketing → 임시로 AI
-    level: 'advanced',
+    level: 'ADVANCED',
     createdAt: '2024-01-20T11:00:00Z',
     updatedAt: '2024-02-01T11:00:00Z',
     description: '실전 그로스 해킹 전략을 배웁니다.',
@@ -155,7 +155,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1516116216624-53e697fedbea?q=80&w=2128&auto=format&fit=crop',
     category: 'FRONTEND',
-    level: 'beginner',
+    level: 'BEGINNER',
     createdAt: '2023-12-05T10:15:00Z',
     updatedAt: '2023-12-05T10:15:00Z',
     description:
@@ -173,7 +173,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?q=80&w=2070&auto=format&fit=crop',
     category: 'BACKEND',
-    level: 'beginner',
+    level: 'BEGINNER',
     createdAt: '2024-03-01T09:30:00Z',
     updatedAt: '2024-03-01T09:30:00Z',
     description:
@@ -191,7 +191,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop',
     category: 'FRONTEND',
-    level: 'advanced',
+    level: 'ADVANCED',
     createdAt: '2024-01-15T09:00:00Z',
     updatedAt: '2024-01-15T09:00:00Z',
     description:
@@ -209,7 +209,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop',
     category: 'AI',
-    level: 'beginner',
+    level: 'BEGINNER',
     createdAt: '2024-02-20T10:00:00Z',
     updatedAt: '2024-02-20T10:00:00Z',
     description:
@@ -227,7 +227,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1626785774573-4b799312afc2?q=80&w=2072&auto=format&fit=crop',
     category: 'GAME',
-    level: 'intermediate',
+    level: 'INTERMEDIATE',
     createdAt: '2024-03-05T14:00:00Z',
     updatedAt: '2024-03-05T14:00:00Z',
     description:
@@ -245,7 +245,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1974&auto=format&fit=crop',
     category: 'AI',
-    level: 'beginner',
+    level: 'BEGINNER',
     createdAt: '2024-01-10T11:00:00Z',
     updatedAt: '2024-01-10T11:00:00Z',
     description: '팔로워를 늘리고 매출로 연결하는 인스타그램 마케팅의 정석.',
@@ -262,7 +262,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=2070&auto=format&fit=crop',
     category: 'BACKEND',
-    level: 'advanced',
+    level: 'ADVANCED',
     createdAt: '2023-12-20T13:00:00Z',
     updatedAt: '2023-12-20T13:00:00Z',
     description: 'VC가 알려주는 투자 유치 전략과 IR 피칭 노하우.',
@@ -279,7 +279,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=2106&auto=format&fit=crop',
     category: 'BACKEND',
-    level: 'intermediate',
+    level: 'INTERMEDIATE',
     createdAt: '2024-02-01T09:00:00Z',
     updatedAt: '2024-02-01T09:00:00Z',
     description:
@@ -297,7 +297,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop',
     category: 'GAME',
-    level: 'beginner',
+    level: 'BEGINNER',
     createdAt: '2024-03-10T15:00:00Z',
     updatedAt: '2024-03-10T15:00:00Z',
     description: '움직이는 그래픽으로 시선을 사로잡는 모션 그래픽 입문 강의.',
@@ -314,7 +314,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop',
     category: 'AI',
-    level: 'intermediate',
+    level: 'INTERMEDIATE',
     createdAt: '2024-01-25T10:00:00Z',
     updatedAt: '2024-01-25T10:00:00Z',
     description: '데이터 기반 마케팅을 위한 GA4 완벽 활용 가이드.',
@@ -331,7 +331,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop',
     category: 'BACKEND',
-    level: 'beginner',
+    level: 'BEGINNER',
     createdAt: '2024-02-15T11:00:00Z',
     updatedAt: '2024-02-15T11:00:00Z',
     description: '비즈니스 상황에서 원하는 것을 얻어내는 협상 기술.',
@@ -348,7 +348,7 @@ export const lectures: Lecture[] = [
     thumbnail:
       'https://images.unsplash.com/photo-1605902711622-cfb43c44367d?q=80&w=2070&auto=format&fit=crop',
     category: 'BACKEND',
-    level: 'advanced',
+    level: 'ADVANCED',
     createdAt: '2024-01-30T09:30:00Z',
     updatedAt: '2024-01-30T09:30:00Z',
     description:
