@@ -11,6 +11,14 @@ interface Props {
 }
 
 export default function LectureSummary({ lecture, actionButton }: Props) {
+  //난이도 텍스트
+  const levelText =
+    lecture.level === 'BEGINNER'
+      ? '초급'
+      : lecture.level === 'INTERMEDIATE'
+      ? '중급'
+      : '고급';
+
   return (
     <div className="relative border-b border-zinc-800">
       {/* 🔥 Background Image Layer */}
@@ -21,7 +29,7 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
           className="w-full h-full object-cover opacity-60" // ← 여기만 바뀜!
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-zinc-950/50 to-zinc-950/20" />
+        <div className="absolute inset-0 bg-linear-to-r from-zinc-950/70 via-zinc-950/50 to-zinc-950/20" />
       </div>
 
       {/* Content */}
@@ -36,10 +44,17 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
               {lecture.category.toUpperCase()}
             </Badge>
 
-            <Badge variant="outline" className="text-zinc-300 border-zinc-700">
+            {/* <Badge variant="outline" className="text-zinc-300 border-zinc-700">
               {lecture.level === 'BEGINNER' && '초급'}
               {lecture.level === 'INTERMEDIATE' && '중급'}
               {lecture.level === 'ADVANCED' && '고급'}
+            </Badge> */}
+            <Badge
+              variant={
+                lecture.level as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'
+              }
+            >
+              {levelText}
             </Badge>
 
             <div className="flex items-center gap-1 text-yellow-500 text-sm font-medium">

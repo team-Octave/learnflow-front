@@ -49,29 +49,6 @@ export default async function MainPage({ searchParams }: PageProps) {
   const totalCount = lectures.totalCount ?? lectures.items.length;
   const totalPages = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
 
-  //   // 나머지 렌더링은 네 코드 그대로 OK
-  // }
-
-  // export default async function MainPage({ searchParams }: PageProps) {
-  //   const params = await searchParams;
-
-  //   const category = normalize(params?.category, DEFAULT_CATEGORY);
-  //   const level = normalize(params?.level, DEFAULT_LEVEL);
-  //   const sort = normalize(params?.sort, DEFAULT_SORT);
-  //   const page = parsePage(params?.page);
-
-  //   // API 호출
-  //   const lectures = await getLecturesByQuery({
-  //     category,
-  //     level,
-  //     sort,
-  //     page,
-  //     limit: ITEMS_PER_PAGE,
-  //   });
-
-  //   const totalCount = lectures.totalCount ?? lectures.items.length;
-  //   const totalPages = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
-
   return (
     <div className="flex flex-col min-h-screen w-full">
       <MainVisual />

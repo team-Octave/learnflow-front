@@ -20,7 +20,7 @@ export default function LectureCard({ lecture }: LectureCardProps) {
       : '고급';
 
   return (
-    <Link href={`/lectures/${lecture.id}`} className="group">
+    <Link href={`/detail/${lecture.id}`} className="group">
       {/* 카드 컨테이너 */}
       <div className="flex flex-col h-full overflow-hidden border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg rounded-lg">
         {/* 썸네일 영역 */}

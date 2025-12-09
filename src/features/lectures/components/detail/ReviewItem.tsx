@@ -1,4 +1,4 @@
-// src/features/lectures/components/detail/Review.tsx
+// src/features/lectures/components/detail/ReviewItem.tsx
 'use client';
 
 import { Star } from 'lucide-react';

@@ -356,7 +356,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-1',
+    id: 'lecture-16',
     title: 'Next.js 15 완벽 가이드: 프로덕션 레벨 앱 만들기',
     creatorId: 'inst-1',
     creatorName: '이영희',
@@ -433,7 +433,7 @@ export const lectures: Lecture[] = [
     ],
   },
   {
-    id: 'lecture-2',
+    id: 'lecture-17',
     title: 'UI/UX 디자인 마스터 클래스: 피그마 기초부터 심화까지',
     creatorId: 'inst-2',
     creatorName: '박지성',
@@ -450,7 +450,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-3',
+    id: 'lecture-18',
     title: '실전 마케팅 전략: 0원으로 시작하는 그로스 해킹',
     creatorId: 'inst-3',
     creatorName: '최민수',
@@ -467,7 +467,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-4',
+    id: 'lecture-19',
     title: '타입스크립트 핸드북: 안전한 자바스크립트 작성하기',
     creatorId: 'creator-4',
     creatorName: '김철수',
@@ -485,7 +485,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-5',
+    id: 'lecture-20',
     title: '비즈니스 영어 이메일 작성법',
     creatorId: 'creator-5',
     creatorName: 'Sarah Kim',
@@ -503,7 +503,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-6',
+    id: 'lecture-21',
     title: '실전 리액트 프로그래밍: 리덕스부터 MobX까지',
     creatorId: 'creator-6',
     creatorName: '김태희',
@@ -521,7 +521,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-7',
+    id: 'lecture-22',
     title: '파이썬으로 시작하는 데이터 분석',
     creatorId: 'creator-7',
     creatorName: '박준형',
@@ -539,7 +539,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-8',
+    id: 'lecture-23',
     title: '브랜드 디자인의 모든 것',
     creatorId: 'creator-8',
     creatorName: '최수진',
@@ -557,7 +557,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-9',
+    id: 'lecture-24',
     title: '인스타그램 마케팅 완전 정복',
     creatorId: 'creator-9',
     creatorName: '정민수',
@@ -574,7 +574,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-10',
+    id: 'lecture-25',
     title: '스타트업 투자 유치 가이드',
     creatorId: 'creator-10',
     creatorName: '이준호',
@@ -591,7 +591,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-11',
+    id: 'lecture-26',
     title: '스프링 부트 3.0 핵심 가이드',
     creatorId: 'creator-11',
     creatorName: '김영한',
@@ -609,7 +609,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-12',
+    id: 'lecture-27',
     title: '모션 그래픽 기초: 애프터 이펙트',
     creatorId: 'creator-12',
     creatorName: '한소희',
@@ -626,7 +626,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-13',
+    id: 'lecture-28',
     title: '구글 애널리틱스 4 (GA4) 실전 활용',
     creatorId: 'creator-13',
     creatorName: '박성훈',
@@ -643,7 +643,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-14',
+    id: 'lecture-29',
     title: '성공적인 협상을 위한 커뮤니케이션 스킬',
     creatorId: 'creator-14',
     creatorName: '최지우',
@@ -660,7 +660,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-15',
+    id: 'lecture-30',
     title: '도커와 쿠버네티스 완전 정복',
     creatorId: 'creator-15',
     creatorName: '정재훈',
@@ -678,7 +678,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-1',
+    id: 'lecture-31',
     title: 'Next.js 15 완벽 가이드: 프로덕션 레벨 앱 만들기',
     creatorId: 'inst-1',
     creatorName: '이영희',
@@ -755,7 +755,7 @@ export const lectures: Lecture[] = [
     ],
   },
   {
-    id: 'lecture-2',
+    id: 'lecture-32',
     title: 'UI/UX 디자인 마스터 클래스: 피그마 기초부터 심화까지',
     creatorId: 'inst-2',
     creatorName: '박지성',
@@ -772,7 +772,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-3',
+    id: 'lecture-33',
     title: '실전 마케팅 전략: 0원으로 시작하는 그로스 해킹',
     creatorId: 'inst-3',
     creatorName: '최민수',
@@ -789,7 +789,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-4',
+    id: 'lecture-34',
     title: '타입스크립트 핸드북: 안전한 자바스크립트 작성하기',
     creatorId: 'creator-4',
     creatorName: '김철수',
@@ -807,7 +807,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-5',
+    id: 'lecture-35',
     title: '비즈니스 영어 이메일 작성법',
     creatorId: 'creator-5',
     creatorName: 'Sarah Kim',
@@ -825,7 +825,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-6',
+    id: 'lecture-36',
     title: '실전 리액트 프로그래밍: 리덕스부터 MobX까지',
     creatorId: 'creator-6',
     creatorName: '김태희',
@@ -843,7 +843,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-7',
+    id: 'lecture-37',
     title: '파이썬으로 시작하는 데이터 분석',
     creatorId: 'creator-7',
     creatorName: '박준형',
@@ -861,7 +861,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-8',
+    id: 'lecture-38',
     title: '브랜드 디자인의 모든 것',
     creatorId: 'creator-8',
     creatorName: '최수진',
@@ -879,7 +879,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-9',
+    id: 'lecture-39',
     title: '인스타그램 마케팅 완전 정복',
     creatorId: 'creator-9',
     creatorName: '정민수',
@@ -896,7 +896,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-10',
+    id: 'lecture-40',
     title: '스타트업 투자 유치 가이드',
     creatorId: 'creator-10',
     creatorName: '이준호',
@@ -913,7 +913,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-11',
+    id: 'lecture-41',
     title: '스프링 부트 3.0 핵심 가이드',
     creatorId: 'creator-11',
     creatorName: '김영한',
@@ -931,7 +931,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-12',
+    id: 'lecture-42',
     title: '모션 그래픽 기초: 애프터 이펙트',
     creatorId: 'creator-12',
     creatorName: '한소희',
@@ -948,7 +948,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-13',
+    id: 'lecture-43',
     title: '구글 애널리틱스 4 (GA4) 실전 활용',
     creatorId: 'creator-13',
     creatorName: '박성훈',
@@ -965,7 +965,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-14',
+    id: 'lecture-44',
     title: '성공적인 협상을 위한 커뮤니케이션 스킬',
     creatorId: 'creator-14',
     creatorName: '최지우',
@@ -982,7 +982,7 @@ export const lectures: Lecture[] = [
     curriculum: [],
   },
   {
-    id: 'lecture-15',
+    id: 'lecture-45',
     title: '도커와 쿠버네티스 완전 정복',
     creatorId: 'creator-15',
     creatorName: '정재훈',
