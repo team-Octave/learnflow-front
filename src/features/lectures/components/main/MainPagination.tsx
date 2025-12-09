@@ -1,3 +1,5 @@
+// src/features/lectures/components/main/MainPagination.tsx
+
 'use client';
 import * as React from 'react';
 import {

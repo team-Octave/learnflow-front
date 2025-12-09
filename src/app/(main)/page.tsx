@@ -49,17 +49,21 @@ export default async function MainPage({ searchParams }: PageProps) {
 
   // API 요청: 카테고리 / 난이도 / 정렬 / 페이지네이션 정보 전달
   const lectures = await getLecturesByQuery({
-    category: categoryParam, // 'ALL' | 'DEVELOPMENT' 같은 형태
-    level: levelParam,       // 'ALL' | 'BEGINNER' 등
-    sort: sortParam,         // 'POPULAR' 등
-    page: pageParam,         // 현재 페이지
-    limit: ITEMS_PER_PAGE,   // 한 페이지 강의 개수
+    category: categoryParam, // 'ALL' | 'DEVELOPMENT' ...
+    level: levelParam, // 'ALL' | 'BEGINNER' ...
+    sort: sortParam, // 'POPULAR' ...
+    page: pageParam, // 현재 페이지
+    limit: ITEMS_PER_PAGE, // 한 페이지 강의 개수
   });
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(lectures.totalCount / ITEMS_PER_PAGE),
-  );
+  // 🔥 totalCount 없을 때도 안전하게 처리
+  const totalCount =
+    typeof lectures.totalCount === 'number'
+      ? lectures.totalCount
+      : lectures.items?.length ?? 0;
+
+  const totalPages =
+    totalCount > 0 ? Math.ceil(totalCount / ITEMS_PER_PAGE) : 1;
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -98,7 +102,7 @@ export default async function MainPage({ searchParams }: PageProps) {
           </div>
 
           {/* 페이지네이션 */}
-          {totalPages > 1 && (
+          {lectures.items.length > 0 && (
             <div className="mt-12">
               <MainPagination
                 currentPage={pageParam}

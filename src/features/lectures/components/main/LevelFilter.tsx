@@ -1,4 +1,6 @@
+// src/features/lectures/components/main/LevelFilter.tsx
 'use client';
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -31,7 +33,9 @@ export default function LevelFilter({
   ];
 
   const handleSelect = (value: string) => {
-    router.push(`${pathname}?category=${category}&level=${value}&sort=${sort}&page=1`);
+    router.push(
+      `${pathname}?category=${category}&level=${value}&sort=${sort}&page=1`,
+    );
   };
 
   return (
@@ -42,9 +46,21 @@ export default function LevelFilter({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-40 bg-background border border-border rounded-md shadow-md p-1">
-        <DropdownMenuRadioGroup value={selectedLevel} onValueChange={handleSelect} className="flex flex-col">
+        <DropdownMenuRadioGroup
+          value={selectedLevel}
+          onValueChange={handleSelect}
+          className="flex flex-col"
+        >
           {options.map((option) => (
-            <DropdownMenuRadioItem key={option.value} value={option.value} className="px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10">
+            <DropdownMenuRadioItem
+              key={option.value}
+              value={option.value}
+              className="
+                px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10
+                pl-3  /* 기본 pl-8 덮어쓰기 */
+                [&>span]:hidden  /* 왼쪽 동그라미 span 숨기기 */
+              "
+            >
               {option.label}
             </DropdownMenuRadioItem>
           ))}
