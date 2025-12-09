@@ -14,14 +14,14 @@ export default function SignupForm() {
   const router = useRouter();
 
   // 입력값
-  const [email, setEmail] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [passwordCheck, setPasswordCheck] = useState<string>('');
 
   // 상태
-  const [emailError, setEmailError] = useState('');
-  const [nicknameError, setNicknameError] = useState('');
+  const [emailError, setEmailError] = useState<string>('');
+  const [nicknameError, setNicknameError] = useState<string>('');
   const [nicknameOk, setNicknameOk] = useState<boolean | null>(null);
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [passwordCheckError, setPasswordCheckError] = useState<string>('');
@@ -267,11 +267,17 @@ export default function SignupForm() {
         </Button>
       </form>
 
+      {/* 로그인 + 홈 링크 */}
       <div className="mt-6 text-center text-sm text-zinc-500">
         이미 계정이 있으신가요?{' '}
         <Link href="/login" className="text-indigo-500 font-semibold">
           로그인
         </Link>
+        <div className="mt-3">
+          <Link href="/" className="text-zinc-500 hover:text-white">
+            홈으로 돌아가기
+          </Link>
+        </div>
       </div>
     </div>
   );
