@@ -17,7 +17,7 @@ interface MainPaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  maxVisiblePages?: number; // 한 번에 표시할 페이지 버튼 수
+  maxVisiblePages?: number;
 }
 
 export default function MainPagination({
@@ -28,6 +28,7 @@ export default function MainPagination({
 }: MainPaginationProps) {
   if (totalPages <= 1) return null;
 
+  // 페이지 번호 생성
   const generatePageNumbers = () => {
     const pages: (number | 'ellipsis')[] = [];
     const half = Math.floor(maxVisiblePages / 2);
@@ -58,17 +59,23 @@ export default function MainPagination({
   const pageNumbers = generatePageNumbers();
 
   return (
-    <Pagination className="mt-6">
+    <Pagination className="flex justify-center items-center gap-2 mt-6">
+      {/* 이전 버튼 */}
       <PaginationPrevious
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+        className="border rounded w-9 h-9 flex items-center justify-center hover:bg-zinc-800 transition-colors"
+        aria-disabled={currentPage === 1}
       >
         <ChevronLeft className="w-4 h-4" />
       </PaginationPrevious>
 
-      <PaginationContent>
+      <PaginationContent className="flex gap-1">
         {pageNumbers.map((page, idx) =>
           page === 'ellipsis' ? (
-            <PaginationEllipsis key={idx}>
+            <PaginationEllipsis
+              key={idx}
+              className="w-9 h-9 flex items-center justify-center text-muted-foreground"
+            >
               <MoreHorizontal className="w-4 h-4" />
             </PaginationEllipsis>
           ) : (
@@ -76,6 +83,13 @@ export default function MainPagination({
               <PaginationLink
                 isActive={page === currentPage}
                 onClick={() => onPageChange(page as number)}
+                className={`w-9 h-9 flex items-center justify-center border rounded transition-colors
+                  ${
+                    page === currentPage
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-background text-foreground border-border hover:bg-zinc-800'
+                  }
+                `}
               >
                 {page}
               </PaginationLink>
@@ -84,8 +98,11 @@ export default function MainPagination({
         )}
       </PaginationContent>
 
+      {/* 다음 버튼 */}
       <PaginationNext
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
+        className="border rounded w-9 h-9 flex items-center justify-center hover:bg-zinc-800 transition-colors"
+        aria-disabled={currentPage === totalPages}
       >
         <ChevronRight className="w-4 h-4" />
       </PaginationNext>

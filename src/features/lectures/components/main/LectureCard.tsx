@@ -64,7 +64,9 @@ export default function LectureCard({ lecture }: LectureCardProps) {
         </div>
 
         {/* 별점, 수강생수 */}
-        <div className="p-4 pt-0 flex items-center justify-between mt-auto">
+
+        {/* flex items-center gap-2 */}
+        <div className="p-4 pt-0 flex items-center gap-2  mt-auto">
           <div className="flex items-center gap-1">
             <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
             <span>{lecture.rating}</span>
