@@ -1,4 +1,3 @@
-// src/features/lectures/components/main/Sort.tsx
 'use client';
 
 import {
@@ -8,32 +7,49 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu';
+import { ChevronDown } from 'lucide-react';
 
 interface SortProps {
-  selectedSort: string; // 선택된 정렬 옵션 (popular, newest, rating)
-  setSelectedSort: (value: string) => void; //setSelectedSort: 선택 변경 시 상태를 바꾸는 함수 (React.Dispatch)
+  selectedSort: string;
+  setSelectedSort: (value: string) => void;
 }
 
-// props로 현재 선택값과 setter를 받아옴
 export default function Sort({ selectedSort, setSelectedSort }: SortProps) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="h-10 w-36 rounded-md border border-input bg-background px-3 py-2 text-sm flex items-center justify-between">
-        {selectedSort === 'popular'
-          ? '인기 순'
-          : selectedSort === 'newest'
-          ? '최신 순'
-          : '별점 높은 순'}
+      <DropdownMenuTrigger className="h-10 w-36 rounded-md border border-input bg-background px-3 py-2 text-sm flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+        <span>
+          {selectedSort === 'popular'
+            ? '인기 순'
+            : selectedSort === 'newest'
+            ? '최신 순'
+            : '별점 높은 순'}
+        </span>
+        <ChevronDown className="w-4 h-4 text-muted-foreground" />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-40">
+      <DropdownMenuContent className="w-40 bg-background border border-border rounded-md shadow-md p-1">
         <DropdownMenuRadioGroup
-          value={selectedSort} //value: 현재 선택값
-          onValueChange={setSelectedSort} //onValueChange: 선택 변경 시 상태 업데이트 (setSelectedSort)
+          value={selectedSort}
+          onValueChange={setSelectedSort}
+          className="flex flex-col"
         >
-          <DropdownMenuRadioItem value="popular">인기 순</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="newest">최신 순</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="rating">
+          <DropdownMenuRadioItem
+            value="popular"
+            className="px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10 focus:bg-primary/20 [&>span]:hidden"
+          >
+            인기 순
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem
+            value="newest"
+            className="px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10 focus:bg-primary/20"
+          >
+            최신 순
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem
+            value="rating"
+            className="px-3 py-2 rounded-md cursor-pointer hover:bg-primary/10 focus:bg-primary/20"
+          >
             별점 높은 순
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
