@@ -6,6 +6,11 @@ import LectureSummary from '@/features/lectures/components/detail/LectureSummry'
 import LectureContent from '@/features/lectures/components/detail/LectureContent';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';
 import Reviews from '@/features/lectures/components/detail/Reviews';
+import ButtonApply from '@/features/lectures/components/detail/ButtonApply';
+import AverageReview from '@/features/lectures/components/detail/AverageReview';
+
+// shadcn tabs
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -27,31 +32,52 @@ export default async function LectureDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* 상단 요약 영역 */}
-      <LectureSummary lecture={lecture} />
+      <LectureSummary
+        lecture={lecture}
+        actionButton={<ButtonApply lectureId={lecture.id} />}
+      />
 
       {/* 메인 컨텐츠 영역 */}
       <div className="container px-4 md:px-8 py-12 flex flex-col md:flex-row gap-12">
-        {/* 왼쪽: 커리큘럼 + 상세설명 + 리뷰 */}
-        <div className="flex-1 space-y-12">
+        {/* 왼쪽: 상세 + 탭(커리큘럼 / 리뷰) */}
+        <div className="flex-1">
           {/* 강의 핵심 정보 / 설명 */}
           <LectureContent lecture={lecture} />
 
-          {/* 커리큘럼 */}
-          <Curriculum curriculum={lecture.curriculum} />
+          {/* 탭 영역 */}
+          <div className="mt-12">
+            <Tabs defaultValue="curriculum" className="">
+              <TabsList className="w-auto justify-start bg-transparent border-b border-zinc-800 rounded-none h-auto p-0 mb-8">
+                <TabsTrigger
+                  value="curriculum"
+                  className="rounded-none border-b-2 border-transparent px-6 py-3 text-base font-medium data-[state=active]:border-indigo-500 data-[state=active]:bg-transparent data-[state=active]:text-indigo-400"
+                >
+                  커리큘럼
+                </TabsTrigger>
+                <TabsTrigger
+                  value="reviews"
+                  className="rounded-none border-b-2 border-transparent px-6 py-3 text-base font-medium data-[state=active]:border-indigo-500 data-[state=active]:bg-transparent data-[state=active]:text-indigo-400"
+                >
+                  리뷰
+                </TabsTrigger>
+              </TabsList>
 
-          {/* 리뷰 목록 */}
-          <Reviews reviews={reviews} />
-        </div>
+              {/* 커리큘럼 탭 */}
+              <TabsContent value="curriculum" className="space-y-6">
+                <Curriculum curriculum={lecture.curriculum} />
+              </TabsContent>
 
-        {/* 오른쪽: 수강 신청 버튼 섹션 */}
-        <div className="w-full md:w-80 shrink-0">
-          <div className="sticky top-24">
-            {/* 이미 만든 컴포넌트가 있는 경우 ButtonApply.tsx 사용 */}
-            {/* <ButtonApply lectureId={lecture.id} /> */}
+              {/* 수강평 탭 */}
+              {/* <TabsContent value="reviews" className="space-y-6">
+                <Reviews reviews={reviews} />
+              </TabsContent> */}
 
-            <button className="w-full h-12 rounded-lg bg-white text-zinc-950 font-bold hover:bg-zinc-200 transition">
-              수강 신청하기
-            </button>
+              {/* 수강평 탭 */}
+              <TabsContent value="reviews" className="space-y-6">
+                <AverageReview reviews={reviews} /> {/* <-- 추가된 부분 */}
+                <Reviews reviews={reviews} />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
