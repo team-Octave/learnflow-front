@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import LectureForm from '@/features/creator/components/form/LectureForm';
 import StepInfo from '@/features/creator/components/form/StepInfo';
-import Link from 'next/link';
 
 export default function LectureNewPage() {
   return (
@@ -9,7 +8,7 @@ export default function LectureNewPage() {
       <div className="flex justify-between items-center">
         <div className="text-2xl font-bold text-white">새 강의 등록</div>
         {/* form id 지정 후 서버액션으로 할 것 */}
-        <Button className="bg-white hover:bg-white/90 cursor-pointer" form="">
+        <Button className="bg-white hover:bg-white/90 cursor-pointer">
           저장하고 다음
         </Button>
       </div>
