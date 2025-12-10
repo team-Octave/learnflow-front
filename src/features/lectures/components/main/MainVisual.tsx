@@ -1,0 +1,27 @@
+// learnflow-front/src/features/lectures/components/main/MainVisual.tsx
+'use client';
+
+export default function MainVisual() {
+  return (
+    <section className="relative py-20 md:py-32 overflow-hidden flex justify-center items-center">
+      <div className="absolute inset-0 bg-linear-to-b from-indigo-500/10 via-background to-background pointer-events-none" />
+
+      <div className="container px-4 md:px-8 relative z-10">
+        <div className="flex flex-col items-center text-center space-y-8 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
+            성장을 위한 <span className="text-indigo-500">최고의 선택</span>
+          </h1>
+
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
+            자유롭게 학습하고 지식을 공유하세요.
+            <br className="hidden md:block" />
+            당신의 커리어 성장을{' '}
+            <span className="text-white text-2xl font-bold">Learn</span>
+            <span className="text-indigo-500 text-2xl font-bold">Flow</span>가
+            함께합니다.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
