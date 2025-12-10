@@ -8,9 +8,10 @@ import MainPagination from '@/features/lectures/components/main/MainPagination';
 
 import { categories } from '@/lib/mock-data';
 import { getLecturesByQuery } from '@/services/lectures.service';
+import { getParam } from '@/lib/utils';
 
 interface PageProps {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const DEFAULT_CATEGORY = 'ALL';
@@ -20,18 +21,18 @@ const ITEMS_PER_PAGE = 16;
 
 function normalize(raw: string | string[] | undefined, fallback: string) {
   if (!raw) return fallback;
-  const v = Array.isArray(raw) ? raw[0] : raw;
+  const v = getParam(raw);
   return (v || fallback).toUpperCase();
 }
 
 function parsePage(raw: string | string[] | undefined) {
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  const n = parseInt(v || '1', 10);
+  const v = getParam(raw);
+  const n = parseInt(v || '1');
   return Number.isNaN(n) || n < 1 ? 1 : n;
 }
 
 export default async function MainPage({ searchParams }: PageProps) {
-  const params = searchParams ?? {};
+  const params = (await searchParams) ?? {};
 
   const category = normalize(params.category, DEFAULT_CATEGORY);
   const level = normalize(params.level, DEFAULT_LEVEL);
@@ -57,16 +58,11 @@ export default async function MainPage({ searchParams }: PageProps) {
         <div className="container px-4 md:px-8">
           {/* 필터 */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-            <Categories
-              categories={categories}
-              category={category}
-              level={level}
-              sort={sort}
-            />
+            <Categories categories={categories} />
 
             <div className="flex items-center gap-4">
-              <LevelFilter category={category} level={level} sort={sort} />
-              <Sort category={category} level={level} sort={sort} />
+              <LevelFilter />
+              <Sort />
             </div>
           </div>
 

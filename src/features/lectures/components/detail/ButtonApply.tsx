@@ -26,9 +26,13 @@ export default function ButtonApply({ lectureId }: Props) {
     }
   }, [lectureId]);
 
-  // 수강 신청하기
+  // 수강 신청 버튼
+  //신청 완료 후 노출되는 confirm에서 “내 학습에서 확인하겠습니까?” 라는 안내 문자를 확인후 확인/취소를 선택할 수 있다. (확인 클릭시 ⇒ 내 학습 페이지로 이동, 취소시 confirm창이 닫히고 강의 상세페이지 더 둘러보기 가능)=>완료 
+  // 로그인 상태에서 이미 수강 중인 강의라면 “이어 학습하기” 버튼을 눌러 바로 수강 페이지로 이동한다.
   const handleApply = () => {
-    const confirmed = confirm('내 학습에서 확인하시겠습니까?');
+    const confirmed = confirm(
+      '수강 신청이 완료되었습니다. 내 학습 페이지로 이동하시겠습니까?',
+    );
     if (!confirmed) return;
 
     const stored = localStorage.getItem('learnedLectures');
@@ -51,7 +55,7 @@ export default function ButtonApply({ lectureId }: Props) {
 
     setIsLearning(true); // 상태 업데이트
 
-    router.push('/learning'); // 내 학습 페이지로 이동
+    router.push('/mylearning'); // 내 학습 페이지로 이동
   };
 
   // 이어 학습하기
@@ -61,7 +65,7 @@ export default function ButtonApply({ lectureId }: Props) {
 
   return (
     <Button
-      className="w-full h-12 text-lg font-bold bg-white text-zinc-950 hover:bg-zinc-200"
+      className="w-full h-12 text-lg font-bold bg-white text-zinc-950 hover:bg-zinc-200 cursor-pointer"
       onClick={isLearning ? handleContinue : handleApply}
     >
       {isLearning ? '이어 학습하기' : '수강 신청하기'}

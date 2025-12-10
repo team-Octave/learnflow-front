@@ -8,26 +8,18 @@ import {
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-interface Props {
-  category: string;
-  level: string;
-  sort: string;
-}
-
-export default function LevelFilter({ category, level, sort }: Props) {
+export default function LevelFilter() {
   const router = useRouter();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const level = searchParams.get('level') || 'ALL';
 
   const update = (value: string) => {
-    const query = new URLSearchParams({
-      category,
-      level: value,
-      sort,
-      page: '1',
-    });
-    router.push(`${pathname}?${query.toString()}`);
+    const query = new URLSearchParams(searchParams.toString());
+    query.set('level', value);
+    query.delete('page');
+    router.push(`?${query.toString()}`, { scroll: false });
   };
 
   return (
@@ -45,6 +37,7 @@ export default function LevelFilter({ category, level, sort }: Props) {
 
       <DropdownMenuContent>
         <DropdownMenuRadioGroup value={level} onValueChange={update}>
+          <DropdownMenuRadioItem value="ALL">전체</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="BEGINNER">입문</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="INTERMEDIATE">
             중급

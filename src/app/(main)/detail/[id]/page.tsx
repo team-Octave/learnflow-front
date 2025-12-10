@@ -3,7 +3,6 @@
 import { notFound } from 'next/navigation';
 import { loadLectureDetail, loadReviews } from '@/features/lectures/actions';
 import LectureSummary from '@/features/lectures/components/detail/LectureSummry';
-import LectureContent from '@/features/lectures/components/detail/LectureContent';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';
 import Reviews from '@/features/lectures/components/detail/Reviews';
 import ButtonApply from '@/features/lectures/components/detail/ButtonApply';
@@ -41,22 +40,35 @@ export default async function LectureDetailPage({ params }: PageProps) {
       <div className="container px-4 md:px-8 py-12 flex flex-col md:flex-row gap-12">
         {/* 왼쪽: 상세 + 탭(커리큘럼 / 리뷰) */}
         <div className="flex-1">
-          {/* 강의 핵심 정보 / 설명 */}
-          <LectureContent lecture={lecture} />
-
           {/* 탭 영역 */}
           <div className="mt-12">
             <Tabs defaultValue="curriculum" className="">
-              <TabsList className="w-auto justify-start bg-transparent border-b border-zinc-800 rounded-none h-auto p-0 mb-8">
+              <TabsList className="bg-transparent mb-10">
                 <TabsTrigger
                   value="curriculum"
-                  className="rounded-none border-b-2 border-transparent px-6 py-3 text-base font-medium data-[state=active]:border-indigo-500 data-[state=active]:bg-transparent data-[state=active]:text-indigo-400"
+                  className="px-6 py-3 h-12 border-0 text-base dark:data-[state=active]:text-indigo-500  dark:data-[state=active]:bg-transparent dark:text-muted-foreground rounded-none cursor-pointer hover:bg-zinc-900 dark:data-[state=active]:hover:bg-zinc-900 
+                  relative
+                  after:absolute
+                  after:left-0
+                  after:bottom-0
+                  after:h-0.5
+                  after:w-full
+                  after:bg-transparent
+                data-[state=active]:after:bg-indigo-500"
                 >
                   커리큘럼
                 </TabsTrigger>
                 <TabsTrigger
                   value="reviews"
-                  className="rounded-none border-b-2 border-transparent px-6 py-3 text-base font-medium data-[state=active]:border-indigo-500 data-[state=active]:bg-transparent data-[state=active]:text-indigo-400"
+                  className="px-6 py-3 h-12 border-0 dark:data-[state=active]:text-indigo-500  dark:data-[state=active]:bg-transparent dark:text-muted-foreground rounded-none cursor-pointer hover:bg-zinc-900 dark:data-[state=active]:hover:bg-zinc-900 
+                  relative
+                  after:absolute
+                  after:left-0
+                  after:bottom-0
+                  after:h-0.5
+                  after:w-full
+                  after:bg-transparent
+                data-[state=active]:after:bg-indigo-500"
                 >
                   리뷰
                 </TabsTrigger>
@@ -66,11 +78,6 @@ export default async function LectureDetailPage({ params }: PageProps) {
               <TabsContent value="curriculum" className="space-y-6">
                 <Curriculum curriculum={lecture.curriculum} />
               </TabsContent>
-
-              {/* 수강평 탭 */}
-              {/* <TabsContent value="reviews" className="space-y-6">
-                <Reviews reviews={reviews} />
-              </TabsContent> */}
 
               {/* 수강평 탭 */}
               <TabsContent value="reviews" className="space-y-6">

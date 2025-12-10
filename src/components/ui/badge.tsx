@@ -19,9 +19,9 @@ const badgeVariants = cva(
           'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
 
         // level 추가
-        BEGINNER: 'bg-green-100 text-green-700 border-green-200',
-        INTERMEDIATE: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-        ADVANCED: 'bg-red-100 text-red-700 border-red-200',
+        BEGINNER: 'bg-emerald-900/30 text-emerald-300 border-emerald-800',
+        INTERMEDIATE: 'bg-yellow-900/30 text-yellow-300 border-yellow-800',
+        ADVANCED: 'bg-red-900/30 text-red-300 border-red-800',
       },
     },
     defaultVariants: {

@@ -8,26 +8,17 @@ import {
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-interface Props {
-  category: string;
-  level: string;
-  sort: string;
-}
-
-export default function Sort({ category, level, sort }: Props) {
+export default function Sort() {
   const router = useRouter();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const sort = searchParams.get('sort') || 'POPULAR';
 
   const update = (value: string) => {
-    const params = new URLSearchParams({
-      category,
-      level,
-      sort: value,
-      page: '1',
-    });
-    router.push(`${pathname}?${params.toString()}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('sort', value);
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
   return (

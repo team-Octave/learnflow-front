@@ -21,12 +21,17 @@ export default function Curriculum({ curriculum }: Props) {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold text-white">강의 목차</h2>
         <span className="text-sm text-zinc-400">
-          총 {curriculum.length}개 섹션
+          {' '}
+          총 {curriculum.length}개 챕터
         </span>
       </div>
 
       {curriculum.length > 0 ? (
-        <Accordion type="multiple" className="w-full space-y-4">
+        <Accordion
+          type="multiple"
+          defaultValue={curriculum.map((c) => c.id)} // ← 모든 아이템 오픈
+          className="w-full space-y-4"
+        >
           {curriculum.map((chapter) => (
             <AccordionItem
               key={chapter.id}
