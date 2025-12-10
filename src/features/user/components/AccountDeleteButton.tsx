@@ -22,8 +22,10 @@ interface AccountDeleteButtonProps {
 export default function AccountDeleteButton({
   email,
 }: AccountDeleteButtonProps) {
-  const [inputEmail, setInputEmail] = useState('');
-  const [error, setError] = useState('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [inputEmail, setInputEmail] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [isEqual, setIsEqual] = useState<boolean>(false);
 
   const handleDelete = () => {
     if (inputEmail !== email) {
@@ -34,44 +36,71 @@ export default function AccountDeleteButton({
     console.log('회원 탈퇴 진행 (지금은 mock)');
   };
 
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const changedEmail = e.target.value;
+    setInputEmail(changedEmail);
+    if (changedEmail === email) {
+      setIsEqual(true);
+    } else {
+      setIsEqual(false);
+    }
+  };
+
+  const handleClose = () => {
+    setInputEmail('');
+  };
+
   return (
-    <Dialog>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(next: boolean) => {
+        if (!next) handleClose(); // 닫힐 때 실행
+        setIsOpen(next);
+      }}
+    >
       {/* 버튼 (휴지통 + 텍스트) */}
       <DialogTrigger asChild>
-        <Button className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2">
+        <Button className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 cursor-pointer">
           <Trash2 size={16} />
           회원 탈퇴
         </Button>
       </DialogTrigger>
 
       {/* 모달 */}
-      <DialogContent className="sm:max-w-[480px] bg-zinc-900 border border-zinc-700 text-white">
+      <DialogContent className="sm:max-w-[520px] bg-zinc-900 border border-zinc-700 text-white">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             정말 탈퇴하시겠습니까?
           </DialogTitle>
 
-          <DialogDescription className="text-zinc-400 leading-relaxed">
-            회원 탈퇴 시 모든 데이터가 영구적으로 삭제되며, 이 작업은 되돌릴 수
-            없습니다. 계속하시려면 아래 입력창에 이메일 주소{' '}
-            <span className="font-semibold text-white">{email}</span> 을
-            입력하세요.
+          <DialogDescription className="text-zinc-400 leading-relaxed text-pretty">
+            <div>
+              회원 탈퇴 시 모든 데이터가 영구적으로 삭제되며, 이 작업은 되돌릴
+              수 없습니다.
+            </div>
+            <div>
+              계속하시려면 아래 입력창에 이메일 주소{' '}
+              <span className="font-semibold text-white">{email}</span> 을
+              입력하세요.
+            </div>
           </DialogDescription>
         </DialogHeader>
 
-        {/* 이메일 입력 */}
-        <Input
-          placeholder={email}
-          value={inputEmail}
-          onChange={(e) => {
-            setInputEmail(e.target.value);
-            setError('');
-          }}
-          className="bg-transparent border-zinc-600 text-white"
-        />
+        <div>
+          {/* 이메일 입력 */}
+          <Input
+            placeholder={email}
+            value={inputEmail}
+            onChange={(e) => {
+              handleChangeEmail(e);
+              setError('');
+            }}
+            className="bg-transparent border-zinc-600 text-white"
+          />
 
-        {/* 에러 텍스트 */}
-        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {/* 에러 텍스트 */}
+          {error && <p className="text-red-500 text-sm px-2 mt-2">{error}</p>}
+        </div>
 
         <DialogFooter className="mt-6">
           <DialogClose asChild>
@@ -80,8 +109,9 @@ export default function AccountDeleteButton({
 
           {/* 탈퇴 실행 버튼 */}
           <Button
-            className="bg-red-600 hover:bg-red-700 text-white"
+            className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
             onClick={handleDelete}
+            disabled={!isEqual}
           >
             탈퇴하기
           </Button>

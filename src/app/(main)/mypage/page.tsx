@@ -4,10 +4,10 @@ import ProfileInfo from '@/features/user/components/ProfileInfo';
 
 export default function MyPage() {
   return (
-    <div className="w-full flex justify-center pt-24 pb-32">
-      <div className="w-full max-w-[480px] flex flex-col items-center">
+    <div className="w-full flex justify-center my-12">
+      <div className="w-full max-w-[520px] flex flex-col items-center">
         {/* 내 정보 제목 */}
-        <h1 className="text-3xl font-bold text-white mb-10 text-center">
+        <h1 className="text-2xl font-bold text-white mb-8 w-full px-2">
           내 정보
         </h1>
 
