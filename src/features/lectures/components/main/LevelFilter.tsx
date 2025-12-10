@@ -18,7 +18,7 @@ export default function LevelFilter() {
   const update = (value: string) => {
     const query = new URLSearchParams(searchParams.toString());
     query.set('level', value);
-    query.delete('page');
+    query.delete('page'); //page를 삭제해서 1페이지로 초기화하는 효과
     router.push(`?${query.toString()}`, { scroll: false });
   };
 

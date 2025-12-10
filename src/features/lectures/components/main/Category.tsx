@@ -11,7 +11,11 @@ interface Props {
 
 export default function Category({ name, selected, onClick }: Props) {
   return (
-    <Button variant={selected ? 'default' : 'secondary'} onClick={onClick}>
+    <Button
+      variant={selected ? 'default' : 'secondary'}
+      onClick={onClick}
+      className="cursor-pointer"
+    >
       {name}
     </Button>
   );

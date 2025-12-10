@@ -16,9 +16,10 @@ export default function Sort() {
   const sort = searchParams.get('sort') || 'POPULAR';
 
   const update = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('sort', value);
-    router.push(`?${params.toString()}`, { scroll: false });
+    const query = new URLSearchParams(searchParams.toString());
+    query.set('sort', value);
+    query.delete('page');
+    router.push(`?${query.toString()}`, { scroll: false });
   };
 
   return (

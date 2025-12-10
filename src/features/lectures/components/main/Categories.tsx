@@ -16,6 +16,7 @@ export default function Categories({ categories }: Props) {
   const update = (value: string) => {
     const query = new URLSearchParams(searchParams.toString());
     query.set('category', value); //  카테고리만 세팅
+    query.delete('page');
     router.push(`?${query.toString()}`, { scroll: false });
   };
 
