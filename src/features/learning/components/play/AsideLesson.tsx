@@ -1,7 +1,7 @@
 // features/learning/components/play/AsideCurriculum/AsideLesson.tsx
 
 import { cn } from '@/lib/utils';
-import { PlayCircle, HelpCircle, Lock, CheckCircle } from 'lucide-react';
+import { PlayCircle, PencilLine, CheckCircle } from 'lucide-react';
 
 type LessonType = 'VIDEO' | 'QUIZ';
 
@@ -25,21 +25,24 @@ export function AsideLesson({
 }: AsideLessonProps) {
   const isQuiz = lesson.type === 'QUIZ';
 
-  let Icon = Lock;
-  let iconClassName = 'text-zinc-600';
+  // 기본 아이콘
+  let Icon = isQuiz ? PencilLine : PlayCircle;
+  let iconClassName = 'text-zinc-600'; // 기본 회색
 
-  if (isQuiz) {
-    Icon = HelpCircle;
-  }
+  // 색상 규칙
+  const activeColor = isQuiz ? 'text-emerald-400' : 'text-indigo-400';
+  const completedColor = activeColor; // VIDEO=보라, QUIZ=민트
 
+  // Completed 레슨
   if (isCompleted) {
     Icon = CheckCircle;
-    iconClassName = 'text-emerald-400';
+    iconClassName = completedColor;
   }
 
+  // Active 레슨 (Completed보다 우선)
   if (isActive) {
-    Icon = isQuiz ? HelpCircle : PlayCircle;
-    iconClassName = 'text-indigo-400';
+    Icon = isQuiz ? PencilLine : PlayCircle;
+    iconClassName = activeColor;
   }
 
   return (
@@ -48,13 +51,15 @@ export function AsideLesson({
       onClick={onClick}
       className={cn(
         'w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left',
-        'focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:ring-offset-0',
+        'focus:outline-none ',
         isActive
-          ? 'bg-indigo-500/10 text-indigo-400'
+          ? isQuiz
+            ? 'bg-emerald-500/10 text-emerald-400' // QUIZ Active: 민트
+            : 'bg-indigo-500/10 text-indigo-400' // VIDEO Active: 보라
           : 'hover:bg-zinc-800/50 text-zinc-300',
       )}
     >
-      <Icon className={cn('w-4 h-4 shrink-0', !isActive && iconClassName)} />
+      <Icon className={cn('w-4 h-4 shrink-0', iconClassName)} />
 
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate">{lesson.title}</p>
@@ -64,7 +69,12 @@ export function AsideLesson({
       </div>
 
       {isActive && (
-        <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+        <div
+          className={cn(
+            'w-1.5 h-1.5 rounded-full shrink-0',
+            isQuiz ? 'bg-emerald-400' : 'bg-indigo-500',
+          )}
+        />
       )}
     </button>
   );
