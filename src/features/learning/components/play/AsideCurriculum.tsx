@@ -1,6 +1,7 @@
 // src/features/learning/components/play/AsideCurriculum.tsx
 'use client';
 
+import { useRouter, useSearchParams } from 'next/navigation'; // ✅ useSearchParams 추가
 import {
   Accordion,
   AccordionContent,
@@ -14,9 +15,7 @@ import { AsideLesson } from './AsideLesson';
 interface AsideCurriculumProps {
   lecture: Lecture;
   currentLessonId: string;
-  // 백엔드에서 오는 진도율 (없으면 내부에서 계산)
   progressRate?: number;
-  // 🔥 추가: 레슨 클릭되었을 때 호출되는 콜백
   onSelectLesson?: (lessonId: string) => void;
 }
 
@@ -26,10 +25,13 @@ export function AsideCurriculum({
   progressRate,
   onSelectLesson,
 }: AsideCurriculumProps) {
-  // 전체 레슨 평탄화
+  const router = useRouter();
+  const searchParams = useSearchParams(); // ✅ 현재 URL 쿼리 읽기
+
+  const completedLessonId = searchParams.get('completedLessonId'); // ✅ 퀴즈에서 셋한 값
+
   const allLessons = lecture.curriculum.flatMap((section) => section.lessons);
 
-  // 현재 레슨 인덱스
   const currentIndex = allLessons.findIndex(
     (lesson) => lesson.id === currentLessonId,
   );
@@ -39,30 +41,22 @@ export function AsideCurriculum({
   const computedProgress =
     totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
 
-  // 백엔드에서 progressRate를 내려주면 그걸 우선 사용
   const progressValue =
     typeof progressRate === 'number' ? progressRate : computedProgress;
 
   return (
-    <aside className="hidden lg:flex w-96 flex-col border-l border-zinc-800 bg-zinc-900/50 backdrop-blur-sm">
-      {/* 상단: 제목 + 진행률 */}
-      <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <h2 className="font-bold text-lg">커리큘럼</h2>
-          <p className="text-xs text-zinc-400 truncate max-w-[220px]">
-            {lecture.title}
-          </p>
-        </div>
-
-        <div className="flex flex-col items-end gap-1 text-xs text-zinc-400">
-          <div className="flex items-center gap-2 w-32">
-            <Progress value={progressValue} className="h-2" />
+    <aside className="flex flex-col w-96 border-l border-zinc-800 bg-zinc-900/50">
+      <div className="p-4 border-b border-zinc-800">
+        <h2 className="font-bold text-lg mb-1">커리큘럼</h2>
+        <div className="progress">
+          <div className="text flex justify-between text-xs text-zinc-400 mb-1">
+            <p>진도율</p>
+            <span>{progressValue}% 완료</span>
           </div>
-          <span>{progressValue}% 완료</span>
+          <Progress value={progressValue} className="h-2" />
         </div>
       </div>
 
-      {/* 커리큘럼 리스트 */}
       <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
         <Accordion
           type="multiple"
@@ -86,8 +80,15 @@ export function AsideCurriculum({
                     const lessonIndex = allLessons.findIndex(
                       (l) => l.id === lesson.id,
                     );
-                    const isCompleted =
+
+                    // 기존: 현재 레슨 이전 것들만 완료
+                    const isCompletedByOrder =
                       lessonIndex !== -1 && lessonIndex < currentIndex;
+
+                    // ✅ 퀴즈 제출로 URL에 찍힌 레슨
+                    const isCompletedByQuiz = completedLessonId === lesson.id;
+
+                    const isCompleted = isCompletedByOrder || isCompletedByQuiz;
 
                     return (
                       <AsideLesson
@@ -95,8 +96,11 @@ export function AsideCurriculum({
                         lesson={lesson}
                         isActive={isActive}
                         isCompleted={isCompleted}
-                        // 🔥 클릭 시 상위에서 내려준 콜백 호출
-                        onClick={() => onSelectLesson?.(lesson.id)}
+                        onClick={() => {
+                          onSelectLesson?.(lesson.id);
+                          // 다른 레슨 클릭 시에는 쿼리스트링 없이 이동 (필요하면 여기서도 조정 가능)
+                          router.push(`/play/${lecture.id}/${lesson.id}`);
+                        }}
                       />
                     );
                   })}

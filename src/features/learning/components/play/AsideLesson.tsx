@@ -1,4 +1,4 @@
-// features/learning/components/play/AsideCurriculum/AsideLesson.tsx
+// src/features/learning/components/play/AsideLesson.tsx
 
 import { cn } from '@/lib/utils';
 import { PlayCircle, PencilLine, CheckCircle } from 'lucide-react';
@@ -25,43 +25,37 @@ export function AsideLesson({
 }: AsideLessonProps) {
   const isQuiz = lesson.type === 'QUIZ';
 
-  // 기본 아이콘
-  let Icon = isQuiz ? PencilLine : PlayCircle;
-  let iconClassName = 'text-zinc-600'; // 기본 회색
-
-  // 색상 규칙
   const activeColor = isQuiz ? 'text-emerald-400' : 'text-indigo-400';
-  const completedColor = activeColor; // VIDEO=보라, QUIZ=민트
+  const baseIcon = isQuiz ? PencilLine : PlayCircle;
 
-  // Completed 레슨
-  if (isCompleted) {
-    Icon = CheckCircle;
-    iconClassName = completedColor;
-  }
+  // ✅ 아이콘은 "완료"가 최우선
+  const Icon = isCompleted ? CheckCircle : baseIcon;
 
-  // Active 레슨 (Completed보다 우선)
-  if (isActive) {
-    Icon = isQuiz ? PencilLine : PlayCircle;
-    iconClassName = activeColor;
-  }
+  // ✅ 아이콘 색상: active 또는 completed면 색 적용, 아니면 회색
+  const iconClassName = isActive || isCompleted ? activeColor : 'text-zinc-600';
 
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        'w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left',
-        'focus:outline-none ',
+        'w-full flex items-center gap-3 pr-3 pl-3 h-15 rounded-lg transition-colors text-left',
+        'focus:outline-none cursor-pointer',
+        // ✅ Active일 때 배경/텍스트 강조
         isActive
           ? isQuiz
-            ? 'bg-emerald-500/10 text-emerald-400' // QUIZ Active: 민트
-            : 'bg-indigo-500/10 text-indigo-400' // VIDEO Active: 보라
+            ? 'bg-emerald-500/10 text-emerald-400'
+            : 'bg-indigo-500/10 text-indigo-400'
           : 'hover:bg-zinc-800/50 text-zinc-300',
+        // ✅ 완료됐지만 현재 활성 레슨이 아닐 때도 색만 살짝
+        !isActive &&
+          isCompleted &&
+          (isQuiz ? 'text-emerald-400' : 'text-indigo-400'),
       )}
     >
       <Icon className={cn('w-4 h-4 shrink-0', iconClassName)} />
 
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 ">
         <p className="text-sm font-medium truncate">{lesson.title}</p>
         {lesson.duration && (
           <p className="text-xs opacity-70 mt-0.5">{lesson.duration}</p>

@@ -28,10 +28,9 @@ export default function ButtonComplete({ lessonId }: ButtonCompleteProps) {
 
   return (
     <Button
-      size="sm"
       disabled={loading}
       onClick={handleComplete}
-      className="rounded-full"
+      className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white font-bold px-8 py-6 text-lg cursor-pointer"
     >
       {loading ? '처리 중...' : '수강 완료'}
     </Button>

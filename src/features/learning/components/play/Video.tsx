@@ -21,7 +21,7 @@ export function Video({ lesson }: VideoProps) {
     'https://www.youtube.com/embed/Axlxk_PaSOg?si=5mlhFbRzOXnGYtJb';
 
   return (
-    <div className="flex flex-col w-full h-full justify-start items-center p-4 md:p-8 overflow-y-auto custom-scrollbar">
+    <div className="flex flex-col w-full h-full justify-center items-center p-4 md:p-8 overflow-y-auto custom-scrollbar">
       {/* 영상 영역 */}
       <div className="w-full max-w-5xl">
         <AspectRatio
@@ -36,16 +36,17 @@ export function Video({ lesson }: VideoProps) {
             className="w-full h-full"
           />
         </AspectRatio>
-      </div>
 
-      {/* 제목 */}
-      <h2 className="text-xl font-semibold text-white mt-6 mb-2 max-w-5xl w-full">
-        {lesson.title}
-      </h2>
+        {/* 제목, 수강 완료 버튼 */}
+        <div className="flex justify-between w-full">
+          <h2 className="text-xl font-semibold text-white mt-6 mb-2 max-w-5xl w-full">
+            {lesson.title}
+          </h2>
 
-      {/* 수강 완료 버튼 */}
-      <div className="max-w-5xl w-full flex justify-end mt-4">
-        <ButtonComplete lessonId={lesson.id} />
+          <div className="max-w-5xl w-full flex justify-end mt-4">
+            <ButtonComplete lessonId={lesson.id} />
+          </div>
+        </div>
       </div>
     </div>
   );
