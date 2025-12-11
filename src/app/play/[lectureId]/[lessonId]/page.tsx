@@ -1,4 +1,5 @@
-// src/app/play/[id]/page.tsx
+// src/app/play/[lectureId]/[lessonId]/page.tsx
+
 import { notFound } from 'next/navigation';
 import {
   getLectureById,
@@ -10,63 +11,60 @@ import { Video } from '@/features/learning/components/play/Video';
 import { Quiz } from '@/features/learning/components/play/Quiz';
 import { AsideCurriculum } from '@/features/learning/components/play/AsideCurriculum';
 
-// interface PlayPageProps {
-//   params: { id: string };
-// }
 interface PlayPageProps {
   params: Promise<{ lectureId: string; lessonId: string }>;
 }
 
-// 강의 수강 페이지
+// 강의 수강 페이지 (SERVER COMPONENT)
 export default async function PlayPage({ params }: PlayPageProps) {
   const { lectureId, lessonId } = await params;
 
-  // 1) 강의 데이터 가져오기 (나중엔 learning.service로 대체 예정)
-  const lecture = getLectureById(id); //
-  // 각레슨마다 완료되었는지도 넘어옴 -> 완료 체크 표시하는 용도
-  // 같이 넘어옴 { lastCompletedLessonId: string, progressRate: number }
+  // 1) 강의 정보 가져오기
+  //    (기본정보 + 커리큘럼 + 각 레슨 완료 여부 + lastCompletedLessonId 등 포함)
+  const lecture = await getLectureById(lectureId);
 
   if (!lecture) {
-    notFound(); //
+    return notFound();
   }
 
-  // lecture.lastComptedLesssonId = 20
-
-  // 2) 학습 진행 데이터 (더미)
-  // const progress = await getLearningProgress(lecture.lastCompletedLessonId); // ✅ await 추가
-  // lastCompletedLessonId로 레슨 정보 조회
-
-  // 3) 현재 강의의 모든 레슨(flat)
-  const allLessons = lecture.curriculum?.flatMap((ch) => ch.lessons) ?? [];
+  // 2) 전체 레슨을 flat 구조로 변환
+  const allLessons =
+    lecture.curriculum?.flatMap((chapter) => chapter.lessons) ?? [];
 
   if (allLessons.length === 0) {
     return notFound();
   }
 
-  // 4) 기본: 첫 번째 레슨
-  let currentLesson = allLessons[0];
+  // 3) URL의 lessonId와 일치하는 레슨 찾기
+  const currentLesson =
+    allLessons.find((lesson) => lesson.id === lessonId) ?? null;
 
-  // 5) 이어보기: lastCompletedLessonId로 현재 레슨 지정
-  //    - 요구사항: "가장 마지막 완료된 레슨"을 현재 레슨으로
-  // if (progress?.lastCompletedLessonId) {
-  //   const found = allLessons.find(
-  //     (lesson) => lesson.id === progress.lastCompletedLessonId,
-  //   );
-  //   if (found) {
-  //     currentLesson = found;
-  //   }
-  // }
+  if (!currentLesson) {
+    // lessonId가 실제 존재하지 않는 경우
+    return notFound();
+  }
 
+  // 4) 비디오 / 퀴즈 타입 분기
   const isVideoLesson = currentLesson.type === 'VIDEO';
+  // const isQuizLesson = currentLesson.type === 'QUIZ';
 
+  // 5) 학습 진행 정보 (더미 or API)
+  //    나중에 필요하면 getLearningProgress로 변경 가능
+  // -----------------------------------
+  // const progress = {
+  //   progressRate: lecture.progressRate ?? 0,
+  //   lastCompletedLessonId: lecture.lastCompletedLessonId,
+  // };
+
+  // 6) 실제 UI 렌더링
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* 상단 타이틀 바 */}
       <TitleBar lecture={lecture} />
 
-      <div className="flex gap-8 flex-1">
-        {/* 메인 영역: 비디오 + 퀴즈 */}
-        <main className="flex-1 flex flex-col gap-6">
+      <div className="flex flex-1  mx-auto w-full">
+        {/* 메인 영역 */}
+        <main className="flex-1 flex items-center">
           {isVideoLesson ? (
             <Video lesson={currentLesson} />
           ) : (
@@ -78,6 +76,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
         <AsideCurriculum
           lecture={lecture}
           currentLessonId={currentLesson.id}
+          // progressRate={progress.progressRate}
           progressRate={10}
         />
       </div>
