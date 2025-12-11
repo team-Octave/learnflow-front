@@ -1,17 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { signupAction, checkNicknameAction } from '@/features/user/actions';
 import Link from 'next/link';
-import { Check, X } from 'lucide-react';
-import { signupAction, checkNicknameAction } from '../actions';
+import { Check, X, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 export default function SignupForm() {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   // 입력값
   const [email, setEmail] = useState<string>('');
@@ -22,17 +23,18 @@ export default function SignupForm() {
   // 상태
   const [emailError, setEmailError] = useState<string>('');
   const [nicknameError, setNicknameError] = useState<string>('');
-  const [nicknameOk, setNicknameOk] = useState<boolean | null>(null);
+  const [nicknameOk, setNicknameOk] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [passwordCheckError, setPasswordCheckError] = useState<string>('');
+  const [serverError, setServerError] = useState<string>('');
 
   // 정규식
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const hasTwoTypes =
-    /(?=.*[A-Za-z])(?=.*\d)|(?=.*[A-Za-z])(?=.*[!@#$%])|(?=.*\d)(?=.*[!@#$%])/.test(
-      password,
-    );
-  const lengthValid = password.length >= 8 && password.length <= 32;
+    /(?=.*[A-Za-z])(?=.*\d)|(?=.*[A-Za-z])(?=.*[!@#$%])|(?=.*\d)(?=.*[!@#$%])/;
+  const lengthValid = (password: string) => {
+    return password.length >= 8 && password.length <= 32;
+  };
 
   // 이메일 검사
   const validateEmail = (changedEmail: string) => {
@@ -50,8 +52,8 @@ export default function SignupForm() {
   };
 
   // 비밀번호 검사
-  const validatePassword = () => {
-    if (!hasTwoTypes || !lengthValid) {
+  const validatePassword = (password: string) => {
+    if (!hasTwoTypes.test(password) || !lengthValid(password)) {
       setPasswordError(true);
     } else {
       setPasswordError(false);
@@ -61,7 +63,7 @@ export default function SignupForm() {
   const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const changedPassword = e.target.value;
     setPassword(changedPassword);
-    validatePassword();
+    validatePassword(changedPassword);
     validatePasswordCheck(passwordCheck, changedPassword);
   };
 
@@ -89,52 +91,74 @@ export default function SignupForm() {
   // 닉네임 중복 확인
   const handleCheckNickname = async () => {
     setNicknameError('');
-    setNicknameOk(null);
+    setNicknameOk(false);
 
     if (!nickname.trim()) {
       setNicknameError('닉네임을 입력해주세요.');
       return;
     }
 
-    // const res = await checkNicknameAction(nickname);
+    startTransition(async () => {
+      try {
+        const result = await checkNicknameAction(nickname);
 
-    // if (!res.success) {
-    //   setNicknameError(res.message);
-    //   return;
-    // }
-
-    // if (res.data === true) {
-    //   // true = 중복됨
-    //   setNicknameError('중복된 닉네임입니다.');
-    //   setNicknameOk(false);
-    // } else {
-    //   setNicknameOk(true);
-    // }
+        if (result.success) {
+          setNicknameOk(true);
+        } else {
+          setNicknameError(result.error || '이미 사용 중인 닉네임입니다.');
+          setNicknameOk(false);
+        }
+      } catch (error) {
+        setNicknameError(
+          '중복 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        );
+      }
+    });
   };
 
   // 제출
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
+    setServerError('');
 
     validateEmail(email);
-    validatePassword();
+    validatePassword(password);
     validatePasswordCheck(passwordCheck);
 
-    if (emailError || passwordError || passwordCheckError || nicknameError)
+    if (
+      !emailRegex.test(email) ||
+      !hasTwoTypes.test(password) ||
+      !lengthValid(password) ||
+      password !== passwordCheck ||
+      !nickname.trim()
+    ) {
       return;
+    }
 
-    // const res = await signupAction({
-    //   email,
-    //   password,
-    //   nickname,
-    // });
+    if (nicknameOk !== true) {
+      setNicknameError('닉네임 중복 확인을 해주세요.');
+      return;
+    }
 
-    // if (!res.success) {
-    //   setEmailError(res.message);
-    //   return;
-    // }
-
-    router.push('/login');
+    startTransition(async () => {
+      try {
+        const result = await signupAction({
+          email,
+          password,
+          nickname,
+        });
+        if (result.success) {
+          alert('회원가입이 완료되었습니다.');
+          router.push('/login');
+        } else {
+          setServerError(result.error!);
+        }
+      } catch (error) {
+        setServerError(
+          '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        );
+      }
+    });
   };
 
   return (
@@ -161,7 +185,7 @@ export default function SignupForm() {
             )}
           />
           {email && emailError && (
-            <p className="text-red-400 text-sm">{emailError}</p>
+            <p className="text-red-400 text-sm px-2">{emailError}</p>
           )}
         </div>
 
@@ -180,29 +204,41 @@ export default function SignupForm() {
               }`}
           />
 
-          <div className="ml-1 space-y-1">
+          <div className="px-1 space-y-1">
             <p
               className={cn(
                 `text-sm flex items-center gap-1 text-zinc-500`,
-                password && (hasTwoTypes ? 'text-indigo-500' : 'text-red-400'),
+                password &&
+                  (hasTwoTypes.test(password)
+                    ? 'text-indigo-500'
+                    : 'text-red-400'),
               )}
             >
-              {password && !hasTwoTypes ? <X size={16} /> : <Check size={16} />}{' '}
+              {password && !hasTwoTypes.test(password) ? (
+                <X size={16} />
+              ) : (
+                <Check size={16} />
+              )}{' '}
               영문/숫자/특수문자 중 2가지 이상 포함
             </p>
             <p
               className={cn(
                 `text-sm flex items-center gap-1 text-zinc-500`,
-                password && (lengthValid ? 'text-indigo-500' : 'text-red-400'),
+                password &&
+                  (lengthValid(password) ? 'text-indigo-500' : 'text-red-400'),
               )}
             >
-              {password && !lengthValid ? <X size={16} /> : <Check size={16} />}{' '}
+              {password && !lengthValid(password) ? (
+                <X size={16} />
+              ) : (
+                <Check size={16} />
+              )}{' '}
               8자 이상 32자 이하 입력 (공백 제외)
             </p>
           </div>
 
           {passwordError && (
-            <p className="text-red-400 text-sm">{passwordError}</p>
+            <p className="text-red-400 text-sm px-2">{passwordError}</p>
           )}
         </div>
 
@@ -214,16 +250,16 @@ export default function SignupForm() {
             type="password"
             placeholder="비밀번호 확인"
             value={passwordCheck}
-            onChange={(e) => setPasswordCheck(e.target.value)}
-            className={`bg-zinc-800 text-white placeholder:text-zinc-500 border border-zinc-800 ${
-              password && passwordCheckError
+            onChange={handleChangePasswordCheck}
+            className={`bg-zinc-800 text-white placeholder:text-zinc-500 border border-zinc-800  ${
+              password && passwordCheck && passwordCheckError
                 ? 'border-red-400'
                 : 'border-zinc-800'
             }`}
           />
 
-          {password && passwordCheckError && (
-            <p className="text-red-400 text-sm">{passwordCheckError}</p>
+          {password && passwordCheck && passwordCheckError && (
+            <p className="text-red-400 text-sm px-2">{passwordCheckError}</p>
           )}
         </div>
 
@@ -245,23 +281,34 @@ export default function SignupForm() {
               type="button"
               onClick={handleCheckNickname}
               className="bg-zinc-900 border-zinc-800 cursor-pointer text-white hover:bg-zinc-800"
+              disabled={isPending}
             >
               중복 확인
             </Button>
           </div>
 
           {nicknameError && (
-            <p className="text-red-400 text-sm">{nicknameError}</p>
+            <p className="text-red-400 text-sm px-2">{nicknameError}</p>
           )}
           {nicknameOk && (
-            <p className="text- text-sm">사용 가능한 닉네임입니다.</p>
+            <p className="text-indigo-500 text-sm px-2">
+              사용 가능한 닉네임입니다.
+            </p>
           )}
         </div>
+
+        {serverError && (
+          <div className="flex items-center gap-2 p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-md animate-in fade-in slide-in-from-bottom-2">
+            <AlertCircle size={16} className="shrink-0" />
+            <p>{serverError}</p>
+          </div>
+        )}
 
         {/* 제출 버튼 */}
         <Button
           type="submit"
-          className="w-full bg-white text-black font-semibold hover:bg-gray-200"
+          className="w-full bg-white text-black font-semibold hover:bg-gray-200 cursor-pointer"
+          disabled={isPending}
         >
           계정 생성하기
         </Button>
