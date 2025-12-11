@@ -2,8 +2,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import type { ReactNode } from 'react';
 
 interface ButtonSubmitProps {
+  children?: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
 }

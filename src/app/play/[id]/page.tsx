@@ -4,50 +4,29 @@ import {
   getLectureById,
   getLearningProgress,
 } from '@/services/lectures.service';
+import { PlayPageClient } from '@/features/learning/components/play/PlayPageClient';
 
-import { TitleBar } from '@/features/learning/components/play/TitleBar';
-import { Video } from '@/features/learning/components/play/Video';
-import { Quiz } from '@/features/learning/components/play/Quiz';
-import { AsideCurriculum } from '@/features/learning/components/play/AsideCurriculum';
+// interface PlayPageProps {
+//   params: { id: string }; // ✅ Promise 제거
+// }
 
-export default async function PlayPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+interface PlayPageProps {
+  params: Promise<{ id: string }>;
+}
 
-  // ⬇ async 함수이므로 await 필요
-  const lecture = await getLectureById(id);
-  if (!lecture) notFound();
+// 강의 수강 페이지 (서버 컴포넌트)
+export default async function PlayPage({ params }: PlayPageProps) {
+  const { id } = await params;
 
-  const progress = await getLearningProgress(id);
-
-  const allLessons = lecture.curriculum.flatMap((ch) => ch.lessons);
-
-  let currentLesson = allLessons[0];
-
-  if (progress?.lastCompletedLessonId) {
-    const idx = allLessons.findIndex(
-      (l) => l.id === progress.lastCompletedLessonId,
-    );
-
-    if (idx !== -1) {
-      currentLesson = allLessons[idx + 1] || allLessons[idx];
-    }
+  // 1) 강의 데이터 가져오기
+  const lecture = getLectureById(id); // lectures.service는 지금 sync 함수라 await 필요 X
+  if (!lecture) {
+    notFound();
   }
 
-  return (
-    <div className="flex flex-col h-screen bg-zinc-950 text-zinc-50 overflow-hidden">
-      <TitleBar lecture={lecture} />
+  // 2) 학습 진행 데이터 (더미)
+  const progress = await getLearningProgress(id);
 
-      <div className="flex flex-1 overflow-hidden">
-        <main className="flex-1 flex flex-col bg-black relative">
-          {currentLesson.type === 'QUIZ' ? (
-            <Quiz lesson={currentLesson} />
-          ) : (
-            <Video lesson={currentLesson} />
-          )}
-        </main>
-
-        <AsideCurriculum lecture={lecture} currentLessonId={currentLesson.id} />
-      </div>
-    </div>
-  );
+  // 3) 실제 UI는 클라이언트 컴포넌트에서
+  return <PlayPageClient lecture={lecture} progress={progress} />;
 }

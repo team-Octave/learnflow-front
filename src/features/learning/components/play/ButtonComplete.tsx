@@ -1,6 +1,7 @@
+// src/features/learning/components/play/Video/ButtonComplete.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 interface ButtonCompleteProps {
@@ -8,59 +9,31 @@ interface ButtonCompleteProps {
 }
 
 export default function ButtonComplete({ lessonId }: ButtonCompleteProps) {
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // 레슨 완료 여부 체크
-  useEffect(() => {
-    const stored = localStorage.getItem('completedLessons');
-    if (!stored) return;
+  const handleComplete = async () => {
+    if (loading) return;
+    setLoading(true);
 
     try {
-      const completedList: string[] = JSON.parse(stored);
-      if (completedList.includes(lessonId)) {
-        setIsCompleted(true);
-      }
-    } catch (err) {
-      console.error('localStorage parsing error:', err);
+      // TODO: 나중에 learning.service의 "특정 레슨 완료" API 호출
+      // await completeLesson(lessonId);
+      console.log('lesson completed:', lessonId);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
-  }, [lessonId]);
-
-  // 완료 처리
-  const handleComplete = () => {
-    const stored = localStorage.getItem('completedLessons');
-    let list: string[] = [];
-
-    if (stored) {
-      try {
-        list = JSON.parse(stored);
-      } catch (err) {
-        console.error('localStorage parsing error:', err);
-      }
-    }
-
-    if (!list.includes(lessonId)) {
-      list.push(lessonId);
-      localStorage.setItem('completedLessons', JSON.stringify(list));
-    }
-
-    setIsCompleted(true);
   };
 
   return (
-    <div className="flex justify-end pt-4 border-t border-zinc-800">
-      <Button
-        onClick={handleComplete}
-        disabled={isCompleted}
-        className={`font-bold px-8 py-6 text-lg
-          ${
-            isCompleted
-              ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
-              : 'bg-indigo-600 hover:bg-indigo-700 text-white'
-          }
-        `}
-      >
-        {isCompleted ? '완료됨' : '수강 완료하기'}
-      </Button>
-    </div>
+    <Button
+      size="sm"
+      disabled={loading}
+      onClick={handleComplete}
+      className="rounded-full"
+    >
+      {loading ? '처리 중...' : '수강 완료'}
+    </Button>
   );
 }

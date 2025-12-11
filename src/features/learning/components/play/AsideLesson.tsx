@@ -1,4 +1,4 @@
-// features/learning/components/play/AsideLesson.tsx
+// features/learning/components/play/AsideCurriculum/AsideLesson.tsx
 
 import { cn } from '@/lib/utils';
 import { PlayCircle, HelpCircle, Lock, CheckCircle } from 'lucide-react';

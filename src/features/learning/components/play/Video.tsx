@@ -4,17 +4,22 @@
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import ButtonComplete from './ButtonComplete';
 
-interface VideoProps {
+export interface VideoProps {
   lesson: {
     id: string;
     title: string;
-    // videoUrl: string; // YouTube embed URL
-    videoUrl: 'https://www.youtube.com/embed/Axlxk_PaSOg?si=5mlhFbRzOXnGYtJb';
     duration?: string;
+    videoUrl?: string; // 나중에 백엔드에서 내려주면 사용
   };
 }
 
 export function Video({ lesson }: VideoProps) {
+  // 나중에는 lesson.videoUrl 사용:
+  // const src = lesson.videoUrl ?? "기본 URL";
+  const src =
+    lesson.videoUrl ??
+    'https://www.youtube.com/embed/Axlxk_PaSOg?si=5mlhFbRzOXnGYtJb';
+
   return (
     <div className="flex flex-col w-full h-full justify-start items-center p-4 md:p-8 overflow-y-auto custom-scrollbar">
       {/* 영상 영역 */}
@@ -24,13 +29,12 @@ export function Video({ lesson }: VideoProps) {
           className="bg-black border border-zinc-800 rounded-xl overflow-hidden shadow-xl"
         >
           <iframe
-            src={lesson.videoUrl}
+            src={src}
             title={lesson.title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="w-full h-full"
           />
-          {/* <iframe width="560" height="315" src="https://www.youtube.com/embed/Axlxk_PaSOg?si=5mlhFbRzOXnGYtJb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> */}
         </AspectRatio>
       </div>
 
