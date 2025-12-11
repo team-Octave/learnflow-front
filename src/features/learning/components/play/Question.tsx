@@ -32,9 +32,9 @@ export function Question({
   const isWrong = submitted && selected && selected !== correctAnswer;
 
   return (
-    <div className="p-6 rounded-lg transition-colors">
+    <div className="p-6 rounded-lg transition-colors mb-0">
       <div className="flex gap-4 mb-4">
-        <span className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 font-bold shrink-0">
+        <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold shrink-0">
           Q{index + 1}
         </span>
         <p className="font-medium text-lg leading-relaxed pt-0.5">
@@ -55,17 +55,18 @@ export function Question({
                 cursor-pointer transition-all group
                 ${
                   isActive
-                    ? 'border-indigo-500 bg-indigo-500/20'
+                    ? 'border-emerald-500 bg-emerald-500/20' /*  선택된 옵션 민트 */
                     : 'border-zinc-700'
                 }
                 ${
                   !submitted
-                    ? 'hover:bg-zinc-700/50 hover:border-indigo-500/50'
+                    ? 'hover:bg-zinc-700/50 hover:border-emerald-500/50' /*  hover도 민트 */
                     : ''
                 }
                 ${
                   submitted && isActive && isWrong
-                    ? 'border-red-500 bg-red-500/20'
+                    ? // ? 'border-red-500 bg-red-500/20'
+                      'border-green-500 bg-green-500/20' //정답 오답체크 기능 뺐으므로
                     : ''
                 }
                 ${
@@ -80,7 +81,7 @@ export function Question({
                 name={`quiz-${question.id}`}
                 checked={isActive}
                 readOnly
-                className="w-5 h-5 accent-indigo-500"
+                className="w-4 h-4 accent-emerald-500" /*  동그라미 체크 색도 민트 */
               />
               <span className="text-xl font-bold text-zinc-300 group-hover:text-white">
                 {option}
