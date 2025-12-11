@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
+import { AlertCircle } from 'lucide-react';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -59,7 +60,12 @@ export default function LoginForm() {
           className="bg-zinc-800 text-white placeholder:text-zinc-500 border border-zinc-800"
         />
 
-        {error && <p className="text-red-400 text-sm px-2">{error}</p>}
+        {error && (
+          <div className="flex items-center gap-2 p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-md animate-in fade-in slide-in-from-bottom-2">
+            <AlertCircle size={16} className="shrink-0" />
+            <p>{error}</p>
+          </div>
+        )}
 
         <Button
           type="submit"
