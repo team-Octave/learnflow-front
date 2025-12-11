@@ -1,22 +1,28 @@
+'use client';
+
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import MyDropdown from './MyDropdown';
+import { useUserStore } from '@/store/userStore';
+import { useEffect, useState } from 'react';
 
-export default async function Header() {
-  // 로그인 여부를 쿠키 값을 보고 알 수 있음!
-  // 아직 쿠키 세팅이 안됐으므로 우선 주석 처리
-  // const cookieStore = await cookies();
-  // const accessToken = cookieStore.get('accessToken');
-  // const isLoggined = accessToken ? true : false;
+interface HeaderProps {
+  serverLoginCheck: boolean;
+}
 
-  // 임시 유저 변수
-  const user = {
-    nickname: '김철수',
-    userEmail: 'test@test.com',
-  };
+export default function Header({ serverLoginCheck }: HeaderProps) {
+  const { user, isAuthenticated } = useUserStore();
 
-  // 임시로 확인용 변수
-  const isLoggined = true;
+  // 렌더링 전까지 서버로 부터 받은 로그인 여부 상태를 사용하고, 이 후에는 zustand의 로그인 여부 상태를 사용
+  // 로그인 상태에서 새로 고침 시 잠깐 로그인 버튼이 보이는 현상 해결 위함
+  const [isRendered, setIsRendered] = useState(false);
+
+  // 렌더링이 완료되면 true로 변경
+  useEffect(() => {
+    setIsRendered(true);
+  }, []);
+
+  const showProfileUI = isRendered ? isAuthenticated : serverLoginCheck;
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-900/40 flex justify-between items-center h-16 w-full px-8 bg-zinc-950 backdrop-blur-md supports-backdrop-filter:bg-zinc-950/60">
@@ -25,8 +31,13 @@ export default async function Header() {
         <div className="text-indigo-500 text-2xl font-bold">Flow</div>
       </Link>
       <div>
-        {isLoggined ? (
-          <MyDropdown user={user} />
+        {showProfileUI ? (
+          <MyDropdown
+            user={{
+              email: user?.email || '이메일',
+              nickname: user?.nickname || '닉네임',
+            }}
+          />
         ) : (
           <Link href={'/login'}>
             <Button
