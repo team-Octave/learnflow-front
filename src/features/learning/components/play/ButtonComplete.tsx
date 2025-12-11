@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
 interface ButtonCompleteProps {
@@ -11,6 +12,10 @@ interface ButtonCompleteProps {
 export default function ButtonComplete({ lessonId }: ButtonCompleteProps) {
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const handleComplete = async () => {
     if (loading) return;
     setLoading(true);
@@ -19,6 +24,13 @@ export default function ButtonComplete({ lessonId }: ButtonCompleteProps) {
       // TODO: 나중에 learning.service의 "특정 레슨 완료" API 호출
       // await completeLesson(lessonId);
       console.log('lesson completed:', lessonId);
+
+      // ✅ URL 쿼리에 완료된 레슨 ID + autoNext 플래그 추가
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('completedLessonId', lessonId);
+      params.set('autoNext', '1');
+
+      router.push(`${pathname}?${params.toString()}`);
     } catch (e) {
       console.error(e);
     } finally {

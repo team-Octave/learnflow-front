@@ -32,18 +32,18 @@ export function Quiz({ lesson, onCompleteLesson }: QuizProps) {
   const handleSubmit = () => {
     if (submitted) return;
 
-    const hasAnySelection = Object.keys(selected).length > 0;
-    if (!hasAnySelection) {
-      alert('O / X를 선택하고 답을 제출해 보세요');
+    // 🔥 모든 문제 선택 여부 확인
+    const totalQuestions = questions.length;
+    const selectedCount = Object.keys(selected).length;
+
+    if (selectedCount !== totalQuestions) {
+      alert('모든 문항에 대해 O 또는 X를 선택해 주세요.');
       return;
     }
 
     setSubmitted(true);
-
-    // 상위 콜백 (혹시 나중에 쓸 수도 있으니까 유지)
     onCompleteLesson?.(lesson.id);
 
-    // ✅ URL 쿼리스트링에 완료된 레슨 ID 기록
     const params = new URLSearchParams(searchParams.toString());
     params.set('completedLessonId', lesson.id);
 

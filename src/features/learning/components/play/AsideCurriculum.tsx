@@ -1,7 +1,8 @@
 // src/features/learning/components/play/AsideCurriculum.tsx
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation'; // ✅ useSearchParams 추가
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Accordion,
   AccordionContent,
@@ -28,7 +29,9 @@ export function AsideCurriculum({
   const router = useRouter();
   const searchParams = useSearchParams(); // ✅ 현재 URL 쿼리 읽기
 
-  const completedLessonId = searchParams.get('completedLessonId'); // ✅ 퀴즈에서 셋한 값
+  // ✅ 퀴즈/비디오에서 셋한 값 (완료된 레슨 ID)
+  const completedLessonId = searchParams.get('completedLessonId');
+  const autoNext = searchParams.get('autoNext'); // '1' 이면 다음 레슨 자동 이동
 
   const allLessons = lecture.curriculum.flatMap((section) => section.lessons);
 
@@ -37,12 +40,44 @@ export function AsideCurriculum({
   );
 
   const totalLessons = allLessons.length;
-  const completedCount = currentIndex === -1 ? 0 : Math.max(0, currentIndex);
+
+  // ✅ 완료된 레슨 개수(지금은 쿼리에 하나만 저장하므로 0 또는 1)
+  const completedCount = completedLessonId ? 1 : 0;
+
   const computedProgress =
     totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
 
   const progressValue =
     typeof progressRate === 'number' ? progressRate : computedProgress;
+
+  // ✅ 수강 완료 후 자동으로 다음 레슨으로 이동
+  useEffect(() => {
+    if (autoNext !== '1') return;
+    if (!completedLessonId) return;
+    if (completedLessonId !== currentLessonId) return;
+    if (currentIndex === -1) return;
+
+    const nextLesson = allLessons[currentIndex + 1];
+    if (!nextLesson) return; // 다음 레슨이 없으면 아무 것도 안 함
+
+    const params = new URLSearchParams(searchParams.toString());
+    // 다음 레슨으로 넘어갈 때는 autoNext 플래그 제거 (무한 루프 방지)
+    params.delete('autoNext');
+
+    const queryString = params.toString();
+    const suffix = queryString ? `?${queryString}` : '';
+
+    router.push(`/play/${lecture.id}/${nextLesson.id}${suffix}`);
+  }, [
+    autoNext,
+    completedLessonId,
+    currentLessonId,
+    currentIndex,
+    allLessons,
+    lecture.id,
+    router,
+    searchParams,
+  ]);
 
   return (
     <aside className="flex flex-col w-96 border-l border-zinc-800 bg-zinc-900/50">
@@ -77,18 +112,17 @@ export function AsideCurriculum({
                 <div className="space-y-1 pt-1">
                   {section.lessons.map((lesson) => {
                     const isActive = lesson.id === currentLessonId;
-                    const lessonIndex = allLessons.findIndex(
-                      (l) => l.id === lesson.id,
-                    );
 
-                    // 기존: 현재 레슨 이전 것들만 완료
-                    const isCompletedByOrder =
-                      lessonIndex !== -1 && lessonIndex < currentIndex;
+                    // ❌ 기존: 순서 기준 자동 완료
+                    // const lessonIndex = allLessons.findIndex((l) => l.id === lesson.id);
+                    // const isCompletedByOrder =
+                    //   lessonIndex !== -1 && lessonIndex < currentIndex;
 
-                    // ✅ 퀴즈 제출로 URL에 찍힌 레슨
-                    const isCompletedByQuiz = completedLessonId === lesson.id;
+                    // ✅ URL 쿼리에 찍힌 레슨만 완료 상태
+                    const isCompletedFromParam =
+                      completedLessonId === lesson.id;
 
-                    const isCompleted = isCompletedByOrder || isCompletedByQuiz;
+                    const isCompleted = isCompletedFromParam;
 
                     return (
                       <AsideLesson
@@ -98,7 +132,7 @@ export function AsideCurriculum({
                         isCompleted={isCompleted}
                         onClick={() => {
                           onSelectLesson?.(lesson.id);
-                          // 다른 레슨 클릭 시에는 쿼리스트링 없이 이동 (필요하면 여기서도 조정 가능)
+                          // ⚠ 여기서는 기존 동작 그대로 유지 (쿼리 없이 이동)
                           router.push(`/play/${lecture.id}/${lesson.id}`);
                         }}
                       />
