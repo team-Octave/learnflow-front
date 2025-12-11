@@ -1,5 +1,4 @@
 // src/app/play/[id]/page.tsx
-
 import { notFound } from 'next/navigation';
 import {
   getLectureById,
@@ -11,44 +10,27 @@ import { Video } from '@/features/learning/components/play/Video';
 import { Quiz } from '@/features/learning/components/play/Quiz';
 import { AsideCurriculum } from '@/features/learning/components/play/AsideCurriculum';
 
-export default async function PlayPage({ params }) {
-  const { id } = await params;
-  const lecture = getLectureById(id);
+export default async function PlayPage({ params }: { params: { id: string } }) {
+  const { id } = params;
+
+  // ⬇ async 함수이므로 await 필요
+  const lecture = await getLectureById(id);
   if (!lecture) notFound();
+
+  const progress = await getLearningProgress(id);
 
   const allLessons = lecture.curriculum.flatMap((ch) => ch.lessons);
 
-  let currentLesson;
+  let currentLesson = allLessons[0];
 
-  // localStorage → 마지막 완료된 레슨 ID 가져오기
-  let lastCompletedLessonId = null;
-
-  if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('completedLessons');
-    if (stored) {
-      try {
-        const arr = JSON.parse(stored);
-        lastCompletedLessonId = arr[arr.length - 1] || null;
-      } catch {}
-    }
-  }
-
-  // 이어보기
-  if (lastCompletedLessonId) {
-    const lastIndex = allLessons.findIndex(
-      (l) => l.id === lastCompletedLessonId,
+  if (progress?.lastCompletedLessonId) {
+    const idx = allLessons.findIndex(
+      (l) => l.id === progress.lastCompletedLessonId,
     );
 
-    if (lastIndex !== -1 && allLessons[lastIndex + 1]) {
-      currentLesson = allLessons[lastIndex + 1];
-    } else {
-      currentLesson = allLessons[lastIndex];
+    if (idx !== -1) {
+      currentLesson = allLessons[idx + 1] || allLessons[idx];
     }
-  }
-
-  // 처음 시작
-  if (!currentLesson) {
-    currentLesson = allLessons[0];
   }
 
   return (
