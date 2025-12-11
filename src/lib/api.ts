@@ -3,6 +3,28 @@ import { cookies } from 'next/headers';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// 리프레시 토큰으로 엑세스 토큰 재발급 함수
+async function reissue() {
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get('refreshToken');
+  const accessTokenResponse = await commonFetch(
+    `${BASE_URL}/api/v1/auth/reissue`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    },
+  );
+  const body = await accessTokenResponse.json();
+  if (accessTokenResponse.ok) {
+    const newAccessToken = body.data.accessToken;
+    cookieStore.set('accessToken', newAccessToken);
+  } else {
+    throw new Error(body.message);
+  }
+}
+
 export async function authFetch(
   endpoint: string,
   options: RequestInit = {},
@@ -23,6 +45,14 @@ export async function authFetch(
 
   // 엑세스 토큰 만료시 리프레쉬 토큰으로 엑세스 토큰 재발급
   // 재발급이 되면, 재발급된 토큰으로 다시 요청 / 재발급 실패 시 최종 실패 처리
+  if (response.status === 401) {
+    try {
+      await reissue();
+      return await authFetch(endpoint, options);
+    } catch (error) {
+      return response;
+    }
+  }
 
   return response;
 }
