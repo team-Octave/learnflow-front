@@ -88,6 +88,12 @@ export default function SignupForm() {
     validatePasswordCheck(changedPasswordCheck);
   };
 
+  const handleChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNicknameError('');
+    setNicknameOk(false);
+    setNickname(e.target.value);
+  };
+
   // 닉네임 중복 확인
   const handleCheckNickname = async () => {
     setNicknameError('');
@@ -272,7 +278,7 @@ export default function SignupForm() {
               type="text"
               placeholder="닉네임"
               value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={handleChangeNickname}
               className={`bg-zinc-800 text-white placeholder:text-zinc-500 border border-zinc-800 ${
                 nicknameError ? 'border-red-400' : 'border-zinc-800'
               }`}
