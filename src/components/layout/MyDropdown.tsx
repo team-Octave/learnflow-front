@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { cookies } from 'next/headers';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
   DropdownMenu,
@@ -11,15 +10,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Book, LogOut, PresentationIcon, User } from 'lucide-react';
+import { useUserStore } from '@/store/userStore';
 
 interface MyDropdownProps {
   user: {
+    email: string;
     nickname: string;
-    userEmail: string;
   };
 }
 
 export default function MyDropdown({ user }: MyDropdownProps) {
+  const logout = useUserStore((state) => state.logout);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -31,7 +32,7 @@ export default function MyDropdown({ user }: MyDropdownProps) {
       <DropdownMenuContent className="w-48 bg-zinc-900" align="end">
         <DropdownMenuLabel>
           <div>{user.nickname}</div>
-          <div className="text-xs text-zinc-400">{user.userEmail}</div>
+          <div className="text-xs text-zinc-400">{user.email}</div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -56,7 +57,10 @@ export default function MyDropdown({ user }: MyDropdownProps) {
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-red-500 hover:text-red-500">
+        <DropdownMenuItem
+          className="text-red-500 hover:text-red-500"
+          onClick={logout}
+        >
           <LogOut className="text-red-500" />
           <span className="text-red-500">로그아웃</span>
         </DropdownMenuItem>
