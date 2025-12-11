@@ -3,15 +3,17 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { loginAction } from '../actions'; // ★ 반드시 추가
+import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
   const router = useRouter();
-
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+
+  const login = useUserStore((state) => state.login);
+  const isLoading = useUserStore((state) => state.isLoading);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,25 +23,12 @@ export default function LoginForm() {
       setError('이메일과 비밀번호를 모두 입력해주세요.');
       return;
     }
-
-    // const res = await loginAction(email, password);
-
-    // // 공통 실패 처리
-    // if (!res || res.success === false) {
-    //   setError(res?.message || '로그인에 실패했습니다.');
-    //   return;
-    // }
-
-    // // 성공했을 때 data 안의 토큰 꺼내기
-    // const { accessToken, refreshToken, nickname, role } = res.data;
-
-    // // 쿠키 저장
-    // document.cookie = `accessToken=${accessToken}; path=/;`;
-    // document.cookie = `refreshToken=${refreshToken}; path=/;`;
-
-    // console.log('로그인 성공:', nickname, role);
-
-    router.push('/');
+    try {
+      await login(email, password);
+      router.replace('/');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '로그인 실패');
+    }
   };
 
   return (
@@ -55,6 +44,7 @@ export default function LoginForm() {
         <Input
           type="text"
           placeholder="name@example.com"
+          name="userEmail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="bg-zinc-800 text-white placeholder:text-zinc-500 border border-zinc-800"
@@ -63,16 +53,18 @@ export default function LoginForm() {
         <Input
           type="password"
           placeholder="비밀번호"
+          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="bg-zinc-800 text-white placeholder:text-zinc-500 border border-zinc-800"
         />
 
-        {error && <p className="text-red-400] text-sm mt-2">{error}</p>}
+        {error && <p className="text-red-400 text-sm px-2">{error}</p>}
 
         <Button
           type="submit"
           className="w-full bg-white text-black font-semibold hover:bg-gray-200 h-11"
+          disabled={isLoading}
         >
           로그인
         </Button>
