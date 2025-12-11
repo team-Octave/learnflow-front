@@ -15,10 +15,7 @@ export default function MainVisual() {
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
             자유롭게 학습하고 지식을 공유하세요.
             <br className="hidden md:block" />
-            당신의 커리어 성장을{' '}
-            <span className="text-white text-2xl font-bold">Learn</span>
-            <span className="text-indigo-500 text-2xl font-bold">Flow</span>가
-            함께합니다.
+            당신의 커리어 성장을 LearnFlow가 함께합니다.
           </p>
         </div>
       </div>
