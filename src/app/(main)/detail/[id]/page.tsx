@@ -7,8 +7,6 @@ import Curriculum from '@/features/lectures/components/detail/Curriculum';
 import Reviews from '@/features/lectures/components/detail/Reviews';
 import ButtonApply from '@/features/lectures/components/detail/ButtonApply';
 import AverageReview from '@/features/lectures/components/detail/AverageReview';
-
-// shadcn tabs
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 interface PageProps {

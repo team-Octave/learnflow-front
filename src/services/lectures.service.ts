@@ -87,3 +87,11 @@ export const getLecturesByQuery = async ({
 
   return { items, totalCount };
 };
+
+// 학습 진행 상태(더미 데이터)
+export function getLearningProgress(lectureId: string) {
+  return {
+    lastCompletedLessonId: 'l-2-1',
+    progressRate: 42,
+  };
+}

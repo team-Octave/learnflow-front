@@ -1,9 +1,5 @@
 // src/lib/mock-data.ts
 
-/*
- 피드백 수정
-  - currentUser의 avatar 사진으로 안들어갑니다! 필요없는 데이터에요. 삭제부탁드려요 => 삭제완료
-*/
 import type {
   Lecture,
   Review,
@@ -59,12 +55,15 @@ export const lectures: Lecture[] = [
             title: 'Next.js란 무엇인가?',
             duration: '10:00',
             type: 'VIDEO',
+            videoUrl:
+              'https://www.youtube.com/embed/bClgGbYfeWE?si=gEN9PBOd0EGJAnn_',
           },
           {
             id: 'l-1-2',
             title: '개발 환경 설정하기',
             duration: '15:30',
             type: 'VIDEO',
+            videoUrl: 'https://youtu.be/DHAiyJrX7t4?si=miV4-Uo_EjTyaWAc',
           },
         ],
       },
@@ -77,12 +76,15 @@ export const lectures: Lecture[] = [
             title: 'Routing 기본',
             duration: '12:45',
             type: 'VIDEO',
+            videoUrl:
+              'https://www.youtube.com/embed/bClgGbYfeWE?si=gEN9PBOd0EGJAnn_',
           },
           {
             id: 'l-2-2',
             title: 'Layouts & Templates',
             duration: '18:20',
             type: 'VIDEO',
+            videoUrl: 'https://youtu.be/DHAiyJrX7t4?si=miV4-Uo_EjTyaWAc',
           },
           {
             id: 'l-2-3',
