@@ -22,6 +22,7 @@ export interface Lesson {
   title: string;
   duration?: string; //  변경됨 — duration(영상 길이)”은 영상 레슨에만 필요하고, 퀴즈 레슨에는 필요 없으니까 선택적(optional)
   type: LessonType;
+  videoUrl?: string;
   questions?: Question[];
 }
 
