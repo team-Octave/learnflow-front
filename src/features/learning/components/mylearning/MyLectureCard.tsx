@@ -3,25 +3,19 @@ import Image from 'next/image';
 import ProgressBar from './ProgressBar';
 import ReviewButton from './ReviewButton';
 import Link from 'next/link';
+import { LearningLecture } from '../../types';
 
 interface MyLectureCardProps {
-  lecture: {
-    lectureId: string;
-    thumbnailURL: string;
-    lectureTitle: string;
-    progress: number;
-    review: {
-      star: number;
-      text: string;
-    };
-  };
+  lecture: LearningLecture;
 }
 
 export default function MyLectureCard({ lecture }: MyLectureCardProps) {
   return (
     <div className="flex flex-col w-full">
       <Link
-        href={`/play/${lecture.lectureId}`}
+        href={`/play/${lecture.enrollmentId}?lectureId=${
+          lecture.lectureId
+        }&lessonId=${'임시'}`}
         className="flex flex-col cursor-pointer"
       >
         <AspectRatio
@@ -29,9 +23,9 @@ export default function MyLectureCard({ lecture }: MyLectureCardProps) {
           className="bg-muted rounded-lg hover:-translate-y-1 transition-all"
         >
           <img
-            src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
+            src={lecture.lectureThumbnail}
             alt="강의 썸네일"
-            className="h-full w-full rounded-lg object-cover dark:brightness-[0.2] dark:grayscale"
+            className="h-full w-full rounded-lg object-cover "
           />
         </AspectRatio>
         <div className="flex flex-col p-4 gap-4">
@@ -43,8 +37,11 @@ export default function MyLectureCard({ lecture }: MyLectureCardProps) {
       </Link>
       <div className="px-4 pb-4">
         <ReviewButton
+          lectureId={lecture.lectureId}
           lectureTitle={lecture.lectureTitle}
-          review={lecture.review}
+          star={lecture.reviewRating}
+          text={lecture.reviewContent}
+          reviewId={lecture.reviewId}
         />
       </div>
     </div>

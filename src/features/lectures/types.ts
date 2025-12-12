@@ -36,10 +36,10 @@ export interface Lecture {
   id: string;
   title: string;
   instructorId: string; // instructor → creatorName + creatorId 로 변경
-  // instructorName: string; // 임시 주석
+  instructorDisplayName: string;
   ratingAverage: number;
   enrollmentCount: number; // / studentCount → enrollmentCount 변경됨
-  thumbnail: string;
+  thumbnailUrl: string;
   categoryId: Category; // 임시 string 타입
   level: Level;
   createdAt: string;

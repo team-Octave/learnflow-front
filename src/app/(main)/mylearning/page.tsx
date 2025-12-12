@@ -3,6 +3,12 @@ import Processing from '@/features/learning/components/mylearning/Processing';
 import Completed from '@/features/learning/components/mylearning/Completed';
 import LearningSort from '@/features/learning/components/mylearning/LearningSort';
 import LearningTabs from '@/features/learning/components/mylearning/LearningTabs';
+import { notFound } from 'next/navigation';
+import { getLearningLecturesAction } from '@/features/learning/actions';
+import {
+  LearningLecture,
+  LearningSortOptions,
+} from '@/features/learning/types';
 
 interface MyLearningPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -13,8 +19,33 @@ export default async function MyLearningPage({
 }: MyLearningPageProps) {
   const params = await searchParams;
   const currentTab = typeof params.tab === 'string' ? params.tab : 'processing';
-  const sortOrder =
-    typeof params.sort === 'string' ? params.sort : 'recent-learned';
+  const sortOption: LearningSortOptions =
+    typeof params.sort === 'string'
+      ? (params.sort as LearningSortOptions)
+      : 'RECENT-LEARNED';
+
+  const response = await getLearningLecturesAction();
+
+  if (!response.success) {
+    return <div>{notFound()}</div>;
+  }
+
+  const learningLectures = response.data! as LearningLecture[];
+  const completedLectures = learningLectures.filter(
+    (lecture) => lecture.enrollmentStatus === 'COMPLETED',
+  );
+  const progressLectures = learningLectures.filter(
+    (lecture) => lecture.enrollmentStatus === 'IN_PROGRESS',
+  );
+
+  if (sortOption === 'RECENT-LEARNED') {
+    progressLectures.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    completedLectures.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  } else {
+    progressLectures.sort((a, b) => b.enrolledAt.localeCompare(a.enrolledAt));
+    completedLectures.sort((a, b) => b.enrolledAt.localeCompare(a.enrolledAt));
+  }
+
   return (
     <div className="flex flex-col mx-auto my-12 gap-8 w-[80%]">
       <div className="text-2xl font-bold text-white">내 학습</div>
@@ -27,10 +58,10 @@ export default async function MyLearningPage({
           <LearningSort />
         </div>
         <TabsContent value="processing">
-          <Processing sortOrder={sortOrder} />
+          <Processing lectures={progressLectures} />
         </TabsContent>
         <TabsContent value="completed">
-          <Completed />
+          <Completed lectures={completedLectures} />
         </TabsContent>
       </LearningTabs>
     </div>

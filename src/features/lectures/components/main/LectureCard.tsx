@@ -30,7 +30,7 @@ export default function LectureCard({ lecture }: LectureCardProps) {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={lecture.thumbnail}
+            src={lecture.thumbnailUrl}
             alt={lecture.title}
             className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
           />
@@ -61,7 +61,9 @@ export default function LectureCard({ lecture }: LectureCardProps) {
           <h3 className="h-10 font-bold leading-tight line-clamp-2 group-hover:text-indigo-400 transition-colors">
             {lecture.title}
           </h3>
-          <p className="text-sm text-muted-foreground">{'강사명 자리'}</p>
+          <p className="text-sm text-muted-foreground">
+            {lecture.instructorDisplayName}
+          </p>
         </div>
 
         {/* 별점, 수강생수 */}
