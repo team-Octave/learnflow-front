@@ -10,12 +10,34 @@ import {
 import { Button } from '@/components/ui/button';
 import { Edit, MoreVertical, Trash } from 'lucide-react';
 import { CreatorLecture } from '../../types';
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+// import { deleteCreatorLectureAction } from '../../actions';
 
 interface LectureDropdownProps {
-  lecture: CreatorLecture;
+  lectureId: number;
+  lectureTitle: string;
 }
 
-export default function LectureDropdown({ lecture }: LectureDropdownProps) {
+export default function LectureDropdown({
+  lectureId,
+  lectureTitle,
+}: LectureDropdownProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const handleEdit = () => {
+    router.push(`/creator/${lectureId}`);
+  };
+
+  const handleDelete = () => {
+    if (confirm(`${lectureTitle} 강의를 정말 삭제하시겠습니까?`)) {
+      startTransition(async () => {
+        // TODO: 강의 삭제 API 연동
+        // const response = await deleteCreatorLectureAction(lectureId);
+      });
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -24,11 +46,19 @@ export default function LectureDropdown({ lecture }: LectureDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-20" align="end">
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handleEdit}
+          className="cursor-pointer"
+          disabled={isPending}
+        >
           <Edit />
           강의 수정
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handleDelete}
+          className="cursor-pointer"
+          disabled={isPending}
+        >
           <Trash className="text-red-500" />
           <span className="text-red-500 hover:text-red-500">강의 삭제</span>
         </DropdownMenuItem>

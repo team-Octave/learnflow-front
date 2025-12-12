@@ -70,7 +70,7 @@ export default function LectureCard({ lecture }: LectureCardProps) {
         <div className="p-4 pt-0 flex items-center gap-2 mt-auto">
           <div className="flex items-center gap-1">
             <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-            <span>{lecture.ratingAverage}</span>
+            <span>{lecture.ratingAverage.toFixed(1)}</span>
           </div>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Users className="w-3 h-3" />
