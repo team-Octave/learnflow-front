@@ -1,11 +1,8 @@
 // src/app/play/[lectureId]/[lessonId]/page.tsx
 
 import { notFound } from 'next/navigation';
-import {
-  getLectureById,
-  getLearningProgress,
-} from '@/services/lectures.service';
-
+import { getLectureById } from '@/services/lectures.service';
+import { getLearningProgress } from '@/services/learning.service';
 import { TitleBar } from '@/features/learning/components/play/TitleBar';
 import { Video } from '@/features/learning/components/play/Video';
 import { Quiz } from '@/features/learning/components/play/Quiz';
