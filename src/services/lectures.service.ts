@@ -1,89 +1,103 @@
 // src/services/lectures.service.ts
-import { lectures, reviews } from '@/lib/mock-data';
-import type { Lecture, Review } from '@/features/lectures/types';
+import type { Query } from '@/features/lectures/types';
+import { commonFetch } from '@/lib/api';
 
-export const getAllLectures = (): Lecture[] => lectures;
-
-export const getLectureById = (id: string): Lecture | undefined =>
-  lectures.find((lecture) => lecture.id === id);
-
-export const getLecturesByCategory = (category: string): Lecture[] => {
-  if (category === 'ALL') return lectures;
-  return lectures.filter((lecture) => lecture.category === category);
-};
-
-export const getReviewsByLectureId = (lectureId: string): Review[] =>
-  reviews.filter((review) => review.lectureId === lectureId);
-
-export const searchLectures = (keyword: string): Lecture[] => {
-  const lower = keyword.trim().toLowerCase();
-  if (!lower) return lectures;
-  return lectures.filter(
-    (lecture) =>
-      lecture.title.toLowerCase().includes(lower) ||
-      lecture.creatorName.toLowerCase().includes(lower),
-  );
-};
-
-/**
- * URL 쿼리 기반으로 강의 가져오기
- */
-export interface QueryOptions {
-  category?: string;
-  level?: string;
-  sort?: string;
-  page?: number;
-  limit?: number;
+export async function getLectures({ category, level, sort, page }: Query) {
+  // sort 오류로 우선 제외
+  const url = `/api/v1/lectures?category=${category}&level=${level}&page=${
+    page - 1
+  }`;
+  const response = await commonFetch(url);
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '강의 목록 조회 실패');
+  }
 }
 
-export const getLecturesByQuery = async ({
-  category = 'ALL',
-  level = 'ALL',
-  sort = 'POPULAR',
-  page = 1,
-  limit = 16,
-}: QueryOptions): Promise<{ items: Lecture[]; totalCount: number }> => {
-  // 항상 대문자로 정규화
-  category = category.toUpperCase();
-  level = level.toUpperCase();
-  sort = sort.toUpperCase();
+// export const getAllLectures = (): Lecture[] => lectures;
 
-  let result = [...lectures];
+// export const getLectureById = (id: string): Lecture | undefined =>
+//   lectures.find((lecture) => lecture.id === id);
 
-  //  1) 카테고리 필터
-  if (category !== 'ALL') {
-    result = result.filter((lecture) => lecture.category === category);
-  }
+// export const getLecturesByCategory = (category: string): Lecture[] => {
+//   if (category === 'ALL') return lectures;
+//   return lectures.filter((lecture) => lecture.category === category);
+// };
 
-  //  2) 난이도 필터
-  if (level !== 'ALL') {
-    result = result.filter((lecture) => lecture.level === level);
-  }
+// export const getReviewsByLectureId = (lectureId: string): Review[] =>
+//   reviews.filter((review) => review.lectureId === lectureId);
 
-  //  3) 정렬
-  switch (sort) {
-    case 'POPULAR':
-      result.sort((a, b) => b.enrollmentCount - a.enrollmentCount);
-      break;
+// export const searchLectures = (keyword: string): Lecture[] => {
+//   const lower = keyword.trim().toLowerCase();
+//   if (!lower) return lectures;
+//   return lectures.filter(
+//     (lecture) =>
+//       lecture.title.toLowerCase().includes(lower) ||
+//       lecture.creatorName.toLowerCase().includes(lower),
+//   );
+// };
 
-    case 'NEWEST':
-      result.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      );
-      break;
+// /**
+//  * URL 쿼리 기반으로 강의 가져오기
+//  */
+// export interface QueryOptions {
+//   category?: string;
+//   level?: string;
+//   sort?: string;
+//   page?: number;
+//   limit?: number;
+// }
 
-    case 'RATING':
-      result.sort((a, b) => b.rating - a.rating);
-      break;
-  }
+// export const getLecturesByQuery = async ({
+//   category = 'ALL',
+//   level = 'ALL',
+//   sort = 'POPULAR',
+//   page = 1,
+//   limit = 16,
+// }: QueryOptions): Promise<{ items: Lecture[]; totalCount: number }> => {
+//   // 항상 대문자로 정규화
+//   category = category.toUpperCase();
+//   level = level.toUpperCase();
+//   sort = sort.toUpperCase();
 
-  const totalCount = result.length;
+//   let result = [...lectures];
 
-  // 4) 페이지네이션
-  const start = (page - 1) * limit;
-  const end = start + limit;
-  const items = result.slice(start, end);
+//   //  1) 카테고리 필터
+//   if (category !== 'ALL') {
+//     result = result.filter((lecture) => lecture.category === category);
+//   }
 
-  return { items, totalCount };
-};
+//   //  2) 난이도 필터
+//   if (level !== 'ALL') {
+//     result = result.filter((lecture) => lecture.level === level);
+//   }
+
+//   //  3) 정렬
+//   switch (sort) {
+//     case 'POPULAR':
+//       result.sort((a, b) => b.enrollmentCount - a.enrollmentCount);
+//       break;
+
+//     case 'NEWEST':
+//       result.sort(
+//         (a, b) =>
+//           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+//       );
+//       break;
+
+//     case 'RATING':
+//       result.sort((a, b) => b.rating - a.rating);
+//       break;
+//   }
+
+//   const totalCount = result.length;
+
+//   // 4) 페이지네이션
+//   const start = (page - 1) * limit;
+//   const end = start + limit;
+//   const items = result.slice(start, end);
+
+//   return { items, totalCount };
+// };
