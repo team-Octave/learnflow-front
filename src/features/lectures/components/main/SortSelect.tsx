@@ -10,7 +10,7 @@ import {
 import { ChevronDown } from 'lucide-react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-export default function Sort() {
+export default function SortSelect() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sort = searchParams.get('sort') || 'POPULAR';
@@ -27,7 +27,7 @@ export default function Sort() {
       <DropdownMenuTrigger className="h-10 w-36 border rounded-md px-3 py-2 text-sm flex items-center justify-between">
         {sort === 'POPULAR'
           ? '인기순'
-          : sort === 'NEWEST'
+          : sort === 'LATEST'
           ? '최신순'
           : '별점순'}
         <ChevronDown />
@@ -36,7 +36,7 @@ export default function Sort() {
       <DropdownMenuContent>
         <DropdownMenuRadioGroup value={sort} onValueChange={update}>
           <DropdownMenuRadioItem value="POPULAR">인기순</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="NEWEST">최신순</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="LATEST">최신순</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="RATING">별점순</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
