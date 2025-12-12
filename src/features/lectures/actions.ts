@@ -16,7 +16,7 @@ export async function getLecturesAction(
 ): Promise<ActionState<Lecture[]>> {
   try {
     const body = await getLectures(query);
-    return { success: true, data: body.content };
+    return { success: true, data: body.data.content };
   } catch (error) {
     return {
       success: false,
