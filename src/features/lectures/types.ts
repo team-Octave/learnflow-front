@@ -1,13 +1,54 @@
 // lxp3/src/features/lectures/types.ts
 
+// ---------------- 연동 후 사용 중인 타입 ---------------
+
+export const CATEGORIES = [
+  { id: '0', name: 'ALL', value: 'ALL' },
+  { id: '1', name: 'FRONTEND', value: '1' },
+  { id: '2', name: 'BACKEND', value: '2' },
+  { id: '3', name: 'AI', value: '3' },
+  { id: '4', name: 'GAME', value: '4' },
+];
+
+export const CATEGORY_MAP = {
+  1: 'FRONTEND',
+  2: 'BACKEND',
+  3: 'AI',
+  4: 'GAME',
+};
+
 // 강의 난이도 레벨
 export type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 
 // 카테고리 타입 추가
-export type Category = 'FRONTEND' | 'BACKEND' | 'AI' | 'GAME';
+export type Category = '1' | '2' | '3' | '4';
 
-// 레슨 타입 (영상 또는 퀴즈)
-export type LessonType = 'VIDEO' | 'QUIZ';
+export interface Query {
+  category: Category | 'ALL';
+  level: Level | 'ALL';
+  sort: Sort;
+  page: number;
+  limit: number;
+}
+
+// 강의 단위
+export interface Lecture {
+  id: string;
+  title: string;
+  instructorId: string; // instructor → creatorName + creatorId 로 변경
+  // instructorName: string; // 임시 주석
+  ratingAverage: number;
+  enrollmentCount: number; // / studentCount → enrollmentCount 변경됨
+  thumbnail: string;
+  categoryId: Category; // 임시 string 타입
+  level: Level;
+  createdAt: string;
+  updatedAt?: string; //   updatedAt 추가
+  description: string;
+  chapters: Chapter[] | null;
+}
+
+// ----------- 연동 전 사용중인 타입 --------------
 
 // O/X 퀴즈 문제
 export interface Question {
@@ -33,24 +74,6 @@ export interface Chapter {
   lessons: Lesson[];
 }
 
-// 강의 단위
-export interface Lecture {
-  id: string;
-  title: string;
-  creatorId: string; // instructor → creatorName + creatorId 로 변경
-  creatorName: string;
-  price: number;
-  rating: number;
-  enrollmentCount: number; // / studentCount → enrollmentCount 변경됨
-  thumbnail: string;
-  category: Category; // Category 타입으로 변경
-  level: Level;
-  createdAt: string;
-  updatedAt: string; //   updatedAt 추가
-  description: string;
-  curriculum: Chapter[];
-}
-
 // 리뷰
 export interface Review {
   id: string;
@@ -61,3 +84,8 @@ export interface Review {
   createdAt: string; // 변경됨 — date → createdAt
   content: string;
 }
+
+// 레슨 타입 (영상 또는 퀴즈)
+export type LessonType = 'VIDEO' | 'QUIZ';
+
+export type Sort = 'LATEST' | 'POPULAR' | 'RATING';
