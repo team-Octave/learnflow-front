@@ -1,7 +1,19 @@
+import { getCreatorLecturesAction } from '@/features/creator/actions';
 import LectureAddButton from '@/features/creator/components/manage/LectureAddButton';
 import LectureTable from '@/features/creator/components/manage/LectureTable';
+import { notFound } from 'next/navigation';
 
-export default function CreatorPage() {
+export default async function CreatorPage() {
+  const response = await getCreatorLecturesAction();
+
+  if (!response.success) {
+    return <div>{notFound()}</div>;
+  }
+
+  const lectures = response.data!;
+
+  console.log(lectures);
+
   return (
     <div className="flex flex-col mx-auto my-12 gap-8 w-[80%]">
       <div className="flex justify-between items-center">
@@ -13,7 +25,7 @@ export default function CreatorPage() {
         </div>
         <LectureAddButton />
       </div>
-      <LectureTable />
+      <LectureTable lectures={lectures} />
     </div>
   );
 }
