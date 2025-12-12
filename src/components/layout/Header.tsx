@@ -2,9 +2,16 @@
 
 import { Button } from '../ui/button';
 import Link from 'next/link';
-import MyDropdown from './MyDropdown';
 import { useUserStore } from '@/store/userStore';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const MyDropdown = dynamic(() => import('./MyDropdown'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-10 h-10 rounded-full bg-zinc-800 animate-pulse" />
+  ),
+});
 
 interface HeaderProps {
   serverLoginCheck: boolean;
