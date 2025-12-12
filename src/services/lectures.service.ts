@@ -87,4 +87,3 @@ export const getLecturesByQuery = async ({
 
   return { items, totalCount };
 };
-

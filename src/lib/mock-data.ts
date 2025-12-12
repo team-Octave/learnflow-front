@@ -63,7 +63,8 @@ export const lectures: Lecture[] = [
             title: '개발 환경 설정하기',
             duration: '15:30',
             type: 'VIDEO',
-            videoUrl: 'https://youtu.be/DHAiyJrX7t4?si=miV4-Uo_EjTyaWAc',
+            videoUrl:
+              'https://www.youtube.com/embed/DHAiyJrX7t4?si=miV4-Uo_EjTyaWAc',
           },
         ],
       },
@@ -84,7 +85,8 @@ export const lectures: Lecture[] = [
             title: 'Layouts & Templates',
             duration: '18:20',
             type: 'VIDEO',
-            videoUrl: 'https://youtu.be/DHAiyJrX7t4?si=miV4-Uo_EjTyaWAc',
+            videoUrl:
+              'https://www.youtube.com/embed/DHAiyJrX7t4?si=miV4-Uo_EjTyaWAc',
           },
           {
             id: 'l-2-3',
