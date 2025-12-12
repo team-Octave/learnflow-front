@@ -1,5 +1,6 @@
 'use server';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -7,6 +8,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 async function reissue() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get('refreshToken');
+  if (!refreshToken) {
+    throw new Error('리프레시 토큰이 없습니다.');
+  }
   const accessTokenResponse = await commonFetch(
     `${BASE_URL}/api/v1/auth/reissue`,
     {
@@ -21,7 +25,9 @@ async function reissue() {
     const newAccessToken = body.data.accessToken;
     cookieStore.set('accessToken', newAccessToken);
   } else {
-    throw new Error(body.message);
+    cookieStore.delete('accessToken');
+    cookieStore.delete('refreshToken');
+    redirect('/login?message=session_expired');
   }
 }
 
