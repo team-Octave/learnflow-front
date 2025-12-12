@@ -1,27 +1,20 @@
+import { LearningLecture, LearningSortOptions } from '../../types';
 import MyLectureCard from './MyLectureCard';
 
 interface ProcessingProps {
-  sortOrder: string;
+  lectures: LearningLecture[];
 }
 
-export default function Processing({ sortOrder }: ProcessingProps) {
-  const dummyLecture = {
-    lectureId: '1',
-    thumbnailURL: '',
-    lectureTitle: 'Next.js 15 완벽 가이드: 프로덕션 레벨 앱 만들기',
-    progress: 40,
-    review: {
-      star: 4,
-      text: '수강평',
-    },
-  };
-
+export default function Processing({ lectures }: ProcessingProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  auto-rows-auto gap-6">
-      <MyLectureCard lecture={dummyLecture} />
-      <MyLectureCard lecture={dummyLecture} />
-      <MyLectureCard lecture={dummyLecture} />
-      <MyLectureCard lecture={dummyLecture} />
+      {lectures.length !== 0 ? (
+        lectures.map((lecture) => (
+          <MyLectureCard lecture={lecture} key={lecture.lectureId} />
+        ))
+      ) : (
+        <div>수강 중인 강의가 없습니다.</div>
+      )}
     </div>
   );
 }
