@@ -69,7 +69,7 @@ export default function LoginForm() {
 
         <Button
           type="submit"
-          className="w-full bg-white text-black font-semibold hover:bg-gray-200 h-11"
+          className="w-full bg-white text-black font-semibold hover:bg-gray-200 h-11 cursor-pointer"
           disabled={isLoading}
         >
           로그인
