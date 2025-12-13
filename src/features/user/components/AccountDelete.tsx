@@ -1,7 +1,11 @@
 import { Separator } from '@/components/ui/separator';
 import AccountDeleteButton from './AccountDeleteButton';
 
-export default function AccountDelete() {
+interface AccountDeleteProps {
+  email: string;
+}
+
+export default function AccountDelete({ email }: AccountDeleteProps) {
   return (
     <section
       className="
@@ -13,7 +17,6 @@ export default function AccountDelete() {
         text-white
       "
     >
-      {/* 제목 + 설명 */}
       <h2 className="text-xl font-bold text-red-500">회원 탈퇴</h2>
 
       <p className="my-2 text-sm leading-relaxed text-red-200/80">
@@ -23,9 +26,9 @@ export default function AccountDelete() {
 
       <Separator className="bg-red-800/40" />
 
-      {/* 버튼을 오른쪽 아래로 */}
       <div className="mt-6 flex justify-end">
-        <AccountDeleteButton email="chulsoo@example.com" />
+        {/* ✅ 하드코딩 제거 */}
+        <AccountDeleteButton email={email} />
       </div>
     </section>
   );

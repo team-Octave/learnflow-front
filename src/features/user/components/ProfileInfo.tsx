@@ -1,13 +1,16 @@
+// src/features/user/components/ProfileInfo.tsx 
 'use client';
 
 import { Input } from '@/components/ui/input';
 
-export default function ProfileInfo() {
-  const nickname = '김철수';
-  const email = 'chulsoo@example.com';
+interface ProfileInfoProps {
+  nickname: string;
+  email: string;
+}
 
+export default function ProfileInfo({ nickname, email }: ProfileInfoProps) {
   return (
-    <section className="w-full p-6 rounded-xl bg-zinc-900/40 border border-zinc-700 text-white ">
+    <section className="w-full p-6 rounded-xl bg-zinc-900/40 border border-zinc-700 text-white">
       <h2 className="text-xl font-bold">프로필 정보</h2>
 
       {/* 닉네임 */}

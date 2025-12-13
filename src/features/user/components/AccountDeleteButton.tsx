@@ -22,43 +22,43 @@ interface AccountDeleteButtonProps {
 export default function AccountDeleteButton({
   email,
 }: AccountDeleteButtonProps) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [inputEmail, setInputEmail] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const [isEqual, setIsEqual] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [inputEmail, setInputEmail] = useState('');
+  const [error, setError] = useState('');
+
+  const normalizedInput = inputEmail.trim().toLowerCase();
+  const normalizedEmail = (email ?? '').trim().toLowerCase();
+  const isEqual = normalizedInput === normalizedEmail;
+
+  const handleClose = () => {
+    setInputEmail('');
+    setError('');
+  };
 
   const handleDelete = () => {
-    if (inputEmail !== email) {
+    if (!isEqual) {
       setError('이메일이 일치하지 않습니다.');
       return;
     }
 
+    // ✅ 지금은 mock
     console.log('회원 탈퇴 진행 (지금은 mock)');
-  };
 
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const changedEmail = e.target.value;
-    setInputEmail(changedEmail);
-    if (changedEmail === email) {
-      setIsEqual(true);
-    } else {
-      setIsEqual(false);
-    }
-  };
-
-  const handleClose = () => {
-    setInputEmail('');
+    // ✅ 사용자에게 "처리됐다"는 UI 변화 제공
+    setIsOpen(false);
+    handleClose();
+    // 원하면 alert도 가능:
+    // alert('탈퇴 요청이 처리되었습니다. (mock)');
   };
 
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={(next: boolean) => {
-        if (!next) handleClose(); // 닫힐 때 실행
+      onOpenChange={(next) => {
+        if (!next) handleClose();
         setIsOpen(next);
       }}
     >
-      {/* 버튼 (휴지통 + 텍스트) */}
       <DialogTrigger asChild>
         <Button className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 cursor-pointer">
           <Trash2 size={16} />
@@ -66,39 +66,34 @@ export default function AccountDeleteButton({
         </Button>
       </DialogTrigger>
 
-      {/* 모달 */}
       <DialogContent className="sm:max-w-[520px] bg-zinc-900 border border-zinc-700 text-white">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             정말 탈퇴하시겠습니까?
           </DialogTitle>
 
+          {/* ✅ div 제거 (hydration 에러 해결) */}
           <DialogDescription className="text-zinc-400 leading-relaxed text-pretty">
-            <div>
-              회원 탈퇴 시 모든 데이터가 영구적으로 삭제되며, 이 작업은 되돌릴
-              수 없습니다.
-            </div>
-            <div>
-              계속하시려면 아래 입력창에 이메일 주소{' '}
-              <span className="font-semibold text-white">{email}</span> 을
-              입력하세요.
-            </div>
+            회원 탈퇴 시 모든 데이터가 영구적으로 삭제되며, 이 작업은 되돌릴 수
+            없습니다.
+            <br />
+            계속하시려면 아래 입력창에 이메일 주소{' '}
+            <span className="font-semibold text-white">{email}</span> 을
+            입력하세요.
           </DialogDescription>
         </DialogHeader>
 
         <div>
-          {/* 이메일 입력 */}
           <Input
             placeholder={email}
             value={inputEmail}
             onChange={(e) => {
-              handleChangeEmail(e);
+              setInputEmail(e.target.value);
               setError('');
             }}
             className="bg-transparent border-zinc-600 text-white"
           />
 
-          {/* 에러 텍스트 */}
           {error && <p className="text-red-500 text-sm px-2 mt-2">{error}</p>}
         </div>
 
@@ -107,10 +102,15 @@ export default function AccountDeleteButton({
             <Button variant="outline">취소</Button>
           </DialogClose>
 
-          {/* 탈퇴 실행 버튼 */}
-          <Button
+          {/* <Button
             className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
             onClick={handleDelete}
+            disabled={!isEqual}
+          >
+            탈퇴하기
+          </Button> */}
+          <Button
+            className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
             disabled={!isEqual}
           >
             탈퇴하기
