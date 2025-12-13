@@ -9,10 +9,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Edit, MoreVertical, Trash } from 'lucide-react';
-import { CreatorLecture } from '../../types';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
-// import { deleteCreatorLectureAction } from '../../actions';
+import { deleteCreatorLectureAction } from '../../actions';
 
 interface LectureDropdownProps {
   lectureId: number;
@@ -32,8 +31,14 @@ export default function LectureDropdown({
   const handleDelete = () => {
     if (confirm(`${lectureTitle} 강의를 정말 삭제하시겠습니까?`)) {
       startTransition(async () => {
-        // TODO: 강의 삭제 API 연동
-        // const response = await deleteCreatorLectureAction(lectureId);
+        const response = await deleteCreatorLectureAction(lectureId);
+        if (!response.success) {
+          alert(response.error);
+          return;
+        } else {
+          alert(`${lectureTitle} 강의가 성공적으로 삭제되었습니다.`);
+          router.refresh();
+        }
       });
     }
   };
