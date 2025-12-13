@@ -1,9 +1,11 @@
+// src/services/auth.service.ts
+
 import {
   LoginRequest,
   LoginResponseWithToken,
   User,
 } from '@/features/auth/types';
-import { commonFetch } from '@/lib/api';
+import { commonFetch, authFetch } from '@/lib/api'; //  authFetch 추가
 
 async function login(user: LoginRequest): Promise<LoginResponseWithToken> {
   const response = await commonFetch(`/api/v1/auth/login`, {
@@ -20,10 +22,23 @@ async function login(user: LoginRequest): Promise<LoginResponseWithToken> {
 
 async function logout() {}
 
-// 내 정보 가져오기 (새로고침 시 세션 유지용)
 async function getMe(): Promise<Pick<User, 'email' | 'nickname' | 'role'>> {
-  // const response = await fetch('/api/me');
-  return { email: 'test@test.com', nickname: '홍길동', role: 'MEMBER' };
-}
+  const response = await authFetch('/api/v1/users/me', {
+    method: 'GET',
+  });
 
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || '유저 정보 조회 실패');
+  }
+
+  const user = data.data as Pick<User, 'email' | 'nickname' | 'role'>;
+
+  return {
+    email: user.email,
+    nickname: user.nickname,
+    role: user.role,
+  };
+}
 export { login, logout, getMe };
