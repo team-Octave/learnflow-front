@@ -1,6 +1,9 @@
+'use server';
+
 import {
   deleteCreatorLecture,
   getCreatorLectures,
+  publishCreatorLecture,
 } from '@/services/creator.service';
 import { CreatorLecture } from './types';
 
@@ -17,7 +20,7 @@ export async function getCreatorLecturesAction(): Promise<
     const body = await getCreatorLectures();
     return {
       success: true,
-      data: body.data,
+      data: body.data.content,
     };
   } catch (error) {
     return {
@@ -28,19 +31,36 @@ export async function getCreatorLecturesAction(): Promise<
   }
 }
 
-// 우선 주석 처리
-// export async function deleteCreatorLectureAction(id: number): Promise<ActionState<any>> {
-//   try {
-//     const body = await deleteCreatorLecture(id);
-//     return {
-//       success: true,
-//       data: body.data,
-//     };
-//   } catch (error) {
-//     return {
-//       success: false,
-//       error:
-//         error instanceof Error ? error.message : '강의 삭제 실패',
-//     };
-//   }
-// }
+export async function deleteCreatorLectureAction(
+  id: number,
+): Promise<ActionState<any>> {
+  try {
+    const body = await deleteCreatorLecture(id);
+    return {
+      success: true,
+      data: body.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '강의 삭제 실패',
+    };
+  }
+}
+
+export async function publishCreatorLectureAction(
+  id: number,
+): Promise<ActionState<any>> {
+  try {
+    const body = await publishCreatorLecture(id);
+    return {
+      success: true,
+      data: body.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '강의 공개 실패',
+    };
+  }
+}
