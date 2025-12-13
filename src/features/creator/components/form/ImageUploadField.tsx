@@ -8,60 +8,51 @@ import Image from 'next/image';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 interface ImageUploadProps {
-  label?: string;
-  value: File | null; // 부모가 관리하는 파일 상태
-  onChange: (file: File | null) => void; // 상태 변경 함수
-  defaultImage: string; // 기본 이미지 URL
+  value: File | null; // 새로 업로드하려는 파일 객체 (부모 상태)
+  onChange: (file: File | null) => void;
+  initialImage: string; // 초기 이미지 URL (기본 이미지 OR 서버 저장 이미지)
 }
-
 export function ImageUploadField({
   value,
   onChange,
-  defaultImage,
+  initialImage,
 }: ImageUploadProps) {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [newFilePreview, setNewFilePreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // value(부모 상태)가 null로 변하면 미리보기(preview)도 초기화
   useEffect(() => {
     if (value) {
-      // 파일이 있으면 프리뷰 생성
       const objectUrl = URL.createObjectURL(value);
-      setPreview(objectUrl);
+      setNewFilePreview(objectUrl);
 
-      // 메모리 정리 (cleanup)
+      // cleanup: 이전 미리보기 URL 메모리 해제
       return () => URL.revokeObjectURL(objectUrl);
     } else {
-      // 파일이 없으면 프리뷰 제거
-      setPreview(null);
+      // 파일이 없으면(초기화 or 취소) 미리보기 제거 -> initialImage가 보이게 됨
+      setNewFilePreview(null);
       if (inputRef.current) inputRef.current.value = '';
     }
   }, [value]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
-      if (!file.type.startsWith('image/')) {
-        alert('이미지 파일만 업로드 가능합니다.');
+      if (!file.type.startsWith('image/jpeg')) {
+        alert('JPG/JPEG 파일만 업로드 가능합니다.');
         return;
       }
-
-      // 미리보기 URL 생성
-      const objectUrl = URL.createObjectURL(file);
-      setPreview(objectUrl);
-
-      // 부모 상태 업데이트
-      onChange(file);
+      onChange(file); // 부모에게 File 객체 전달
     }
   };
 
   const handleRemove = (e: React.MouseEvent) => {
     e.preventDefault();
-    onChange(null);
+    e.stopPropagation(); // 라벨 클릭 이벤트 전파 방지
+    onChange(null); // 파일 상태 초기화 (-> 다시 initialImage가 보임)
   };
 
-  const currentImageSrc = preview || defaultImage;
+  // 새 파일이 있으면 그 파일의 미리보기를, 없으면 초기(서버/기본) 이미지를 보여줌
+  const displaySrc = newFilePreview || initialImage;
 
   return (
     <div className="space-y-2">
@@ -76,12 +67,20 @@ export function ImageUploadField({
               htmlFor="image-upload"
               className="block w-full h-full cursor-pointer relative"
             >
-              <Image
-                src={currentImageSrc!}
-                alt="Thumbnail"
-                fill
-                className="object-fill transition-opacity group-hover:opacity-90 "
-              />
+              {displaySrc ? (
+                <img
+                  src={displaySrc}
+                  alt="Thumbnail"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  loading="eager"
+                  className="object-cover transition-opacity group-hover:opacity-90"
+                />
+              ) : (
+                // 만약 initialImage조차 없을 때를 대비한 Fallback (선택사항)
+                <div className="flex items-center justify-center w-full h-full text-gray-400">
+                  <ImagePlus size={40} />
+                </div>
+              )}
 
               {/* 호버 시 '변경' 아이콘 표시 (UX 강화) */}
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -92,15 +91,12 @@ export function ImageUploadField({
               </div>
             </label>
 
-            {/* X 버튼: 사용자가 '직접 업로드한 파일'이 있을 때만 표시.
-              누르면 업로드 취소 -> 기본 이미지로 복귀 
-            */}
             {value && (
               <button
                 type="button"
                 onClick={handleRemove}
                 className="absolute top-2 right-2 z-10 bg-rose-500 text-white p-1.5 rounded-full shadow-md hover:bg-rose-600 transition transform hover:scale-105"
-                title="업로드 취소 (기본 이미지로 복귀)"
+                title="변경 취소 (기본 이미지로)"
               >
                 <X className="h-4 w-4" />
               </button>
