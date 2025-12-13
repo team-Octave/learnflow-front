@@ -1,14 +1,18 @@
+import { Category, Level } from '../lectures/types';
+
 export interface CreatorLecture {
-  lectureId: string;
-  lectureTitle: string;
-  lectureDesctiption: string;
-  category: 'FRONTEND' | 'BACKEND' | 'AI' | 'GAME';
-  level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
-  thumbnailURL: string;
-  status: boolean;
-  enrollmentCount: number;
-  rating: number;
-  curriculum: Chapter[];
+  id: number;
+  title: string;
+  description: string;
+  categoryId: Category;
+  level: Level;
+  statusDisplayName: 'PUBLISHED' | 'UNPUBLISHED';
+  instructorId: string;
+  instructorDisplayName: string;
+  ratingAverage: number | null;
+  enrollmentCount: number | null;
+  thumbnailUrl: string;
+  chapters: Chapter[] | null;
 }
 
 export interface Chapter {

@@ -5,6 +5,7 @@ import { Star } from 'lucide-react';
 import { useState } from 'react';
 
 interface StarRatingProps {
+  isDisabled: boolean;
   value: number;
   onChange: (value: number) => void;
 }
@@ -17,7 +18,11 @@ const RATING_DESCRIPTIONS: Record<number, string> = {
   5: '최고에요!',
 };
 
-export default function StarRating({ value, onChange }: StarRatingProps) {
+export default function StarRating({
+  isDisabled,
+  value,
+  onChange,
+}: StarRatingProps) {
   const [hoverRating, setHoverRating] = useState<number>(0);
   const displayRating = hoverRating || value;
 
@@ -35,7 +40,8 @@ export default function StarRating({ value, onChange }: StarRatingProps) {
               onClick={() => onChange(starScore)}
               onMouseEnter={() => setHoverRating(starScore)}
               onMouseLeave={() => setHoverRating(0)}
-              className="p-1 transition-transform hover:scale-105 focus:outline-none"
+              className="p-1 transition-transform hover:scale-105 focus:outline-none cursor-pointer"
+              disabled={isDisabled}
             >
               <Star
                 className={cn(

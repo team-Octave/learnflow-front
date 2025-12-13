@@ -3,12 +3,9 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Category from './Category';
+import { CATEGORIES } from '../../types';
 
-interface Props {
-  categories: { id: string; name: string; value: string }[];
-}
-
-export default function Categories({ categories }: Props) {
+export default function Categories() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || 'ALL';
@@ -22,7 +19,7 @@ export default function Categories({ categories }: Props) {
 
   return (
     <div className="flex flex-wrap gap-2">
-      {categories.map((item) => (
+      {CATEGORIES.map((item: { id: string; name: string; value: string }) => (
         <Category
           key={item.id}
           name={item.name}

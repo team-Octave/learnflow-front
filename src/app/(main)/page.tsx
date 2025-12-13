@@ -2,17 +2,15 @@
 import MainVisual from '@/features/lectures/components/main/MainVisual';
 import Categories from '@/features/lectures/components/main/Categories';
 import LevelFilter from '@/features/lectures/components/main/LevelFilter';
-import Sort from '@/features/lectures/components/main/Sort';
+import SortSelect from '@/features/lectures/components/main/SortSelect';
 import LectureCard from '@/features/lectures/components/main/LectureCard';
 import MainPagination from '@/features/lectures/components/main/MainPagination';
 
-import { categories } from '@/lib/mock-data';
-import { getLecturesByQuery } from '@/services/lectures.service';
+import { getLectures } from '@/services/lectures.service';
 import { getParam } from '@/lib/utils';
-
-interface PageProps {
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}
+import { Category, Lecture, Level, Sort } from '@/features/lectures/types';
+import { getLecturesAction } from '@/features/lectures/actions';
+import { notFound } from 'next/navigation';
 
 const DEFAULT_CATEGORY = 'ALL';
 const DEFAULT_LEVEL = 'ALL';
@@ -30,16 +28,19 @@ function parsePage(raw: string | string[] | undefined) {
   const n = parseInt(v || '1');
   return Number.isNaN(n) || n < 1 ? 1 : n;
 }
+interface PageProps {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
 export default async function MainPage({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
 
-  const category = normalize(params.category, DEFAULT_CATEGORY);
-  const level = normalize(params.level, DEFAULT_LEVEL);
-  const sort = normalize(params.sort, DEFAULT_SORT);
+  const category = normalize(params.category, DEFAULT_CATEGORY) as Category;
+  const level = normalize(params.level, DEFAULT_LEVEL) as Level;
+  const sort = normalize(params.sort, DEFAULT_SORT) as Sort;
   const page = parsePage(params.page);
 
-  const lectures = await getLecturesByQuery({
+  const response = await getLecturesAction({
     category,
     level,
     sort,
@@ -47,8 +48,11 @@ export default async function MainPage({ searchParams }: PageProps) {
     limit: ITEMS_PER_PAGE,
   });
 
-  const totalCount = lectures.totalCount ?? lectures.items.length;
-  const totalPages = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
+  if (!response.success) {
+    return <div>{notFound()}</div>;
+  }
+
+  const lectures: Lecture[] = response.data!;
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -58,23 +62,23 @@ export default async function MainPage({ searchParams }: PageProps) {
         <div className="container px-4 md:px-8">
           {/* 필터 */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-            <Categories categories={categories} />
+            <Categories />
 
             <div className="flex items-center gap-4">
               <LevelFilter />
-              <Sort />
+              <SortSelect />
             </div>
           </div>
 
           {/* 리스트 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {lectures.items.map((lecture) => (
+            {lectures.map((lecture) => (
               <LectureCard key={lecture.id} lecture={lecture} />
             ))}
           </div>
 
           {/* 페이지네이션 */}
-          <div className="mt-12">
+          {/* <div className="mt-12">
             <MainPagination
               currentPage={page}
               totalPages={totalPages}
@@ -82,7 +86,7 @@ export default async function MainPage({ searchParams }: PageProps) {
               level={level}
               sort={sort}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

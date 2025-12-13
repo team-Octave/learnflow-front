@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Star, Users, PlayCircle } from 'lucide-react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import type { Lecture } from '@/features/lectures/types';
+import { CATEGORY_MAP, type Lecture } from '@/features/lectures/types';
 
 interface LectureCardProps {
   lecture: Lecture;
@@ -30,7 +30,7 @@ export default function LectureCard({ lecture }: LectureCardProps) {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={lecture.thumbnail}
+            src={lecture.thumbnailUrl}
             alt={lecture.title}
             className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
           />
@@ -46,7 +46,7 @@ export default function LectureCard({ lecture }: LectureCardProps) {
               variant="secondary"
               className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20"
             >
-              {lecture.category.toUpperCase()}
+              {CATEGORY_MAP[lecture.categoryId]}
             </Badge>
 
             <Badge
@@ -61,14 +61,16 @@ export default function LectureCard({ lecture }: LectureCardProps) {
           <h3 className="h-10 font-bold leading-tight line-clamp-2 group-hover:text-indigo-400 transition-colors">
             {lecture.title}
           </h3>
-          <p className="text-sm text-muted-foreground">{lecture.creatorName}</p>
+          <p className="text-sm text-muted-foreground">
+            {lecture.instructorDisplayName}
+          </p>
         </div>
 
         {/* 별점, 수강생수 */}
         <div className="p-4 pt-0 flex items-center gap-2 mt-auto">
           <div className="flex items-center gap-1">
             <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-            <span>{lecture.rating}</span>
+            <span>{lecture.ratingAverage.toFixed(1)}</span>
           </div>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Users className="w-3 h-3" />
