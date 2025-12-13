@@ -11,14 +11,25 @@ export async function getCreatorLectures() {
 }
 
 export async function deleteCreatorLecture(id: number) {
-  // 우선 주석 처리
-  // const response = await authFetch(`/api/v1/lectures/my`, {
-  //   method: 'POST',
-  // });
-  // const data = await response.json();
-  // if (response.ok) {
-  //   return data;
-  // } else {
-  //   throw new Error(data.message || '강의 삭제 실패');
-  // }
+  const response = await authFetch(`/api/v1/lectures/${id}`, {
+    method: 'DELETE',
+  });
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '강의 삭제 실패');
+  }
+}
+
+export async function publishCreatorLecture(id: number) {
+  const response = await authFetch(`/api/v1/lectures/${id}/publish`, {
+    method: 'PUT',
+  });
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '강의 공개 실패');
+  }
 }
