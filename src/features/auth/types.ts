@@ -1,3 +1,4 @@
+// src/features/auth/types.ts
 export interface User {
   userId: string;
   email: string;
