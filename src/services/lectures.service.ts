@@ -3,8 +3,7 @@ import type { Query } from '@/features/lectures/types';
 import { commonFetch } from '@/lib/api';
 
 export async function getLectures({ category, level, sort, page }: Query) {
-  // sort 오류로 우선 제외
-  const url = `/api/v1/lectures?category=${category}&level=${level}&page=${
+  const url = `/api/v1/lectures?category=${category}&level=${level}&sort=${sort}&page=${
     page - 1
   }`;
   const response = await commonFetch(url);
@@ -13,6 +12,18 @@ export async function getLectures({ category, level, sort, page }: Query) {
     return data;
   } else {
     throw new Error(data.message || '강의 목록 조회 실패');
+  }
+}
+
+// 지원님 상세 페이지 구현할 때 이 함수 사용하시면 됩니다!!
+export async function getLectureById(lectureId: number) {
+  const url = `/api/v1/lectures/${lectureId}`;
+  const response = await commonFetch(url);
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '강의 단건 조회 실패');
   }
 }
 

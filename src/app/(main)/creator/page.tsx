@@ -7,6 +7,7 @@ export default async function CreatorPage() {
   const response = await getCreatorLecturesAction();
 
   if (!response.success) {
+    console.log(response.error);
     return <div>{notFound()}</div>;
   }
 

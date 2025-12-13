@@ -27,17 +27,109 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ImageUploadField } from './ImageUploadField';
-import { useState } from 'react';
-import { CreatorLecture } from '../../types';
+import { useEffect, useState, useTransition } from 'react';
+import { BasicInfo, CreatorLecture } from '../../types';
+import { Category, Lecture, Level } from '@/features/lectures/types';
+import { useRouter } from 'next/navigation';
+import { convertURLtoFile } from '@/lib/utils';
+import { createBasicLectureAction } from '../../actions';
 
 interface LectureFormProps {
-  lecture?: CreatorLecture;
+  lecture?: Lecture;
 }
 
 export default function LectureForm({ lecture }: LectureFormProps) {
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [basicInfo, setBasicInfo] = useState<BasicInfo>({
+    title: '',
+    categoryId: '',
+    level: '',
+    description: '',
+    file: null,
+  });
+
+  // 수정 시 초기 값 로드
+  useEffect(() => {
+    if (lecture) {
+      console.log(lecture);
+      setBasicInfo({
+        title: lecture.title,
+        categoryId: lecture.categoryId.toString() as Category,
+        level: lecture.level,
+        description: lecture.description,
+        file: null,
+      });
+    }
+  }, [lecture]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setBasicInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSumbit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !basicInfo.title ||
+      !basicInfo.categoryId ||
+      !basicInfo.level ||
+      !basicInfo.description
+    ) {
+      alert('모든 정보를 입력해 주세요.');
+      return;
+    }
+    if (basicInfo.title.length >= 100) {
+      alert('제목은 최대 100자까지 입력 가능합니다.');
+    }
+    startTransition(async () => {
+      const formData = new FormData();
+
+      formData.append('title', basicInfo.title);
+      formData.append('categoryId', basicInfo.categoryId);
+      formData.append('level', basicInfo.level);
+      formData.append('description', basicInfo.description);
+
+      // 2. 파일 처리 로직 (핵심 변경 사항)
+      if (basicInfo.file) {
+        // CASE A: 사용자가 새 이미지를 직접 업로드한 경우 -> 그 파일 전송
+        formData.append('file', basicInfo.file);
+      } else if (!lecture) {
+        // CASE B: [초기 등록]인데 사용자가 파일을 안 올린 경우 -> '기본 이미지' 전송
+        try {
+          const defaultPath = '/images/defaultImage.jpg';
+          const defaultFile = await convertURLtoFile(
+            defaultPath,
+            'default_thumbnail.jpg',
+          );
+          formData.append('file', defaultFile);
+        } catch (error) {
+          console.error('기본 이미지 변환 실패:', error);
+        }
+      }
+      // CASE C: [수정 모드]인데 파일을 안 올린 경우 (basicInfo.file === null)
+      // -> 아무것도 보내지 않음 (서버는 기존 이미지 유지)
+
+      const response = await createBasicLectureAction(formData);
+      if (!response.success) {
+        alert(response.error);
+      } else {
+        const lecture = response.data!;
+        router.replace(`/creator/${lecture.id}?step=2`);
+      }
+    });
+  };
+
+  const defaultThumbnail = '/images/defaultImage.jpg';
+  const currentThumbnailUrl = lecture?.thumbnailUrl || defaultThumbnail;
+
   return (
-    <form action="" className="grid grid-cols-3 gap-8">
+    <form
+      onSubmit={handleSumbit}
+      className="grid grid-cols-3 gap-8"
+      id="basic-form"
+    >
       <Card className="col-span-2">
         <CardHeader>
           <CardTitle className="text-xl font-bold">강의 정보</CardTitle>
@@ -47,15 +139,14 @@ export default function LectureForm({ lecture }: LectureFormProps) {
           <FieldSet>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="name">강의 제목</FieldLabel>
+                <FieldLabel htmlFor="title">강의 제목</FieldLabel>
                 <Input
-                  id="lectureTitle"
+                  id="title"
+                  name="title"
                   autoComplete="off"
-                  placeholder="예: Next.js 15 완벽 가이드"
-                  value={lecture?.lectureTitle || ''}
-                  onChange={() => {
-                    // TODO: 강의 제목 변경 로직 작성
-                  }}
+                  placeholder="강의 제목을 입력해주세요.(최대 100자)"
+                  value={basicInfo.title}
+                  onChange={handleChange}
                 />
               </Field>
               <Field>
@@ -63,29 +154,34 @@ export default function LectureForm({ lecture }: LectureFormProps) {
                   <div>
                     <FieldLabel>카테고리</FieldLabel>
                     <Select
-                      value={lecture?.category}
-                      onValueChange={() => {
-                        // TODO: 카테고리 선택 로직 작성
+                      key={basicInfo.categoryId}
+                      value={basicInfo.categoryId}
+                      onValueChange={(value: Category) => {
+                        setBasicInfo((prev) => ({
+                          ...prev,
+                          categoryId: value,
+                        }));
                       }}
                     >
                       <SelectTrigger className="w-full mt-3">
                         <SelectValue placeholder="카테고리 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="FRONTEND">Frontend</SelectItem>
-                        <SelectItem value="BACKEND">Backend</SelectItem>
-                        <SelectItem value="AI">AI</SelectItem>
-                        <SelectItem value="GAME">Game</SelectItem>
+                        <SelectItem value="1">Frontend</SelectItem>
+                        <SelectItem value="2">Backend</SelectItem>
+                        <SelectItem value="3">AI</SelectItem>
+                        <SelectItem value="4">Game</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
                     <FieldLabel>난이도</FieldLabel>
                     <Select
-                      onValueChange={() => {
-                        // TODO: 난이도 선택 로직 작성
+                      key={basicInfo.level}
+                      value={basicInfo.level}
+                      onValueChange={(value: Level) => {
+                        setBasicInfo((prev) => ({ ...prev, level: value }));
                       }}
-                      value={lecture?.level}
                     >
                       <SelectTrigger className="w-full mt-3">
                         <SelectValue placeholder="난이도 선택" />
@@ -100,15 +196,14 @@ export default function LectureForm({ lecture }: LectureFormProps) {
                 </div>
               </Field>
               <Field>
-                <FieldLabel htmlFor="name">강의 설명</FieldLabel>
+                <FieldLabel htmlFor="description">강의 설명</FieldLabel>
                 <Textarea
-                  name="lectureTitle"
+                  id="description"
+                  name="description"
                   autoComplete="off"
-                  placeholder="예: Next.js 15 완벽 가이드"
-                  value={lecture?.lectureDesctiption}
-                  onChange={() => {
-                    // TODO: 강의 설명 로직 작성
-                  }}
+                  placeholder="강의 설명을 입력해주세요."
+                  value={basicInfo.description}
+                  onChange={handleChange}
                 />
               </Field>
             </FieldGroup>
@@ -122,10 +217,11 @@ export default function LectureForm({ lecture }: LectureFormProps) {
           </CardHeader>
           <CardContent>
             <ImageUploadField
-              value={thumbnail}
-              onChange={(file) => setThumbnail(file)}
-              // TODO: 썸네일 변경 로직 작성
-              defaultImage="/images/defaultImage.jpg"
+              value={basicInfo.file}
+              onChange={(file) =>
+                setBasicInfo((prev) => ({ ...prev, file: file }))
+              }
+              initialImage={currentThumbnailUrl}
             />
           </CardContent>
         </Card>

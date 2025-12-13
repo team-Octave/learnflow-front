@@ -1,6 +1,13 @@
 'use client';
 
-import { Chapter, CreatorLecture } from '../../types';
+import {
+  useForm,
+  FormProvider,
+  useFieldArray,
+  SubmitHandler,
+} from 'react-hook-form';
+import { Chapter, CurriculumFormValues } from '../../types';
+import { Lecture } from '@/features/lectures/types';
 import {
   Card,
   CardContent,
@@ -9,54 +16,94 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import ChapterItem from './ChapterItem';
 import { Button } from '@/components/ui/button';
+import ChapterItem from './ChapterItem';
+
 interface CurriculumFormProps {
-  lecture: CreatorLecture;
+  lecture: Lecture;
 }
 
-const DEFAULT_CHAPTER: Partial<Chapter> = {
+const DEFAULT_CHAPTER: Chapter = {
   chapterTitle: '',
-  chapterOrder: 1,
+  order: 0,
   lessons: [],
 };
-const DEFAULT_CURRICULUM: Partial<Chapter>[] = [DEFAULT_CHAPTER];
 
 export default function CurriculumForm({ lecture }: CurriculumFormProps) {
-  // TODO: 요기서 상태 관리 react-hook-form?
-  const curriculum =
-    lecture.curriculum.length === 0 ? DEFAULT_CURRICULUM : lecture.curriculum;
+  // 1. 초기 데이터 설정 (null 값 처리 포함)
+  const methods = useForm<CurriculumFormValues>({
+    defaultValues: {
+      chapters: lecture.chapters?.map((chapter) => ({
+        ...chapter,
+        lessons:
+          chapter.lessons?.map((lesson) => ({
+            ...lesson,
+            quizQuestions: lesson.questions || [],
+          })) || [],
+      })) || [DEFAULT_CHAPTER],
+    },
+    mode: 'onChange',
+  });
+
+  const { control, handleSubmit } = methods;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'chapters',
+  });
+
+  const onSubmit: SubmitHandler<CurriculumFormValues> = (data) => {
+    // 제출 전 order 값 재정렬 로직이 필요하다면 여기서 처리
+    const formattedData = data.chapters.map((chapter, cIdx) => ({
+      ...chapter,
+      order: cIdx, // 배열 순서대로 order 덮어쓰기
+      lessons: chapter.lessons.map((lesson, lIdx) => ({
+        ...lesson,
+        order: lIdx,
+        quizQuestions:
+          lesson.quizQuestions?.map((q, qIdx) => ({
+            ...q,
+            order: qIdx,
+          })) || [],
+      })),
+    }));
+
+    console.log('서버로 전송할 데이터:', formattedData);
+  };
+
   return (
-    <form>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">커리큘럼 구성</CardTitle>
-          <CardDescription>
-            챕터와 레슨을 추가하여 커리큘럼을 완성하세요
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          {curriculum.map((chapter, idx) => (
-            <ChapterItem
-              key={chapter.chapterId}
-              chapter={chapter}
-              order={idx + 1}
-            />
-          ))}
-        </CardContent>
-        <CardFooter>
-          <Button
-            type="button"
-            variant={'outline'}
-            className="w-full cursor-pointer"
-            onClick={() => {
-              // TODO: 챕터 추가 로직 작성
-            }}
-          >
-            챕터 추가
-          </Button>
-        </CardFooter>
-      </Card>
-    </form>
+    <FormProvider {...methods}>
+      <form id="curriculum-form" onSubmit={handleSubmit(onSubmit)}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl font-bold">커리큘럼 구성</CardTitle>
+            <CardDescription>
+              챕터와 레슨을 추가하여 커리큘럼을 완성하세요
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            {fields.map((field, idx) => (
+              <ChapterItem
+                key={field.id}
+                chapterIndex={idx}
+                removeChapter={() => remove(idx)}
+              />
+            ))}
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() =>
+                append({ ...DEFAULT_CHAPTER, order: fields.length })
+              }
+            >
+              + 챕터 추가
+            </Button>
+          </CardFooter>
+        </Card>
+      </form>
+    </FormProvider>
   );
 }

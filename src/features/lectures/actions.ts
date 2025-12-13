@@ -1,7 +1,8 @@
+'use server';
 // src/features/lectures/actions.ts
 // 강의 및 리뷰 관련 액션 함수 모음
 
-import { getLectures } from '@/services/lectures.service';
+import { getLectureById, getLectures } from '@/services/lectures.service';
 import type { Lecture, Query, Review } from './types';
 import { commonFetch } from '@/lib/api';
 
@@ -21,6 +22,21 @@ export async function getLecturesAction(
     return {
       success: false,
       error: error instanceof Error ? error.message : '강의 목록 조회 실패',
+    };
+  }
+}
+
+// 지원님 상세 페이지 구현할 때 이 함수 사용하시면 됩니다!
+export async function getLectureByIdAction(
+  lectureId: number,
+): Promise<ActionState<Lecture>> {
+  try {
+    const body = await getLectureById(lectureId);
+    return { success: true, data: body.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '강의 단건 조회 실패',
     };
   }
 }

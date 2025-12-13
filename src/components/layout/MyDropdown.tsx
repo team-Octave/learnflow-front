@@ -25,8 +25,8 @@ export default function MyDropdown({ user }: MyDropdownProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage alt="S" />
-          <AvatarFallback>S</AvatarFallback>
+          <AvatarImage alt={user.nickname[0]} />
+          <AvatarFallback>{user.nickname[0]}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48 bg-zinc-900" align="end">
@@ -37,12 +37,12 @@ export default function MyDropdown({ user }: MyDropdownProps) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <Link href="/mypage">
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <User />내 정보
             </DropdownMenuItem>
           </Link>
           <Link href="/mylearning">
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <Book />내 학습
             </DropdownMenuItem>
           </Link>
@@ -50,7 +50,7 @@ export default function MyDropdown({ user }: MyDropdownProps) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <Link href="/creator">
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <PresentationIcon />
               강의 관리
             </DropdownMenuItem>
@@ -58,7 +58,7 @@ export default function MyDropdown({ user }: MyDropdownProps) {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="text-red-500 hover:text-red-500"
+          className="text-red-500 hover:text-red-500 cursor-pointer"
           onClick={logout}
         >
           <LogOut className="text-red-500" />
