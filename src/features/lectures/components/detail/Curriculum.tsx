@@ -29,17 +29,17 @@ export default function Curriculum({ curriculum }: Props) {
       {curriculum.length > 0 ? (
         <Accordion
           type="multiple"
-          defaultValue={curriculum.map((c) => c.id)} // ← 모든 아이템 오픈
+          defaultValue={curriculum.map((c) => String(c.id))} // ← 모든 아이템 오픈
           className="w-full space-y-4"
         >
           {curriculum.map((chapter) => (
             <AccordionItem
               key={chapter.id}
-              value={chapter.id}
+              value={String(chapter.id)}
               className="border border-zinc-800 rounded-lg px-4 bg-zinc-900/30"
             >
               <AccordionTrigger className="hover:no-underline py-4 text-left">
-                <span className="font-semibold">{chapter.title}</span>
+                <span className="font-semibold">{chapter.chapterTitle}</span>
               </AccordionTrigger>
 
               <AccordionContent className="pb-4">

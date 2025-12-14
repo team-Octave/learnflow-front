@@ -33,14 +33,15 @@ export interface Query {
 
 // 강의 단위
 export interface Lecture {
-  id: string;
+  // id: string;
+  id: number;
   title: string;
   instructorId: string; // instructor → creatorName + creatorId 로 변경
   instructorDisplayName: string;
-  ratingAverage: number;
-  enrollmentCount: number; // / studentCount → enrollmentCount 변경됨
-  thumbnailUrl: string;
-  categoryId: Category; // 임시 string 타입
+  ratingAverage: number | null;
+  enrollmentCount: number | null;
+  thumbnailUrl: string | null;
+  categoryId: number;
   level: Level;
   createdAt: string;
   updatedAt?: string; //   updatedAt 추가
@@ -49,7 +50,7 @@ export interface Lecture {
 }
 
 export interface QuizQuestion {
-  id: string;
+  id: number | null;
   question: string; // 질문 텍스트
   correct: boolean; // 정답 여부 (true/false)
   questionOrder: number; // 순서
@@ -57,31 +58,33 @@ export interface QuizQuestion {
 
 // 레슨 단위 (영상 또는 퀴즈)
 export interface Lesson {
-  id: string;
+  id: number;
   lessonTitle: string;
   isFreePreview: boolean;
-  lessonOrder: 0;
+  lessonOrder: number;
   lessonTypeDisplayName: LessonType;
   quizQuestions: null | QuizQuestion[];
-  videoUrl?: string;
+  videoUrl: string | null;
   duration?: string;
 }
 
 // 챕터 단위 (레슨 여러 개 포함)
 export interface Chapter {
-  id: string;
+  id: number;
   chapterTitle: string;
   lessons: Lesson[];
+  chapterOrder?: number;
+  lessonCount?: number;
 }
 
 // 리뷰
 export interface Review {
-  id: string;
-  lectureId: string;
-  userId: string;
+  id: number;
+  lectureId: number;
+  userId: number;
   nickname: string;
   rating: number;
-  createdAt: string; // 변경됨 — date → createdAt
+  createdAt: string;
   content: string;
 }
 

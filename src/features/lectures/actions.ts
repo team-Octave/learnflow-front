@@ -1,10 +1,15 @@
-'use server';
 // src/features/lectures/actions.ts
+'use server';
+
 // 강의 및 리뷰 관련 액션 함수 모음
 
-import { getLectureById, getLectures } from '@/services/lectures.service';
+import {
+  getLectureById,
+  getLectures,
+  getReviewsByLectureId,
+} from '@/services/lectures.service';
 import type { Lecture, Query, Review } from './types';
-import { commonFetch } from '@/lib/api';
+// import { commonFetch } from '@/lib/api';
 
 interface ActionState<T> {
   success: boolean;
@@ -14,10 +19,10 @@ interface ActionState<T> {
 
 export async function getLecturesAction(
   query: Query,
-): Promise<ActionState<any>> {
+): Promise<ActionState<Lecture[]>> {
   try {
     const body = await getLectures(query);
-    return { success: true, data: body.data };
+    return { success: true, data: body.data?.content ?? [] };
   } catch (error) {
     return {
       success: false,
@@ -27,16 +32,37 @@ export async function getLecturesAction(
 }
 
 // 지원님 상세 페이지 구현할 때 이 함수 사용하시면 됩니다!
+// 상세페이지 강의 단건 조회
 export async function getLectureByIdAction(
   lectureId: number,
 ): Promise<ActionState<Lecture>> {
   try {
     const body = await getLectureById(lectureId);
+    if (!body?.data) return { success: false, error: '강의가 없습니다.' };
     return { success: true, data: body.data };
   } catch (error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : '강의 단건 조회 실패',
+    };
+  }
+}
+
+// 리뷰 조회
+export async function getReviewsByLectureIdAction(
+  lectureId: number,
+): Promise<ActionState<Review[]>> {
+  try {
+    const body = await getReviewsByLectureId(lectureId);
+    return {
+      success: true,
+      // 페이지네이션 구조 대응
+      data: body.data?.content ?? [],
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '리뷰 조회 실패',
     };
   }
 }

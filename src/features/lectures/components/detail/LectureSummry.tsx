@@ -1,17 +1,24 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 import type { Lecture } from '../../types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CATEGORY_MAP } from '../../types';
 
 interface Props {
   lecture: Lecture;
-  actionButton?: React.ReactNode; // 추가
+  actionButton?: ReactNode;
 }
 
 export default function LectureSummary({ lecture, actionButton }: Props) {
-  //난이도 텍스트
+  //  categoryId('1'|'2'|'3'|'4') -> 텍스트로 변환
+  const categoryText =
+    CATEGORY_MAP[Number(lecture.categoryId) as 1 | 2 | 3 | 4] ??
+    'UNCATEGORIZED';
+
+  // 난이도 텍스트
   const levelText =
     lecture.level === 'BEGINNER'
       ? '초급'
@@ -19,16 +26,18 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
       ? '중급'
       : '고급';
 
+  const instructorName = lecture.instructorDisplayName ?? '강사';
+  const instructorInitial = instructorName?.[0] ?? 'G';
+
   return (
     <div className="relative border-b border-zinc-800">
-      {/* 🔥 Background Image Layer */}
+      {/* Background Image Layer */}
       <div className="absolute inset-0">
         <img
-          src={lecture.thumbnail}
+          src={lecture.thumbnailUrl ?? ''}
           alt={lecture.title}
-          className="w-full h-full object-cover opacity-60" // ← 여기만 바뀜!
+          className="w-full h-full object-cover opacity-60"
         />
-
         <div className="absolute inset-0 bg-linear-to-r from-zinc-950/70 via-zinc-950/50 to-zinc-950/20" />
       </div>
 
@@ -41,14 +50,10 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
               variant="secondary"
               className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
             >
-              {lecture.category.toUpperCase()}
+              {categoryText}
             </Badge>
 
-            {/* <Badge variant="outline" className="text-zinc-300 border-zinc-700">
-              {lecture.level === 'BEGINNER' && '초급'}
-              {lecture.level === 'INTERMEDIATE' && '중급'}
-              {lecture.level === 'ADVANCED' && '고급'}
-            </Badge> */}
+            {/* level 배지 variant는 기존대로 쓰되, 텍스트만 표시 */}
             <Badge
               variant={
                 lecture.level as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'
@@ -59,9 +64,9 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
 
             <div className="flex items-center gap-1 text-yellow-500 text-sm font-medium">
               <Star className="w-4 h-4 fill-current" />
-              <span>{lecture.rating}</span>
+              <span>{lecture.ratingAverage ?? 0}</span>
               <span className="text-muted-foreground ml-1">
-                ({lecture.enrollmentCount.toLocaleString()}명 수강)
+                ({(lecture.enrollmentCount ?? 0).toLocaleString()}명 수강)
               </span>
             </div>
           </div>
@@ -76,19 +81,18 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
             {lecture.description}
           </p>
 
-          {/* Creator */}
+          {/* Instructor */}
           <div className="flex items-center gap-4 pt-4">
             <Avatar className="w-10 h-10">
-              <AvatarImage src="" alt={lecture.creatorName} />
+              {/* 현재 타입에 instructor 이미지 필드가 없어서 비워둠 */}
+              <AvatarImage src="" alt={instructorName} />
               <AvatarFallback className="bg-zinc-700 text-zinc-300 font-bold">
-                {lecture.creatorName[0]}
+                {instructorInitial}
               </AvatarFallback>
             </Avatar>
 
             <div>
-              <p className="text-sm font-medium text-white">
-                {lecture.creatorName}
-              </p>
+              <p className="text-sm font-medium text-white">{instructorName}</p>
               <p className="text-xs text-zinc-400">대표 강사</p>
             </div>
           </div>

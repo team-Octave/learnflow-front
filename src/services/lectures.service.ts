@@ -27,6 +27,36 @@ export async function getLectureById(lectureId: number) {
   }
 }
 
+/**
+ * 강의별 리뷰 조회 (상세페이지 리뷰 탭용)
+ */
+export async function getReviewsByLectureId(
+  lectureId: number,
+  params?: {
+    page?: number;
+    size?: number;
+    sort?: string;
+  },
+) {
+  const page = params?.page ?? 0;
+  const size = params?.size ?? 10;
+  const sort = params?.sort ?? 'createdAt,desc';
+
+  const url = `/api/v1/reviews/lectures/${lectureId}?page=${page}&size=${size}&sort=${encodeURIComponent(
+    sort,
+  )}`;
+
+  const response = await commonFetch(url);
+  const data = await response.json();
+
+  if (response.ok) {
+    return data;
+  } else {
+    // 예: LECTURE_NOT_FOUND
+    throw new Error(data.message || '강의 리뷰 조회 실패');
+  }
+}
+
 // export const getAllLectures = (): Lecture[] => lectures;
 
 // export const getLectureById = (id: string): Lecture | undefined =>
