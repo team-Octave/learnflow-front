@@ -2,12 +2,13 @@
 
 import {
   createBasicLecture,
+  createCurriculum,
   deleteCreatorLecture,
   getCreatorLectures,
   publishCreatorLecture,
   uploadThumbnail,
 } from '@/services/creator.service';
-import { CreatorLecture } from './types';
+import { CreatorLecture, CurriculumFormValues } from './types';
 import { Action } from 'sonner';
 import { Category, Lecture, Level } from '../lectures/types';
 
@@ -104,6 +105,24 @@ export async function createBasicLectureAction(
       success: false,
       error:
         error instanceof Error ? error.message : '강의 기본 정보 저장 실패',
+    };
+  }
+}
+
+export async function createCurriculumAction(
+  lectureId: string,
+  curriculum: CurriculumFormValues,
+): Promise<ActionState<any>> {
+  try {
+    const body = await createCurriculum(lectureId, curriculum);
+    return {
+      success: true,
+      data: body.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '커리큘럼 등록 실패',
     };
   }
 }

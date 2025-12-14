@@ -12,25 +12,23 @@ interface ChapterItemProps {
   removeChapter: () => void;
 }
 
-// 기본값 상수
-const DEFAULT_VIDEO_LESSON: Lesson = {
+// VIDEO 초기값: quizQuestions = null
+const INIT_VIDEO_LESSON: Lesson = {
   lessonTitle: '',
-  order: 0,
   lessonType: 'VIDEO',
-  isFreePreview: false,
-  videoUrl: '',
+  isFreePreview: true,
+  videoUrl: 'https://www.youtube.com/watch?v=LclObYwGj90',
   quizQuestions: null,
 };
 
-const DEFAULT_QUIZ_LESSON: Lesson = {
+// QUIZ 초기값: videoUrl = null, 기본 문제 1개 포함
+const INIT_QUIZ_LESSON: Lesson = {
   lessonTitle: '',
-  order: 0,
   lessonType: 'QUIZ',
-  isFreePreview: false,
+  isFreePreview: true,
   videoUrl: null,
-  quizQuestions: [{ questionText: '', answer: 'O', order: 0 }],
+  quizQuestions: [{ question: '', correct: true, questionOrder: 1 }],
 };
-
 export default function ChapterItem({
   chapterIndex,
   removeChapter,
@@ -85,9 +83,7 @@ export default function ChapterItem({
           type="button"
           variant="outline"
           className="flex-1 border-dashed text-zinc-400 hover:text-indigo-400 hover:border-indigo-400"
-          onClick={() =>
-            append({ ...DEFAULT_VIDEO_LESSON, order: fields.length })
-          }
+          onClick={() => append(INIT_VIDEO_LESSON)}
         >
           <PlayCircle className="mr-2 h-4 w-4" /> 영상 레슨 추가
         </Button>
@@ -95,9 +91,7 @@ export default function ChapterItem({
           type="button"
           variant="outline"
           className="flex-1 border-dashed text-zinc-400 hover:text-teal-400 hover:border-teal-400"
-          onClick={() =>
-            append({ ...DEFAULT_QUIZ_LESSON, order: fields.length })
-          }
+          onClick={() => append(INIT_QUIZ_LESSON)}
         >
           <PencilLine className="mr-2 h-4 w-4" /> 퀴즈 레슨 추가
         </Button>
