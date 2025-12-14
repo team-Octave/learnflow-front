@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Book, LogOut, PresentationIcon, User } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
+import { useRouter } from 'next/navigation';
 
 interface MyDropdownProps {
   user: {
@@ -20,7 +21,13 @@ interface MyDropdownProps {
 }
 
 export default function MyDropdown({ user }: MyDropdownProps) {
+  const router = useRouter();
   const logout = useUserStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    router.replace('/');
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -59,7 +66,7 @@ export default function MyDropdown({ user }: MyDropdownProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-red-500 hover:text-red-500 cursor-pointer"
-          onClick={logout}
+          onClick={handleLogout}
         >
           <LogOut className="text-red-500" />
           <span className="text-red-500">로그아웃</span>
