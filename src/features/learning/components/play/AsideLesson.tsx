@@ -1,17 +1,13 @@
 // src/features/learning/components/play/AsideLesson.tsx
 
+import { Lesson } from '@/features/lectures/types';
 import { cn } from '@/lib/utils';
 import { PlayCircle, PencilLine, CheckCircle } from 'lucide-react';
 
 type LessonType = 'VIDEO' | 'QUIZ';
 
 interface AsideLessonProps {
-  lesson: {
-    id: string;
-    title: string;
-    duration?: string;
-    type: LessonType;
-  };
+  lesson: Lesson;
   isActive: boolean;
   isCompleted: boolean;
   onClick?: () => void;
@@ -23,7 +19,7 @@ export function AsideLesson({
   isCompleted,
   onClick,
 }: AsideLessonProps) {
-  const isQuiz = lesson.type === 'QUIZ';
+  const isQuiz = lesson.lessonTypeDisplayName === 'QUIZ';
 
   const activeColor = isQuiz ? 'text-emerald-400' : 'text-indigo-400';
   const baseIcon = isQuiz ? PencilLine : PlayCircle;
@@ -56,7 +52,7 @@ export function AsideLesson({
       <Icon className={cn('w-4 h-4 shrink-0', iconClassName)} />
 
       <div className="flex-1 min-w-0 ">
-        <p className="text-sm font-medium truncate">{lesson.title}</p>
+        <p className="text-sm font-medium truncate">{lesson.lessonTitle}</p>
         {lesson.duration && (
           <p className="text-xs opacity-70 mt-0.5">{lesson.duration}</p>
         )}

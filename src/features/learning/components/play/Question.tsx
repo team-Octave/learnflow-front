@@ -1,24 +1,15 @@
 // src\features\learning\components\play\Question.tsx
 'use client';
 
-import React from 'react';
-
-type OX = 'O' | 'X';
-
-export interface QuizQuestion {
-  id: string;
-  question: string;
-  // 정답이 없는 경우도 있을 수 있으니 optional로 둠
-  answer?: OX;
-}
+import { QuizQuestion } from '@/features/lectures/types';
 
 interface QuestionProps {
   index: number;
   question: QuizQuestion;
-  selected?: OX;
+  selected?: boolean;
   submitted: boolean;
-  correctAnswer?: OX;
-  onSelect: (questionId: string, answer: OX) => void;
+  correctAnswer?: boolean;
+  onSelect: (questionId: string, answer: boolean) => void;
 }
 
 export function Question({
@@ -44,12 +35,12 @@ export function Question({
       </div>
 
       <div className="flex gap-4 pl-12">
-        {(['O', 'X'] as OX[]).map((option) => {
+        {([true, false] as boolean[]).map((option, idx) => {
           const isActive = selected === option;
 
           return (
             <label
-              key={option}
+              key={idx}
               onClick={() => onSelect(question.id, option)}
               className={`
                 flex-1 flex items-center justify-center gap-2 p-4 rounded-md border
@@ -85,7 +76,7 @@ export function Question({
                 className="w-4 h-4 accent-emerald-500" /*  동그라미 체크 색도 민트 */
               />
               <span className="text-xl font-bold text-zinc-300 group-hover:text-white">
-                {option}
+                {option ? 'O' : 'X'}
               </span>
             </label>
           );
