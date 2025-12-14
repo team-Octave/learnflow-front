@@ -18,29 +18,25 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ChapterItem from './ChapterItem';
+import { useTransition } from 'react';
+import { createCurriculumAction } from '../../actions';
+import { useRouter } from 'next/navigation';
 
 interface CurriculumFormProps {
   lecture: Lecture;
 }
 
+// 초기값 상수
 const DEFAULT_CHAPTER: Chapter = {
   chapterTitle: '',
-  order: 0,
   lessons: [],
 };
-
 export default function CurriculumForm({ lecture }: CurriculumFormProps) {
-  // 1. 초기 데이터 설정 (null 값 처리 포함)
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const methods = useForm<CurriculumFormValues>({
     defaultValues: {
-      chapters: lecture.chapters?.map((chapter) => ({
-        ...chapter,
-        lessons:
-          chapter.lessons?.map((lesson) => ({
-            ...lesson,
-            quizQuestions: lesson.questions || [],
-          })) || [],
-      })) || [DEFAULT_CHAPTER],
+      chapters: [DEFAULT_CHAPTER],
     },
     mode: 'onChange',
   });
@@ -53,22 +49,47 @@ export default function CurriculumForm({ lecture }: CurriculumFormProps) {
   });
 
   const onSubmit: SubmitHandler<CurriculumFormValues> = (data) => {
-    // 제출 전 order 값 재정렬 로직이 필요하다면 여기서 처리
-    const formattedData = data.chapters.map((chapter, cIdx) => ({
-      ...chapter,
-      order: cIdx, // 배열 순서대로 order 덮어쓰기
-      lessons: chapter.lessons.map((lesson, lIdx) => ({
-        ...lesson,
-        order: lIdx,
-        quizQuestions:
-          lesson.quizQuestions?.map((q, qIdx) => ({
-            ...q,
-            order: qIdx,
-          })) || [],
+    // 서버 전송 전 데이터 클린업 (불필요한 필드 null 처리)
+    const formattedData = {
+      chapters: data.chapters.map((chapter) => ({
+        ...chapter,
+        lessons: chapter.lessons.map((lesson) => {
+          // VIDEO: quizQuestions 제거
+          if (lesson.lessonType === 'VIDEO') {
+            return {
+              ...lesson,
+              quizQuestions: null,
+            };
+          }
+          // QUIZ: videoUrl 제거 및 order 재정렬
+          if (lesson.lessonType === 'QUIZ') {
+            return {
+              ...lesson,
+              videoUrl: null,
+              quizQuestions:
+                lesson.quizQuestions?.map((q, idx) => ({
+                  ...q,
+                  questionOrder: idx + 1,
+                })) || [],
+            };
+          }
+          return lesson;
+        }),
       })),
-    }));
+    };
 
-    console.log('서버로 전송할 데이터:', formattedData);
+    console.log('커리큘럼 요청 전:', JSON.stringify(formattedData, null, 2));
+    // API 호출 로직...
+    startTransition(async () => {
+      const response = await createCurriculumAction(lecture.id, formattedData);
+      if (!response.success) {
+        alert(response.error);
+        return;
+      } else {
+        alert('강의 등록이 완료되었습니다.');
+        router.replace(`/creator`);
+      }
+    });
   };
 
   return (
@@ -95,9 +116,7 @@ export default function CurriculumForm({ lecture }: CurriculumFormProps) {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() =>
-                append({ ...DEFAULT_CHAPTER, order: fields.length })
-              }
+              onClick={() => append(DEFAULT_CHAPTER)}
             >
               + 챕터 추가
             </Button>

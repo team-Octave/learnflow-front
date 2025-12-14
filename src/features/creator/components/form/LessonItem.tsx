@@ -31,7 +31,7 @@ export default function LessonItem({
 }: LessonItemProps) {
   const { register, control, watch, setValue } =
     useFormContext<CurriculumFormValues>();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   // 경로 설정
   const lessonPath = `chapters.${chapterIndex}.lessons.${lessonIndex}` as const;
@@ -39,12 +39,11 @@ export default function LessonItem({
   // 값 관찰
   const lessonType = watch(`${lessonPath}.lessonType`);
   const lessonTitle = watch(`${lessonPath}.lessonTitle`);
-  const isFreePreview = watch(`${lessonPath}.isFreePreview`);
 
   // 퀴즈용 Field Array (항상 호출)
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `${lessonPath}.quizQuestions` as any, // 타입 추론이 복잡할 경우 any 허용 or 상세 타입 지정
+    name: `${lessonPath}.quizQuestions` as any,
   });
 
   return (
@@ -60,12 +59,6 @@ export default function LessonItem({
         <span className="flex-1 font-medium text-sm text-zinc-200">
           {lessonTitle || '제목 없는 레슨'}
         </span>
-
-        {isFreePreview && (
-          <span className="text-xs bg-indigo-900/50 text-indigo-300 px-2 py-0.5 rounded">
-            무료 공개
-          </span>
-        )}
 
         <div className="flex items-center gap-1">
           <Button
@@ -102,22 +95,6 @@ export default function LessonItem({
                 className="mt-1"
               />
             </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={`preview-${chapterIndex}-${lessonIndex}`}
-                checked={isFreePreview}
-                onCheckedChange={(checked) =>
-                  setValue(`${lessonPath}.isFreePreview`, checked as boolean)
-                }
-              />
-              <Label
-                htmlFor={`preview-${chapterIndex}-${lessonIndex}`}
-                className="text-sm cursor-pointer"
-              >
-                무료 미리보기로 설정
-              </Label>
-            </div>
           </div>
 
           <Separator className="bg-zinc-800" />
@@ -142,15 +119,12 @@ export default function LessonItem({
               <div className="flex items-center justify-between">
                 <Label className="text-xs text-zinc-400">퀴즈 문제 목록</Label>
                 <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 text-xs text-teal-400 hover:text-teal-300"
+                  // ... props
                   onClick={() =>
                     append({
-                      questionText: '',
-                      answer: 'O',
-                      order: fields.length,
+                      question: '', // 변경
+                      correct: true, // 변경 (기본값 True)
+                      questionOrder: fields.length + 1, // 변경 (1부터 시작)
                     })
                   }
                 >
