@@ -57,12 +57,6 @@ export default async function LectureEditPage({
               <div className="text-2xl font-bold text-white">커리큘럼</div>
             </div>{' '}
             <div className="flex gap-2">
-              <Link href={`/creator/${id}?step=1`}>
-                <Button variant="outline" className="cursor-pointer">
-                  이전 단계
-                </Button>
-              </Link>
-              {/* form id 지정 후 서버액션으로 할 것 */}
               <Button
                 className="bg-white hover:bg-white/90 cursor-pointer"
                 form="curriculum-form"
