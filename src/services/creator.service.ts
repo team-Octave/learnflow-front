@@ -1,4 +1,4 @@
-import { BasicInfo } from '@/features/creator/types';
+import { BasicInfo, CurriculumFormValues } from '@/features/creator/types';
 import { authFetch } from '@/lib/api';
 
 export async function getCreatorLectures() {
@@ -58,5 +58,21 @@ export async function uploadThumbnail(formData: FormData) {
     return data;
   } else {
     throw new Error(data.message || '강의 썸네일 등록 실패');
+  }
+}
+
+export async function createCurriculum(
+  lectureId: string,
+  curriculum: CurriculumFormValues,
+) {
+  const response = await authFetch(`/api/v1/lectures/${lectureId}/curriculum`, {
+    method: 'POST',
+    body: JSON.stringify(curriculum),
+  });
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '강의 커리큘럼 등록 실패');
   }
 }
