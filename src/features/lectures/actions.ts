@@ -14,10 +14,10 @@ interface ActionState<T> {
 
 export async function getLecturesAction(
   query: Query,
-): Promise<ActionState<Lecture[]>> {
+): Promise<ActionState<any>> {
   try {
     const body = await getLectures(query);
-    return { success: true, data: body.data.content };
+    return { success: true, data: body.data };
   } catch (error) {
     return {
       success: false,
