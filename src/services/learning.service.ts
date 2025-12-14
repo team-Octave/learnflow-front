@@ -30,11 +30,38 @@ export async function deleteReview(reviewId: number) {
     method: 'DELETE',
   });
   const data = await response.json();
-  console.log(data);
   if (response.ok) {
     return data;
   } else {
     throw new Error(data.message || '리뷰 삭제 실패');
+  }
+}
+
+export async function getEnrollmentById(enrollmentId: number) {
+  const response = await authFetch(`/api/v1/enrollment/select-enrollment`, {
+    method: 'POST',
+    body: JSON.stringify({ enrollmentId }),
+  });
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '수강 정보 조회 실패');
+  }
+}
+
+export async function completeLesson(enrollmentId: number, lessonId: number) {
+  console.log(enrollmentId, lessonId);
+  const response = await authFetch(`/api/v1/enrollment/complete-lesson`, {
+    method: 'POST',
+    body: JSON.stringify({ enrollmentId, lessonId }),
+  });
+  const data = await response.json();
+  console.log(data);
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '수강 완료 처리 실패');
   }
 }
 

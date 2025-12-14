@@ -4,29 +4,39 @@ import ProgressBar from './ProgressBar';
 import ReviewButton from './ReviewButton';
 import Link from 'next/link';
 import { LearningLecture } from '../../types';
+import { Play } from 'lucide-react';
 
 interface MyLectureCardProps {
   lecture: LearningLecture;
 }
 
 export default function MyLectureCard({ lecture }: MyLectureCardProps) {
+  const playURL = `/play/${lecture.enrollmentId}?lectureId=${
+    lecture.lectureId
+  }&lessonId=${
+    lecture.completedLessonIds.length === 0
+      ? lecture.firstLessonId
+      : lecture.completedLessonIds.slice(-1)[0]
+  }`;
+
   return (
     <div className="flex flex-col w-full">
-      <Link
-        href={`/play/${lecture.enrollmentId}?lectureId=${
-          lecture.lectureId
-        }&lessonId=${'임시'}`}
-        className="flex flex-col cursor-pointer"
-      >
+      <Link href={playURL} className="flex flex-col cursor-pointer">
         <AspectRatio
           ratio={16 / 9}
-          className="bg-muted rounded-lg hover:-translate-y-1 transition-all"
+          className="bg-muted rounded-lg hover:-translate-y-1 transition-all group relative overflow-hidden"
         >
           <img
             src={lecture.lectureThumbnail}
             alt="강의 썸네일"
-            className="h-full w-full rounded-lg object-cover "
+            className="h-full w-full rounded-lg object-cover transition-all duration-300 group-hover:brightness-95 group-hover:grayscale-[0.3]"
           />
+
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="bg-black/30 rounded-full p-3">
+              <Play className="w-8 h-8 text-white fill-white" />
+            </div>
+          </div>
         </AspectRatio>
         <div className="flex flex-col p-4 gap-4">
           <div className="h-12 overflow-hidden line-clamp-2 text-ellipsis">

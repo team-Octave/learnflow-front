@@ -1,30 +1,32 @@
 // src/features/learning/components/play/Quiz.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // ✅ 추가
 import { PencilLine } from 'lucide-react';
 import { ButtonSubmit } from './ButtonSubmit';
 import { Question } from './Question';
 import type { Lesson } from '@/features/lectures/types';
+import { completeLessonAction } from '../../actions';
 
 type QuizProps = {
+  enrollmentId: number;
   lesson: Lesson;
-  onCompleteLesson?: (lessonId: string) => void;
 };
 
-export function Quiz({ lesson, onCompleteLesson }: QuizProps) {
-  const [selected, setSelected] = useState<Record<string, 'O' | 'X'>>({});
+export function Quiz({ enrollmentId, lesson }: QuizProps) {
+  const [isPending, startTransition] = useTransition();
+  const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
 
-  const questions = lesson.questions ?? [];
+  const questions = lesson.quizQuestions!;
 
   // ✅ 현재 URL 정보 사용
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const handleSelect = (questionId: string, answer: 'O' | 'X') => {
+  const handleSelect = (questionId: string, answer: boolean) => {
     if (submitted) return;
     setSelected((prev) => ({ ...prev, [questionId]: answer }));
   };
@@ -41,15 +43,20 @@ export function Quiz({ lesson, onCompleteLesson }: QuizProps) {
       return;
     }
 
-    setSubmitted(true);
-    onCompleteLesson?.(lesson.id);
-
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('completedLessonId', lesson.id);
-
-    router.replace(
-      params.toString() ? `${pathname}?${params.toString()}` : pathname,
-    );
+    startTransition(async () => {
+      const response = await completeLessonAction(
+        enrollmentId,
+        parseInt(lesson.id),
+      );
+      if (!response.success) {
+        alert(response.error);
+      } else {
+        setSubmitted(true);
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('lessonId', lesson.id);
+        router.replace(`${pathname}?${params.toString()}`);
+      }
+    });
   };
 
   if (!questions.length) {
@@ -101,10 +108,9 @@ export function Quiz({ lesson, onCompleteLesson }: QuizProps) {
             문제
           </p>
 
-          {/* 사용자가 퀴즈 제출에 성공하면 URL이 /play/lecture-1/lesson-2?completedLessonId=lesson-2이런 식으로 바뀜. */}
           <ButtonSubmit
             onClick={handleSubmit}
-            disabled={submitted || questions.length === 0}
+            disabled={submitted || isPending}
           >
             {submitted ? '제출 완료' : '제출하기'}
           </ButtonSubmit>

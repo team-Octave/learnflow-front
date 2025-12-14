@@ -3,17 +3,15 @@
 
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import ButtonComplete from './ButtonComplete';
+import { Lesson } from '@/features/lectures/types';
+import { Enrollment } from '../../types';
 
 export interface VideoProps {
-  lesson: {
-    id: string;
-    title: string;
-    duration?: string;
-    videoUrl?: string; // 나중에 백엔드에서 내려주면 사용
-  };
+  lesson: Lesson;
+  enrollmentInfo: Enrollment;
 }
 
-export function Video({ lesson }: VideoProps) {
+export function Video({ lesson, enrollmentInfo }: VideoProps) {
   // 나중에는 lesson.videoUrl 사용:
   // const src = lesson.videoUrl ?? "기본 URL";
   const src =
@@ -30,7 +28,7 @@ export function Video({ lesson }: VideoProps) {
         >
           <iframe
             src={src}
-            title={lesson.title}
+            title={lesson.lessonTitle}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="w-full h-full"
@@ -40,11 +38,14 @@ export function Video({ lesson }: VideoProps) {
         {/* 제목, 수강 완료 버튼 */}
         <div className="flex justify-between w-full">
           <h2 className="text-xl font-semibold text-white mt-6 mb-2 max-w-5xl w-full">
-            {lesson.title}
+            {lesson.lessonTitle}
           </h2>
 
           <div className="max-w-5xl w-full flex justify-end mt-4">
-            <ButtonComplete lessonId={lesson.id} />
+            <ButtonComplete
+              enrollmentInfo={enrollmentInfo}
+              lessonId={lesson.id}
+            />
           </div>
         </div>
       </div>

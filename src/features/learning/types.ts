@@ -5,6 +5,10 @@ export interface LearningLecture {
   lectureThumbnail: string;
   lectureTitle: string;
   enrollmentStatus: 'IN_PROGRESS' | 'COMPLETED';
+  firstChapterId: number;
+  firstLessonId: number;
+  lastCompletedLessonChapterId: number | null;
+  completedLessonIds: number[];
   progress: number;
   enrolledAt: string;
   updatedAt: string;
@@ -18,4 +22,14 @@ export interface ReviewRequest {
   lectureId: number;
   rating: number;
   content: string;
+}
+
+export interface Enrollment {
+  enrollmentId: number;
+  lectureId: number;
+  progress: number | null;
+  completedLessonIds: number[];
+  lastCompletedLessonChapterId: number | null;
+  firstChapterId: number;
+  firstLessonId: number;
 }

@@ -27,7 +27,7 @@ export default async function MyLearningPage({
   const response = await getLearningLecturesAction();
 
   if (!response.success) {
-    return <div>{notFound()}</div>;
+    return <div>{response.error}</div>;
   }
 
   const learningLectures = response.data! as LearningLecture[];

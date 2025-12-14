@@ -48,29 +48,29 @@ export interface Lecture {
   chapters: Chapter[] | null;
 }
 
-// ----------- 연동 전 사용중인 타입 --------------
-
-// O/X 퀴즈 문제
-export interface Question {
+export interface QuizQuestion {
   id: string;
-  question: string;
-  answer: 'O' | 'X';
+  question: string; // 질문 텍스트
+  correct: boolean; // 정답 여부 (true/false)
+  questionOrder: number; // 순서
 }
 
 // 레슨 단위 (영상 또는 퀴즈)
 export interface Lesson {
   id: string;
-  title: string;
-  duration?: string; //  변경됨 — duration(영상 길이)”은 영상 레슨에만 필요하고, 퀴즈 레슨에는 필요 없으니까 선택적(optional)
-  type: LessonType;
+  lessonTitle: string;
+  isFreePreview: boolean;
+  lessonOrder: 0;
+  lessonTypeDisplayName: LessonType;
+  quizQuestions: null | QuizQuestion[];
   videoUrl?: string;
-  questions?: Question[];
+  duration?: string;
 }
 
 // 챕터 단위 (레슨 여러 개 포함)
 export interface Chapter {
   id: string;
-  title: string;
+  chapterTitle: string;
   lessons: Lesson[];
 }
 
