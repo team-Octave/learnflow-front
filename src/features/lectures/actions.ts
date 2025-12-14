@@ -2,7 +2,11 @@
 // src/features/lectures/actions.ts
 // 강의 및 리뷰 관련 액션 함수 모음
 
-import { getLectureById, getLectures } from '@/services/lectures.service';
+import {
+  getLectureById,
+  getLectures,
+  getReviewById,
+} from '@/services/lectures.service';
 import type { Lecture, Query, Review } from './types';
 import { commonFetch } from '@/lib/api';
 
@@ -37,6 +41,20 @@ export async function getLectureByIdAction(
     return {
       success: false,
       error: error instanceof Error ? error.message : '강의 단건 조회 실패',
+    };
+  }
+}
+
+export async function getReviewByIdAction(
+  lectureId: number,
+): Promise<ActionState<Review[]>> {
+  try {
+    const body = await getReviewById(lectureId);
+    return { success: true, data: body.data.content };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '리뷰 조회 실패',
     };
   }
 }
