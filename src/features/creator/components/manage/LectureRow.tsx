@@ -59,7 +59,7 @@ export default function LectureRow({ lecture }: LectureRowProps) {
         {lecture.statusDisplayName === 'PUBLISHED' ? (
           <Badge
             variant="secondary"
-            className="border border-green-500 bg-green-950 text-green-500"
+            className="w-16 border border-green-500 bg-green-950 text-green-500"
           >
             공개 됨
           </Badge>

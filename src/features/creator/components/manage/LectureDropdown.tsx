@@ -24,9 +24,6 @@ export default function LectureDropdown({
 }: LectureDropdownProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const handleEdit = () => {
-    router.push(`/creator/${lectureId}`);
-  };
 
   const handleDelete = () => {
     if (confirm(`${lectureTitle} 강의를 정말 삭제하시겠습니까?`)) {
@@ -51,14 +48,6 @@ export default function LectureDropdown({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-20" align="end">
-        <DropdownMenuItem
-          onClick={handleEdit}
-          className="cursor-pointer"
-          disabled={isPending}
-        >
-          <Edit />
-          강의 수정
-        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleDelete}
           className="cursor-pointer"
