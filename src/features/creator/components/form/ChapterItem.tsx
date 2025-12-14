@@ -3,7 +3,7 @@
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Lesson, CurriculumFormValues } from '../../types';
+import { CreatorLesson, CurriculumFormValues } from '../../types';
 import LessonItem from './LessonItem';
 import { PencilLine, PlayCircle, Trash2 } from 'lucide-react';
 
@@ -13,16 +13,16 @@ interface ChapterItemProps {
 }
 
 // VIDEO 초기값: quizQuestions = null
-const INIT_VIDEO_LESSON: Lesson = {
+const INIT_VIDEO_LESSON: CreatorLesson = {
   lessonTitle: '',
   lessonType: 'VIDEO',
   isFreePreview: true,
-  videoUrl: 'https://www.youtube.com/watch?v=LclObYwGj90',
+  videoUrl: 'https://www.youtube.com/embed/LclObYwGj90?si=_cIT_vmfRQgX1tZF',
   quizQuestions: null,
 };
 
 // QUIZ 초기값: videoUrl = null, 기본 문제 1개 포함
-const INIT_QUIZ_LESSON: Lesson = {
+const INIT_QUIZ_LESSON: CreatorLesson = {
   lessonTitle: '',
   lessonType: 'QUIZ',
   isFreePreview: true,

@@ -6,7 +6,7 @@ import {
   useFieldArray,
   SubmitHandler,
 } from 'react-hook-form';
-import { Chapter, CurriculumFormValues } from '../../types';
+import { CreatorChapter, CurriculumFormValues } from '../../types';
 import { Lecture } from '@/features/lectures/types';
 import {
   Card,
@@ -27,10 +27,11 @@ interface CurriculumFormProps {
 }
 
 // 초기값 상수
-const DEFAULT_CHAPTER: Chapter = {
+const DEFAULT_CHAPTER: CreatorChapter = {
   chapterTitle: '',
   lessons: [],
 };
+
 export default function CurriculumForm({ lecture }: CurriculumFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
