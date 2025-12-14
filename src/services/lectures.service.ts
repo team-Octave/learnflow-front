@@ -27,6 +27,15 @@ export async function getLectureById(lectureId: number) {
   }
 }
 
+export async function getReviewById(lectureId: number) {
+  const response = await commonFetch(`/api/v1/reviews/lectures/${lectureId}`);
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '강의 리뷰 조회 실패');
+  }
+}
 // export const getAllLectures = (): Lecture[] => lectures;
 
 // export const getLectureById = (id: string): Lecture | undefined =>

@@ -3,6 +3,7 @@
 import {
   completeLesson,
   deleteReview,
+  enrollLecture,
   getEnrollmentById,
   getLearningLectures,
   writeReview,
@@ -14,6 +15,20 @@ interface ActionState<T> {
   success: boolean;
   error?: string;
   data?: T;
+}
+
+export async function enrollLectureAction(
+  lectureId: number,
+): Promise<ActionState<any>> {
+  try {
+    const body = await enrollLecture(lectureId);
+    return { success: true, data: body.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '수강 신청 실패',
+    };
+  }
 }
 
 export async function getLearningLecturesAction(): Promise<

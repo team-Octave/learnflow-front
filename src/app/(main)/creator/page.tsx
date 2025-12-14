@@ -12,6 +12,9 @@ export default async function CreatorPage() {
   }
 
   const lectures = response.data!;
+  const sortedLectures = lectures.sort((a, b) =>
+    b.createdAt.localeCompare(a.createdAt),
+  );
 
   return (
     <div className="flex flex-col mx-auto my-12 gap-8 w-[80%]">
@@ -24,7 +27,7 @@ export default async function CreatorPage() {
         </div>
         <LectureAddButton />
       </div>
-      <LectureTable lectures={lectures} />
+      <LectureTable lectures={sortedLectures} />
     </div>
   );
 }

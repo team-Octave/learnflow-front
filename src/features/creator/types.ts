@@ -22,6 +22,7 @@ export interface CreatorLecture {
   enrollmentCount: number | null;
   thumbnailUrl: string;
   chapters: Chapter[] | null;
+  createdAt: string;
 }
 
 export interface CurriculumFormValues {

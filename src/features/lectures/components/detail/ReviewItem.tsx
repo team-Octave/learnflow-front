@@ -40,7 +40,9 @@ export default function ReviewItem({ review }: Props) {
         </div>
 
         {/* 날짜 */}
-        <span className="text-xs text-zinc-500">{review.createdAt}</span>
+        <span className="text-xs text-zinc-500">
+          {review.createdAt.split('T')[0]}
+        </span>
       </div>
 
       {/* 리뷰 내용 */}

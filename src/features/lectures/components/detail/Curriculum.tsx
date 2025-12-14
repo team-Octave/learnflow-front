@@ -39,7 +39,7 @@ export default function Curriculum({ curriculum }: Props) {
               className="border border-zinc-800 rounded-lg px-4 bg-zinc-900/30"
             >
               <AccordionTrigger className="hover:no-underline py-4 text-left">
-                <span className="font-semibold">{chapter.title}</span>
+                <span className="font-semibold">{chapter.chapterTitle}</span>
               </AccordionTrigger>
 
               <AccordionContent className="pb-4">

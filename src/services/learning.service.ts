@@ -3,6 +3,19 @@
 import { ReviewRequest } from '@/features/learning/types';
 import { authFetch } from '@/lib/api';
 
+export async function enrollLecture(lectureId: number) {
+  const response = await authFetch(`/api/v1/enrollment`, {
+    method: 'POST',
+    body: JSON.stringify({ lectureId }),
+  });
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || '수강 신청 실패');
+  }
+}
+
 export async function getLearningLectures() {
   const response = await authFetch(`/api/v1/enrollment/my`);
   const data = await response.json();

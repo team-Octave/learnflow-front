@@ -76,7 +76,7 @@ export interface Chapter {
 
 // 리뷰
 export interface Review {
-  id: string;
+  reviewId: string;
   lectureId: string;
   userId: string;
   nickname: string;

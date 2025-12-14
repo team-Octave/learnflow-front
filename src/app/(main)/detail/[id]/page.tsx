@@ -1,13 +1,15 @@
 // src/app/(main)/detail/[id]/page.tsx
 
-import { notFound } from 'next/navigation';
-import { loadLectureDetail, loadReviews } from '@/features/lectures/actions';
 import LectureSummary from '@/features/lectures/components/detail/LectureSummry';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';
 import Reviews from '@/features/lectures/components/detail/Reviews';
 import ButtonApply from '@/features/lectures/components/detail/ButtonApply';
 import AverageReview from '@/features/lectures/components/detail/AverageReview';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import {
+  getLectureByIdAction,
+  getReviewByIdAction,
+} from '@/features/lectures/actions';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -17,21 +19,25 @@ export default async function LectureDetailPage({ params }: PageProps) {
   const { id } = await params;
 
   // 강의 데이터 불러오기
-  const lecture = loadLectureDetail(id);
-
-  if (!lecture) {
-    notFound();
+  const [lectureRes, reviewRes] = await Promise.all([
+    getLectureByIdAction(parseInt(id)),
+    getReviewByIdAction(parseInt(id)),
+  ]);
+  if (!lectureRes.success || !reviewRes.success) {
+    return <div>{lectureRes.error || reviewRes.error}</div>;
   }
 
-  // 리뷰 데이터 불러오기
-  const reviews = loadReviews(id);
+  const lecture = lectureRes.data!;
+  const reviews = reviewRes.data!;
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-20 w-[60%]">
       {/* 상단 요약 영역 */}
       <LectureSummary
         lecture={lecture}
-        actionButton={<ButtonApply lectureId={lecture.id} />}
+        actionButton={
+          <ButtonApply lectureId={lecture.id} lectureTitle={lecture.title} />
+        }
       />
 
       {/* 메인 컨텐츠 영역 */}
@@ -74,12 +80,15 @@ export default async function LectureDetailPage({ params }: PageProps) {
 
               {/* 커리큘럼 탭 */}
               <TabsContent value="curriculum" className="space-y-6">
-                <Curriculum curriculum={lecture.curriculum} />
+                <Curriculum curriculum={lecture.chapters!} />
               </TabsContent>
 
               {/* 수강평 탭 */}
               <TabsContent value="reviews" className="space-y-6">
-                <AverageReview reviews={reviews} /> {/* <-- 추가된 부분 */}
+                <AverageReview
+                  reviews={reviews}
+                  ratingAverage={lecture.ratingAverage}
+                />
                 <Reviews reviews={reviews} />
               </TabsContent>
             </Tabs>
