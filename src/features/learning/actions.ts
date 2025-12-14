@@ -1,11 +1,13 @@
 'use server';
 
 import {
+  completeLesson,
   deleteReview,
+  getEnrollmentById,
   getLearningLectures,
   writeReview,
 } from '@/services/learning.service';
-import { LearningLecture, ReviewRequest } from './types';
+import { Enrollment, LearningLecture, ReviewRequest } from './types';
 import { revalidatePath } from 'next/cache';
 
 interface ActionState<T> {
@@ -62,6 +64,41 @@ export async function deleteReviewAction(
     return {
       success: false,
       error: error instanceof Error ? error.message : '리뷰 삭제 실패',
+    };
+  }
+}
+
+export async function getEnrollmentByIdAction(
+  enrollmentId: number,
+): Promise<ActionState<Enrollment>> {
+  try {
+    const body = await getEnrollmentById(enrollmentId);
+    return {
+      success: true,
+      data: body.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '수강 정보 조회 실패',
+    };
+  }
+}
+
+export async function completeLessonAction(
+  enrollmentId: number,
+  lessonId: number,
+): Promise<ActionState<any>> {
+  try {
+    const body = await completeLesson(enrollmentId, lessonId);
+    return {
+      success: true,
+      data: body.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '수강 완료 처리 실패',
     };
   }
 }
