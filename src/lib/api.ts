@@ -11,22 +11,16 @@ async function reissue() {
   if (!refreshToken) {
     throw new Error('리프레시 토큰이 없습니다.');
   }
-  const accessTokenResponse = await commonFetch(
-    `${BASE_URL}/api/v1/auth/reissue`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${refreshToken}`,
-      },
+  const accessTokenResponse = await fetch(`${BASE_URL}/api/v1/auth/reissue`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${refreshToken.value}`,
     },
-  );
+  });
   const body = await accessTokenResponse.json();
-  if (accessTokenResponse.ok) {
-    const newAccessToken = body.data.accessToken;
-    cookieStore.set('accessToken', newAccessToken);
+  if (body.success) {
+    return body.data.accessToken;
   } else {
-    cookieStore.delete('accessToken');
-    cookieStore.delete('refreshToken');
     redirect('/login?message=session_expired');
   }
 }
@@ -58,8 +52,15 @@ export async function authFetch(
   // 재발급이 되면, 재발급된 토큰으로 다시 요청 / 재발급 실패 시 최종 실패 처리
   if (response.status === 401) {
     try {
-      await reissue();
-      return await authFetch(endpoint, options);
+      const newAccessToken = await reissue();
+      const newHeaders = new Headers(options.headers || {});
+      newHeaders.set('Authorization', `Bearer ${newAccessToken}`);
+
+      const response = await fetch(`${BASE_URL}${endpoint}`, {
+        headers: newHeaders,
+        ...options,
+      });
+      return response;
     } catch (error) {
       return response;
     }

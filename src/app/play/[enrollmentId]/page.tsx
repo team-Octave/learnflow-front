@@ -35,7 +35,7 @@ export default async function PlayPage({
 
   if (!enrollmentRes.success || !lectureRes.success) {
     alert(enrollmentRes.error || lectureRes.error);
-    redirect('/mylearning');
+    return <div>{enrollmentRes.error || lectureRes.error}</div>;
   }
 
   const enrollmentInfo = enrollmentRes.data as Enrollment;
