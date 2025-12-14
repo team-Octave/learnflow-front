@@ -23,3 +23,13 @@ export interface ReviewRequest {
   rating: number;
   content: string;
 }
+
+export interface Enrollment {
+  enrollmentId: number;
+  lectureId: number;
+  progress: number | null;
+  completedLessonIds: number[];
+  lastCompletedLessonChapterId: number | null;
+  firstChapterId: number;
+  firstLessonId: number;
+}
