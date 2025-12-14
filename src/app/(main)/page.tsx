@@ -10,7 +10,6 @@ import { getLectures } from '@/services/lectures.service';
 import { getParam } from '@/lib/utils';
 import { Category, Lecture, Level, Sort } from '@/features/lectures/types';
 import { getLecturesAction } from '@/features/lectures/actions';
-import { notFound } from 'next/navigation';
 
 const DEFAULT_CATEGORY = 'ALL';
 const DEFAULT_LEVEL = 'ALL';
@@ -49,7 +48,8 @@ export default async function MainPage({ searchParams }: PageProps) {
   });
 
   if (!response.success) {
-    return <div>{notFound()}</div>;
+    alert(response.error);
+    return;
   }
 
   const lectures: Lecture[] = response.data!;
@@ -71,11 +71,15 @@ export default async function MainPage({ searchParams }: PageProps) {
           </div>
 
           {/* 리스트 */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {lectures.map((lecture) => (
-              <LectureCard key={lecture.id} lecture={lecture} />
-            ))}
-          </div>
+          {lectures.length === 0 ? (
+            <div>조건에 맞는 강의가 없습니다.</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {lectures.map((lecture) => (
+                <LectureCard key={lecture.id} lecture={lecture} />
+              ))}
+            </div>
+          )}
 
           {/* 페이지네이션 */}
           {/* <div className="mt-12">
