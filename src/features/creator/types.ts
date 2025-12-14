@@ -23,34 +23,27 @@ export interface CreatorLecture {
   thumbnailUrl: string;
   chapters: Chapter[] | null;
 }
-
 export type LessonType = 'VIDEO' | 'QUIZ';
 
-export interface Chapter {
-  chapterId?: number;
-  chapterTitle: string;
-  order: number;
-  lessons: Lesson[];
+export interface QuizQuestion {
+  question: string; // 질문 텍스트
+  correct: boolean; // 정답 여부 (true/false)
+  questionOrder: number; // 순서
 }
 
 export interface Lesson {
-  lessonId?: number;
   lessonTitle: string;
-  order: number;
   lessonType: LessonType;
   isFreePreview: boolean;
-  videoUrl: string | null; // VIDEO 타입일 때 사용
-  quizQuestions: QuizQuestion[] | null; // QUIZ 타입일 때 사용
+  videoUrl: string | null; // VIDEO 전용
+  quizQuestions: QuizQuestion[] | null; // QUIZ 전용
 }
 
-export interface QuizQuestion {
-  questionId?: number; // 신규 생성 시 없을 수 있음
-  questionText: string;
-  answer: 'O' | 'X';
-  order: number;
+export interface Chapter {
+  chapterTitle: string;
+  lessons: Lesson[];
 }
 
-// 폼 전체에서 사용할 데이터 타입
 export interface CurriculumFormValues {
   chapters: Chapter[];
 }
