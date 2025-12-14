@@ -1,4 +1,4 @@
-import { Category, Level } from '../lectures/types';
+import { Category, Chapter, LessonType, Level } from '../lectures/types';
 
 // --------------- 수정 후 -----------------
 
@@ -23,27 +23,26 @@ export interface CreatorLecture {
   thumbnailUrl: string;
   chapters: Chapter[] | null;
 }
-export type LessonType = 'VIDEO' | 'QUIZ';
 
-export interface QuizQuestion {
-  question: string; // 질문 텍스트
-  correct: boolean; // 정답 여부 (true/false)
-  questionOrder: number; // 순서
+export interface CurriculumFormValues {
+  chapters: CreatorChapter[];
 }
 
-export interface Lesson {
+export interface CreatorChapter {
+  chapterTitle: string;
+  lessons: CreatorLesson[];
+}
+
+export interface CreatorLesson {
   lessonTitle: string;
   lessonType: LessonType;
   isFreePreview: boolean;
-  videoUrl: string | null; // VIDEO 전용
-  quizQuestions: QuizQuestion[] | null; // QUIZ 전용
+  videoUrl: string | null;
+  quizQuestions: CreatorQuizQuestion[] | null;
 }
 
-export interface Chapter {
-  chapterTitle: string;
-  lessons: Lesson[];
-}
-
-export interface CurriculumFormValues {
-  chapters: Chapter[];
+export interface CreatorQuizQuestion {
+  question: string;
+  correct: boolean;
+  questionOrder: number;
 }
