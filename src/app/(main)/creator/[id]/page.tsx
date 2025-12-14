@@ -24,7 +24,7 @@ export default async function LectureEditPage({
   const response = await getLectureByIdAction(parseInt(id));
   if (!response.success) {
     console.log(response.error);
-    return <div>강의 정보를 불러올 수 없습니다.</div>;
+    return <div>{response.error}</div>;
   }
 
   const lecture = response.data!;

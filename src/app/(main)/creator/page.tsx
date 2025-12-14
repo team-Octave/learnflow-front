@@ -8,12 +8,10 @@ export default async function CreatorPage() {
 
   if (!response.success) {
     console.log(response.error);
-    return <div>{notFound()}</div>;
+    return <div>{response.error}</div>;
   }
 
   const lectures = response.data!;
-
-  console.log(lectures);
 
   return (
     <div className="flex flex-col mx-auto my-12 gap-8 w-[80%]">
