@@ -19,7 +19,9 @@ export default function Reviews({ reviews }: Props) {
 
       {/* 리뷰 리스트 */}
       {reviews.length > 0 &&
-        reviews.map((review) => <ReviewItem key={review.id} review={review} />)}
+        reviews.map((review) => (
+          <ReviewItem key={review.reviewId} review={review} />
+        ))}
     </section>
   );
 }
