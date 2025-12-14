@@ -8,27 +8,16 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from '@/components/ui/pagination';
-import { usePathname } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Props {
   currentPage: number;
   totalPages: number;
-  category: string;
-  level: string;
-  sort: string;
 }
 
-export default function MainPagination({
-  currentPage,
-  totalPages,
-  category,
-  level,
-  sort,
-}: Props) {
-  const pathname = usePathname();
-
-  const makeHref = (page: number) =>
-    `${pathname}?category=${category}&level=${level}&sort=${sort}&page=${page}`;
+export default function MainPagination({ currentPage, totalPages }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
@@ -38,19 +27,28 @@ export default function MainPagination({
   const isPrevDisabled = currentPage === 1;
   const isNextDisabled = currentPage === totalPages;
 
+  const handleClick = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    router.replace(`?${params.toString()}`);
+  };
+
   return (
     <Pagination className="flex justify-center items-center gap-2 mt-12">
       <PaginationContent className="flex items-center gap-2">
         {/* PREVIOUS */}
         <PaginationItem>
           <PaginationPrevious
-            href={isPrevDisabled ? '#' : makeHref(prevPage)}
+            onClick={() => {
+              if (!isPrevDisabled) handleClick(prevPage);
+            }}
             aria-disabled={isPrevDisabled}
             tabIndex={isPrevDisabled ? -1 : 0}
             className={`
               w-9 h-9 flex items-center justify-center rounded border
               border-zinc-800 
               [&>span]:hidden [&>svg]:block
+              cursor-pointer
 
               ${
                 isPrevDisabled
@@ -65,14 +63,18 @@ export default function MainPagination({
         {pages.map((p) => (
           <PaginationItem key={p}>
             <PaginationLink
-              href={makeHref(p)}
+              onClick={() => {
+                if (p !== currentPage) handleClick(p);
+              }}
               isActive={p === currentPage}
+              aria-disabled={p === currentPage}
               className="
                 w-9 h-9 flex items-center justify-center rounded border text-sm
 
-                data-[active=true]:bg-primary
-                data-[active=true]:text-primary-foreground
-                data-[active=true]:border-primary
+                data-[active=true]:bg-zinc-500
+                data-[active=true]:text-zinc-500
+                data-[active=true]:border-bg-zinc-600
+                cursor-pointer
 
                 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-white
               "
@@ -85,14 +87,16 @@ export default function MainPagination({
         {/* NEXT */}
         <PaginationItem>
           <PaginationNext
-            href={isNextDisabled ? '#' : makeHref(nextPage)}
+            onClick={() => {
+              if (!isNextDisabled) handleClick(nextPage);
+            }}
             aria-disabled={isNextDisabled}
             tabIndex={isNextDisabled ? -1 : 0}
             className={`
               w-9 h-9 flex items-center justify-center rounded border
               border-zinc-800 
               [&>span]:hidden [&>svg]:block
-
+              cursor-pointer
               ${
                 isNextDisabled
                   ? 'opacity-40 pointer-events-none'
