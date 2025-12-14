@@ -52,7 +52,11 @@ export default async function MainPage({ searchParams }: PageProps) {
     return;
   }
 
-  const lectures: Lecture[] = response.data!;
+  const data = response.data;
+
+  const lectures: Lecture[] = data.content;
+  const pageNumber = data.pageable.pageNumber + 1;
+  const totalPages = data.totalPages;
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -82,15 +86,9 @@ export default async function MainPage({ searchParams }: PageProps) {
           )}
 
           {/* 페이지네이션 */}
-          {/* <div className="mt-12">
-            <MainPagination
-              currentPage={page}
-              totalPages={totalPages}
-              category={category}
-              level={level}
-              sort={sort}
-            />
-          </div> */}
+          <div className="mt-12">
+            <MainPagination currentPage={pageNumber} totalPages={totalPages} />
+          </div>
         </div>
       </div>
     </div>
