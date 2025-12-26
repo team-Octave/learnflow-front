@@ -7,12 +7,6 @@ export interface User {
   createdAt: string;
 }
 
-export interface AuthState {
-  user: Pick<User, 'email' | 'nickname' | 'role'> | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-}
-
 export interface LoginRequest {
   email: string;
   password: string;
