@@ -1,78 +1,57 @@
 'use server';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { reissue } from './reissue';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// 리프레시 토큰으로 엑세스 토큰 재발급 함수
-async function reissue() {
-  const cookieStore = await cookies();
-  const refreshToken = cookieStore.get('refreshToken');
-  if (!refreshToken) {
-    throw new Error('리프레시 토큰이 없습니다.');
-  }
-  const accessTokenResponse = await fetch(`${BASE_URL}/api/v1/auth/reissue`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${refreshToken.value}`,
-    },
-  });
-  const body = await accessTokenResponse.json();
-  if (body.success) {
-    return body.data.accessToken;
-  } else {
-    redirect('/login?message=session_expired');
-  }
-}
-
-export async function authFetch(
-  endpoint: string,
-  options: RequestInit = {},
-): Promise<Response> {
+// 토큰이 필요한 Fetch 요청
+export async function authFetch(endpoint: string, options: RequestInit = {}) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('accessToken')?.value;
+  const refreshToken = cookieStore.get('refreshToken')?.value;
 
-  const headers = new Headers(options.headers || {});
-  if (accessToken) {
-    headers.set('Authorization', `Bearer ${accessToken}`);
-  }
-
-  if (options.body && !(options.body instanceof FormData)) {
-    if (!headers.has('Content-Type')) {
+  // 헤더 설정 함수
+  const getHeaders = (token?: string) => {
+    const headers = new Headers(options.headers || {});
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+    if (options.body && !(options.body instanceof FormData)) {
       headers.set('Content-Type', 'application/json');
     }
-  }
+    return headers;
+  };
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    headers: headers,
+  // 1. 첫 번째 시도
+  let response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
+    headers: getHeaders(accessToken),
   });
 
-  // 엑세스 토큰 만료시 리프레쉬 토큰으로 엑세스 토큰 재발급
-  // 재발급이 되면, 재발급된 토큰으로 다시 요청 / 재발급 실패 시 최종 실패 처리
-  if (response.status === 401) {
+  // 2. 401 발생 시 토큰 재발급 후 요청 재시도
+  if (response.status === 401 && refreshToken) {
     try {
-      const newAccessToken = await reissue();
-      const newHeaders = new Headers(options.headers || {});
-      newHeaders.set('Authorization', `Bearer ${newAccessToken}`);
-
-      const response = await fetch(`${BASE_URL}${endpoint}`, {
-        headers: newHeaders,
-        ...options,
+      const newAccessToken = await reissue(refreshToken); // 재발급 및 쿠키 저장 시도
+      cookieStore.set('accessToken', newAccessToken, {
+        httpOnly: true,
+        path: '/',
+        maxAge: 60 * 60,
       });
-      return response;
+
+      // 새로 발급한 토큰으로 재시도
+      response = await fetch(`${BASE_URL}${endpoint}`, {
+        ...options,
+        headers: getHeaders(newAccessToken),
+      });
     } catch (error) {
-      return response;
+      // 재발급도 실패하면 원래의 401 응답을 그대로 반환 (로그아웃 처리용)
+      console.error('토큰 재발급/재시도 실패');
     }
   }
 
   return response;
 }
 
-export async function commonFetch(
-  endpoint: string,
-  options: RequestInit = {},
-): Promise<Response> {
+// 토큰이 필요 없는 Fetch
+export async function commonFetch(endpoint: string, options: RequestInit = {}) {
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
