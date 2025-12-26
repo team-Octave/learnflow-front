@@ -12,6 +12,7 @@ import {
 import { Book, LogOut, PresentationIcon, User } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
+import { logoutAction } from '@/features/auth/actions';
 
 interface MyDropdownProps {
   user: {
@@ -22,10 +23,11 @@ interface MyDropdownProps {
 
 export default function MyDropdown({ user }: MyDropdownProps) {
   const router = useRouter();
-  const logout = useUserStore((state) => state.logout);
+  const { clearUser } = useUserStore();
 
   const handleLogout = () => {
-    logout();
+    logoutAction();
+    clearUser();
     router.replace('/');
   };
   return (
