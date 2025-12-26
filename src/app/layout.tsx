@@ -1,11 +1,12 @@
+import AuthChecker from '@/features/auth/components/AuthChecker';
 import './globals.css';
 import localFont from 'next/font/local';
 
 const pretendard = localFont({
-  src: '../../public/fonts/PretendardVariable.woff2', // 폰트 파일 경로 (알맞게 수정하세요)
+  src: '../../public/fonts/PretendardVariable.woff2',
   display: 'swap',
-  weight: '45 920', // 가변 폰트 웨이트 범위 설정
-  variable: '--font-pretendard', // CSS 변수 이름 지정
+  weight: '45 920',
+  variable: '--font-pretendard',
 });
 
 //전체 사이트에 공통으로 적용되는 전역 설정 파일
@@ -23,6 +24,8 @@ export default function RootLayout({
         {/* 모든 페이지(page.tsx) 내용을 여기에 렌더링. */}
         {children}
       </body>
+      {/* 새로고침 시 다시 유저 정보 요청하도록하는 컴포넌트(유저 정보 검증) */}
+      <AuthChecker />
     </html>
   );
 }
