@@ -18,18 +18,16 @@ interface HeaderProps {
 }
 
 export default function Header({ serverLoginCheck }: HeaderProps) {
-  const { user, isAuthenticated } = useUserStore();
-
-  // 렌더링 전까지 서버로 부터 받은 로그인 여부 상태를 사용하고, 이 후에는 zustand의 로그인 여부 상태를 사용
-  // 로그인 상태에서 새로 고침 시 잠깐 로그인 버튼이 보이는 현상 해결 위함
   const [isRendered, setIsRendered] = useState(false);
+  const { user, isLoading } = useUserStore();
 
-  // 렌더링이 완료되면 true로 변경
+  // 렌더링이 다 되면, true로 변경(새로고침 시 로그인 버튼이 잠깐 보이는 현상 해결)
   useEffect(() => {
     setIsRendered(true);
   }, []);
 
-  const showProfileUI = isRendered ? isAuthenticated : serverLoginCheck;
+  // 렌더링 중이거나, 유저 정보를 다시 불러오는 중이면, serverLoginCheck를 반영(refreshToken 유/무로 로그인 여부 판단)
+  const showProfileUI = !isRendered || isLoading ? serverLoginCheck : user;
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-900/40 flex justify-between items-center h-16 w-full px-8 bg-zinc-950 backdrop-blur-md supports-backdrop-filter:bg-zinc-950/60">
