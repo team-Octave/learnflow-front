@@ -28,19 +28,17 @@ export default function LoginForm() {
     setIsLoading(true);
 
     // 로그인 액션 요청
-    const response = await loginAction(email, password);
+    const state = await loginAction({ email, password });
 
     // 로그인 성공 여부에 따라 zustand에 전역 정보 저장
-    if (!response.success) {
-      setError(response.error!);
+    if (state.success) {
+      setUser(state.data!);
       setIsLoading(false);
-      return;
+      router.replace('/');
+    } else {
+      setError(state.message!);
+      setIsLoading(false);
     }
-
-    setUser(response.data!);
-    setIsLoading(false);
-
-    router.replace('/');
   };
 
   return (

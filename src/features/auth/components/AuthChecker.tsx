@@ -12,16 +12,16 @@ export default function AuthChecker() {
   useEffect(() => {
     setIsLoading(true);
     startTransition(async () => {
-      const response = await getUserAction();
-
-      // 실패 시 기존 유저 정보 제거
-      if (!response.success) {
-        logoutAction(); // 쿠키 제거
-        clearUser(); // 기존의 전역 유저 정보 제거
+      const state = await getUserAction();
+      if (state.success) {
+        // 성공 시 다시 전역에 유저 정보 저장
+        setUser(state.data!); // response.data : {email, nickname, role}
         setIsLoading(false);
       } else {
-        // 성공 시 다시 전역에 유저 정보 저장
-        setUser(response.data!); // response.data : {email, nickname, role}
+        // 실패 시 기존 유저 정보 제거
+        alert(state.message || '유저 정보 조회 실패');
+        logoutAction(); // 쿠키 제거
+        clearUser(); // 기존의 전역 유저 정보 제거
         setIsLoading(false);
       }
     });
