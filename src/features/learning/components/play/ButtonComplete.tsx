@@ -24,16 +24,16 @@ export default function ButtonComplete({
 
   const handleComplete = async () => {
     startTransition(async () => {
-      const response = await completeLessonAction(
+      const state = await completeLessonAction(
         enrollmentInfo.enrollmentId,
         parseInt(lessonId),
       );
-      if (!response.success) {
-        alert(response.error);
-      } else {
+      if (state.success) {
         const params = new URLSearchParams(searchParams.toString());
         params.set('lessonId', lessonId);
         router.replace(`${pathname}?${params.toString()}`);
+      } else {
+        alert(state.message || '레슨 완료 처리에 실패하였습니다.');
       }
     });
   };

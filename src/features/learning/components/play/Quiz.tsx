@@ -44,17 +44,17 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
     }
 
     startTransition(async () => {
-      const response = await completeLessonAction(
+      const state = await completeLessonAction(
         enrollmentId,
         parseInt(lesson.id),
       );
-      if (!response.success) {
-        alert(response.error);
-      } else {
+      if (state.success) {
         setSubmitted(true);
         const params = new URLSearchParams(searchParams.toString());
         params.set('lessonId', lesson.id);
         router.replace(`${pathname}?${params.toString()}`);
+      } else {
+        alert(state.message || '레슨 완료 처리에 실패하였습니다.');
       }
     });
   };

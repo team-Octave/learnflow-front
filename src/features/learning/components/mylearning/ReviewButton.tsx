@@ -46,14 +46,14 @@ export default function ReviewButton({
       return;
     }
     startTransition(async () => {
-      const response = await writeReviewAction({ lectureId, rating, content });
-      if (!response.success) {
-        alert(response.error);
-      } else {
+      const state = await writeReviewAction({ lectureId, rating, content });
+      if (state.success) {
         setIsOpen(false);
         setContent('');
         setRating(5);
         router.refresh();
+      } else {
+        alert(state.message || '리뷰 저장에 실패하였습니다.');
       }
     });
   };
@@ -64,14 +64,14 @@ export default function ReviewButton({
       return;
     }
     startTransition(async () => {
-      const response = await deleteReviewAction(reviewId);
-      if (!response.success) {
-        alert(response.error);
-      } else {
+      const state = await deleteReviewAction(reviewId);
+      if (state.success) {
         setIsOpen(false);
         setContent('');
         setRating(5);
         router.refresh();
+      } else {
+        alert(state.message || '리뷰 삭제에 실패하였습니다.');
       }
     });
   };
