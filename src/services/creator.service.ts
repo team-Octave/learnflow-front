@@ -1,5 +1,5 @@
 import { BasicInfo, CurriculumFormValues } from '@/features/creator/types';
-import { authFetch } from '@/lib/api';
+import { authFetch } from '@/shared/api';
 
 export async function getCreatorLectures() {
   const response = await authFetch(`/api/v1/lectures/my`);

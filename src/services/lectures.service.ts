@@ -1,6 +1,6 @@
 // src/services/lectures.service.ts
 import type { Query } from '@/features/lectures/types';
-import { commonFetch } from '@/lib/api';
+import { commonFetch } from '@/shared/api';
 
 export async function getLectures({ category, level, sort, page }: Query) {
   const url = `/api/v1/lectures?category=${category}&level=${level}&sort=${sort}&page=${

@@ -5,7 +5,7 @@ import {
   LoginResponseWithToken,
   User,
 } from '@/features/auth/types';
-import { commonFetch, authFetch } from '@/lib/api'; //  authFetch 추가
+import { commonFetch, authFetch } from '@/shared/api'; //  authFetch 추가
 
 async function login(user: LoginRequest): Promise<LoginResponseWithToken> {
   const response = await commonFetch(`/api/v1/auth/login`, {

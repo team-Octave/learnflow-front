@@ -1,4 +1,4 @@
-import { commonFetch } from '@/lib/api';
+import { commonFetch } from '@/shared/api';
 
 export async function checkNickname(nickname: string) {
   const response = await commonFetch(
