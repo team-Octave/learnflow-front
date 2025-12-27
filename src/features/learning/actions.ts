@@ -8,7 +8,7 @@ import {
   getLearningLectures,
   writeReview,
 } from '@/services/learning.service';
-import { Enrollment, LearningLecture, ReviewRequest } from './types';
+import { ReviewRequest } from './types';
 import { revalidatePath } from 'next/cache';
 import { ActionState } from '@/shared/types/ActionState';
 
@@ -19,9 +19,7 @@ export async function enrollLectureAction(
   return state;
 }
 
-export async function getLearningLecturesAction(): Promise<
-  ActionState<LearningLecture[]>
-> {
+export async function getLearningLecturesAction(): Promise<ActionState<any>> {
   const state = await getLearningLectures();
   return state;
 }
@@ -43,7 +41,7 @@ export async function deleteReviewAction(
 
 export async function getEnrollmentByIdAction(
   enrollmentId: number,
-): Promise<ActionState<Enrollment>> {
+): Promise<ActionState<any>> {
   const state = await getEnrollmentById(enrollmentId);
   return state;
 }

@@ -7,7 +7,7 @@ import {
   getLectures,
   getReviewById,
 } from '@/services/lectures.service';
-import type { Lecture, Query, Review } from './types';
+import type { Query } from './types';
 import { ActionState } from '@/shared/types/ActionState';
 
 export async function getLecturesAction(
@@ -19,14 +19,14 @@ export async function getLecturesAction(
 
 export async function getLectureByIdAction(
   lectureId: number,
-): Promise<ActionState<Lecture>> {
+): Promise<ActionState<any>> {
   const state = await getLectureById(lectureId);
   return state;
 }
 
 export async function getReviewByIdAction(
   lectureId: number,
-): Promise<ActionState<Review[]>> {
+): Promise<ActionState<any>> {
   const state = await getReviewById(lectureId);
   return state;
 }

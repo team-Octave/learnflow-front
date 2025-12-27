@@ -12,9 +12,7 @@ import { CreatorLecture, CurriculumFormValues } from './types';
 import { Category, Lecture, Level } from '../lectures/types';
 import { ActionState } from '@/shared/types/ActionState';
 
-export async function getCreatorLecturesAction(): Promise<
-  ActionState<CreatorLecture[]>
-> {
+export async function getCreatorLecturesAction(): Promise<ActionState<any>> {
   const state = await getCreatorLectures();
   return state;
 }
