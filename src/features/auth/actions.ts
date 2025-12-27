@@ -5,14 +5,16 @@ import { getUser, login } from '@/services/auth.service';
 import { cookies } from 'next/headers';
 import { ActionState } from '@/shared/types/ActionState';
 
-export async function loginAction(
-  email: string,
-  password: string,
-): Promise<ActionState<any>> {
-  const payload = { email, password };
-  const state = await login(payload);
+export async function loginAction(user: {
+  email: string;
+  password: string;
+}): Promise<ActionState<any>> {
+  const state = await login(user);
 
-  // 쿠키에 토큰 세팅
+  if (!state.success) {
+    return state;
+  }
+
   const cookieStore = await cookies();
   cookieStore.set('accessToken', state.accessToken, {
     httpOnly: true, // 자바스크립트 접근 불가
