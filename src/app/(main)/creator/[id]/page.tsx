@@ -4,7 +4,7 @@ import LectureForm from '@/features/creator/components/form/LectureForm';
 import StepInfo from '@/features/creator/components/form/StepInfo';
 import { CreatorLecture } from '@/features/creator/types';
 import { getLectureByIdAction } from '@/features/lectures/actions';
-import { getParam } from '@/lib/utils';
+import { getParam } from '@/shared/utils';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 

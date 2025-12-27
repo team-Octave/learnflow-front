@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils';
 import { MessageSquare, Star } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import StarRating from './StarRating';

@@ -1,5 +1,5 @@
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils';
 
 interface StepInfoProps {
   step: number;

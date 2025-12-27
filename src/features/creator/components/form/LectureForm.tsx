@@ -31,7 +31,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { BasicInfo, CreatorLecture } from '../../types';
 import { Category, Lecture, Level } from '@/features/lectures/types';
 import { useRouter } from 'next/navigation';
-import { convertURLtoFile } from '@/lib/utils';
+import { convertURLtoFile } from '@/shared/utils';
 import { createBasicLectureAction } from '../../actions';
 
 interface LectureFormProps {
