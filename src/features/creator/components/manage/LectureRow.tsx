@@ -29,13 +29,12 @@ export default function LectureRow({ lecture }: LectureRowProps) {
       return;
     }
     startTransition(async () => {
-      const response = await publishCreatorLectureAction(lecture.id);
-      if (!response.success) {
-        alert(response.error);
-        return;
-      } else {
+      const state = await publishCreatorLectureAction(lecture.id);
+      if (state.success) {
         alert(`${lecture.title} 강의가 공개되었습니다.`);
         router.refresh();
+      } else {
+        alert(state.message || '강의 공개에 실패하였습니다.');
       }
     });
   };

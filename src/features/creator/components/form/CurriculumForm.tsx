@@ -79,16 +79,13 @@ export default function CurriculumForm({ lecture }: CurriculumFormProps) {
       })),
     };
 
-    console.log('커리큘럼 요청 전:', JSON.stringify(formattedData, null, 2));
-    // API 호출 로직...
     startTransition(async () => {
-      const response = await createCurriculumAction(lecture.id, formattedData);
-      if (!response.success) {
-        alert(response.error);
-        return;
-      } else {
+      const state = await createCurriculumAction(lecture.id, formattedData);
+      if (state.success) {
         alert('강의 등록이 완료되었습니다.');
         router.replace(`/creator`);
+      } else {
+        alert(state.message || '강의 등록에 실패하였습니다.');
       }
     });
   };
