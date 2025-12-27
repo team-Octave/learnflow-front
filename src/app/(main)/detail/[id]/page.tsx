@@ -31,7 +31,7 @@ export default async function LectureDetailPage({ params }: PageProps) {
   const reviews = reviewRes.data!;
 
   return (
-    <div className="min-h-screen bg-background pb-20 w-[60%]">
+    <div className="min-h-screen bg-background pb-20 w-[90%] md:w-[70%]">
       {/* 상단 요약 영역 */}
       <LectureSummary
         lecture={lecture}
