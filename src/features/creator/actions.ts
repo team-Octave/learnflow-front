@@ -9,70 +9,34 @@ import {
   uploadThumbnail,
 } from '@/services/creator.service';
 import { CreatorLecture, CurriculumFormValues } from './types';
-import { Action } from 'sonner';
 import { Category, Lecture, Level } from '../lectures/types';
-
-interface ActionState<T> {
-  success: boolean;
-  error?: string;
-  data?: T;
-}
+import { ActionState } from '@/shared/types/ActionState';
 
 export async function getCreatorLecturesAction(): Promise<
   ActionState<CreatorLecture[]>
 > {
-  try {
-    const body = await getCreatorLectures();
-    return {
-      success: true,
-      data: body.data.content,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : '등록한 강의 목록 조회 실패',
-    };
-  }
+  const state = await getCreatorLectures();
+  return state;
 }
 
 export async function deleteCreatorLectureAction(
   id: number,
 ): Promise<ActionState<any>> {
-  try {
-    const body = await deleteCreatorLecture(id);
-    return {
-      success: true,
-      data: body.data,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : '강의 삭제 실패',
-    };
-  }
+  const state = await deleteCreatorLecture(id);
+  return state;
 }
 
 export async function publishCreatorLectureAction(
   id: number,
 ): Promise<ActionState<any>> {
-  try {
-    const body = await publishCreatorLecture(id);
-    return {
-      success: true,
-      data: body.data,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : '강의 공개 실패',
-    };
-  }
+  const state = await publishCreatorLecture(id);
+  return state;
 }
 
+// 우선 두 개의 state를 return 하도록 구현
 export async function createBasicLectureAction(
   formData: FormData,
-): Promise<ActionState<Lecture>> {
+): Promise<ActionState<any>[]> {
   const title = formData.get('title') as string;
   const categoryId = formData.get('categoryId') as Category;
   const level = formData.get('level') as Level;
@@ -86,43 +50,23 @@ export async function createBasicLectureAction(
     description,
   };
 
-  try {
-    const body = await createBasicLecture(payload);
+  // 강의 기본 정보로 먼저 등록하고, ID를 가져옴
+  const lectureState = await createBasicLecture(payload);
 
-    const lecture = body.data as Lecture;
-    const formData = new FormData();
-    formData.append('lectureId', lecture.id);
-    formData.append('file', file);
-    await uploadThumbnail(formData);
+  const lecture = lectureState.data as Lecture;
+  const thumbnailFormData = new FormData();
+  thumbnailFormData.append('lectureId', lecture.id);
+  thumbnailFormData.append('file', file);
+  // 등록된 ID로 썸네일 등록 API 호출
+  const thumbnailState = await uploadThumbnail(thumbnailFormData);
 
-    return {
-      success: true,
-      data: body.data,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : '강의 기본 정보 저장 실패',
-    };
-  }
+  return [lectureState, thumbnailState];
 }
 
 export async function createCurriculumAction(
   lectureId: string,
   curriculum: CurriculumFormValues,
 ): Promise<ActionState<any>> {
-  try {
-    const body = await createCurriculum(lectureId, curriculum);
-    return {
-      success: true,
-      data: body.data,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : '커리큘럼 등록 실패',
-    };
-  }
+  const state = await createCurriculum(lectureId, curriculum);
+  return state;
 }
