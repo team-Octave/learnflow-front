@@ -1,6 +1,6 @@
 'use server';
 
-import { commonFetch } from '@/lib/api';
+import { commonFetch } from '@/shared/api';
 import { checkNickname, signup } from '@/services/user.service';
 import { Action } from 'sonner';
 

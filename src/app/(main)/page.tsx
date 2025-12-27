@@ -5,9 +5,7 @@ import LevelFilter from '@/features/lectures/components/main/LevelFilter';
 import SortSelect from '@/features/lectures/components/main/SortSelect';
 import LectureCard from '@/features/lectures/components/main/LectureCard';
 import MainPagination from '@/features/lectures/components/main/MainPagination';
-
-import { getLectures } from '@/services/lectures.service';
-import { getParam } from '@/lib/utils';
+import { getParam } from '@/shared/utils';
 import { Category, Lecture, Level, Sort } from '@/features/lectures/types';
 import { getLecturesAction } from '@/features/lectures/actions';
 

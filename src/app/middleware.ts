@@ -1,4 +1,4 @@
-import { reissue } from '@/lib/reissue';
+import { reissue } from '@/shared/api/reissue';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 

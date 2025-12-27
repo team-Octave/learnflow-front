@@ -8,7 +8,6 @@ import {
   getReviewById,
 } from '@/services/lectures.service';
 import type { Lecture, Query, Review } from './types';
-import { commonFetch } from '@/lib/api';
 
 interface ActionState<T> {
   success: boolean;
