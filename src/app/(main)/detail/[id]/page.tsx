@@ -1,6 +1,6 @@
 // src/app/(main)/detail/[id]/page.tsx
 
-import LectureSummary from '@/features/lectures/components/detail/LectureSummry';
+import LectureSummary from '@/features/lectures/components/detail/LectureSummary';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';
 import Reviews from '@/features/lectures/components/detail/Reviews';
 import ButtonApply from '@/features/lectures/components/detail/ButtonApply';
