@@ -1,8 +1,8 @@
 // src/app/(main)/mypage/page.tsx
+import { getUserAction } from '@/features/auth/actions';
 import AccountDelete from '@/features/user/components/AccountDelete';
 import ProfileInfo from '@/features/user/components/ProfileInfo';
-import { getMe } from '@/services/auth.service';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 interface Me {
   nickname: string;
@@ -11,13 +11,12 @@ interface Me {
 }
 
 export default async function MyPage() {
-  let me: Me;
-
-  try {
-    me = await getMe();
-  } catch (e) {
-    redirect('/login');
+  const state = await getUserAction();
+  if (!state.success) {
+    console.log(state.message);
+    return notFound();
   }
+  const user = state.data!;
 
   return (
     <div className="w-full flex justify-center my-12">
@@ -27,11 +26,11 @@ export default async function MyPage() {
         </h1>
 
         <div className="w-full mb-6">
-          <ProfileInfo nickname={me.nickname} email={me.email} />
+          <ProfileInfo nickname={user.nickname} email={user.email} />
         </div>
 
         <div className="w-full">
-          <AccountDelete email={me.email} />
+          <AccountDelete email={user.email} />
         </div>
       </div>
     </div>

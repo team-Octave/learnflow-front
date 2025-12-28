@@ -1,17 +1,18 @@
 import { getCreatorLecturesAction } from '@/features/creator/actions';
 import LectureAddButton from '@/features/creator/components/manage/LectureAddButton';
 import LectureTable from '@/features/creator/components/manage/LectureTable';
+import { CreatorLecture } from '@/features/creator/types';
 import { notFound } from 'next/navigation';
 
 export default async function CreatorPage() {
-  const response = await getCreatorLecturesAction();
+  const state = await getCreatorLecturesAction();
 
-  if (!response.success) {
-    console.log(response.error);
-    return <div>{response.error}</div>;
+  if (!state.success) {
+    console.log(state.message);
+    return notFound();
   }
 
-  const lectures = response.data!;
+  const lectures: CreatorLecture[] = state.data.content;
   const sortedLectures = lectures.sort((a, b) =>
     b.createdAt.localeCompare(a.createdAt),
   );

@@ -10,6 +10,7 @@ import {
   getLectureByIdAction,
   getReviewByIdAction,
 } from '@/features/lectures/actions';
+import { notFound } from 'next/navigation';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -19,16 +20,17 @@ export default async function LectureDetailPage({ params }: PageProps) {
   const { id } = await params;
 
   // 강의 데이터 불러오기
-  const [lectureRes, reviewRes] = await Promise.all([
+  const [lectureState, reviewState] = await Promise.all([
     getLectureByIdAction(parseInt(id)),
     getReviewByIdAction(parseInt(id)),
   ]);
-  if (!lectureRes.success || !reviewRes.success) {
-    return <div>{lectureRes.error || reviewRes.error}</div>;
+  if (!lectureState.success || !reviewState.success) {
+    console.log(lectureState.message || reviewState.message);
+    return notFound();
   }
 
-  const lecture = lectureRes.data!;
-  const reviews = reviewRes.data!;
+  const lecture = lectureState.data!;
+  const reviewData = reviewState.data!;
 
   return (
     <div className="min-h-screen bg-background pb-20 w-[90%] md:w-[70%]">
@@ -86,10 +88,10 @@ export default async function LectureDetailPage({ params }: PageProps) {
               {/* 수강평 탭 */}
               <TabsContent value="reviews" className="space-y-6">
                 <AverageReview
-                  reviews={reviews}
+                  reviews={reviewData}
                   ratingAverage={lecture.ratingAverage}
                 />
-                <Reviews reviews={reviews} />
+                <Reviews reviews={reviewData.content} />
               </TabsContent>
             </Tabs>
           </div>

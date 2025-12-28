@@ -2,11 +2,11 @@ import { Button } from '@/components/ui/button';
 import CurriculumForm from '@/features/creator/components/form/CurriculumForm';
 import LectureForm from '@/features/creator/components/form/LectureForm';
 import StepInfo from '@/features/creator/components/form/StepInfo';
-import { CreatorLecture } from '@/features/creator/types';
 import { getLectureByIdAction } from '@/features/lectures/actions';
 import { getParam } from '@/shared/utils';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 interface LectureEditPageProps {
   params: Promise<{ id: string }>;
@@ -21,13 +21,13 @@ export default async function LectureEditPage({
   const stepString = getParam((await searchParams).step) || '1';
   const step = parseInt(stepString);
 
-  const response = await getLectureByIdAction(parseInt(id));
-  if (!response.success) {
-    console.log(response.error);
-    return <div>{response.error}</div>;
+  const state = await getLectureByIdAction(parseInt(id));
+  if (!state.success) {
+    console.log(state.message);
+    return notFound();
   }
 
-  const lecture = response.data!;
+  const lecture = state.data!;
 
   return (
     <div className="flex flex-col mx-auto my-12 gap-8 w-[80%] md:w-[60%] ">

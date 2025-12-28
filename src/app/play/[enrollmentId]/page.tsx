@@ -7,7 +7,7 @@ import { Video } from '@/features/learning/components/play/Video';
 import { Quiz } from '@/features/learning/components/play/Quiz';
 import { AsideCurriculum } from '@/features/learning/components/play/AsideCurriculum';
 import { getEnrollmentByIdAction } from '@/features/learning/actions';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 // URL : /play/[enrollmentId]?lectureId=LEC1&lessonId=LES1
 interface PlayPageProps {
@@ -28,20 +28,18 @@ export default async function PlayPage({
     redirect('/mylearning');
   }
 
-  const [enrollmentRes, lectureRes] = await Promise.all([
+  const [enrollmentState, lectureState] = await Promise.all([
     getEnrollmentByIdAction(parseInt(enrollmentId)),
     getLectureByIdAction(parseInt(lectureId)),
   ]);
 
-  if (!enrollmentRes.success || !lectureRes.success) {
-    alert(enrollmentRes.error || lectureRes.error);
-    return <div>{enrollmentRes.error || lectureRes.error}</div>;
+  if (!enrollmentState.success || !lectureState.success) {
+    console.log(enrollmentState.message || lectureState.message);
+    return notFound();
   }
 
-  const enrollmentInfo = enrollmentRes.data as Enrollment;
-  const lecture = lectureRes.data as Lecture;
-
-  console.log(enrollmentInfo);
+  const enrollmentInfo = enrollmentState.data as Enrollment;
+  const lecture = lectureState.data as Lecture;
 
   // 2) 전체 레슨을 flat 구조로 변환
   const allLessons = lecture.chapters!.flatMap(
