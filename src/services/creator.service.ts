@@ -1,8 +1,8 @@
 import { BasicInfo, CurriculumFormValues } from '@/features/creator/types';
 import { authFetch } from '@/shared/api';
 
-export async function getCreatorLectures() {
-  const response = await authFetch(`/api/v1/lectures/my`);
+export async function getCreatorLectures(page: number) {
+  const response = await authFetch(`/api/v1/lectures/my?page=${page - 1}`);
   return response.json();
 }
 

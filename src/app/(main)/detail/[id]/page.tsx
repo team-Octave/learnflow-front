@@ -10,19 +10,27 @@ import {
   getLectureByIdAction,
   getReviewByIdAction,
 } from '@/features/lectures/actions';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { getParam } from '@/shared/utils';
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function LectureDetailPage({ params }: PageProps) {
+export default async function LectureDetailPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { id } = await params;
+  const pageParam = getParam((await searchParams).page) || '1';
+
+  const page = pageParam ? parseInt(pageParam) : 1;
 
   // 강의 데이터 불러오기
   const [lectureState, reviewState] = await Promise.all([
     getLectureByIdAction(parseInt(id)),
-    getReviewByIdAction(parseInt(id)),
+    getReviewByIdAction(parseInt(id), page),
   ]);
   if (!lectureState.success || !reviewState.success) {
     console.log(lectureState.message || reviewState.message);
@@ -31,6 +39,10 @@ export default async function LectureDetailPage({ params }: PageProps) {
 
   const lecture = lectureState.data!;
   const reviewData = reviewState.data!;
+
+  if (isNaN(page) || page <= 0 || page > reviewData.totalPages) {
+    redirect(`/detail/${id}`);
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20 w-[90%] md:w-[70%]">
@@ -91,7 +103,7 @@ export default async function LectureDetailPage({ params }: PageProps) {
                   reviews={reviewData}
                   ratingAverage={lecture.ratingAverage}
                 />
-                <Reviews reviews={reviewData.content} />
+                <Reviews reviewData={reviewData} />
               </TabsContent>
             </Tabs>
           </div>

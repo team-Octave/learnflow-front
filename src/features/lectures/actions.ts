@@ -26,7 +26,8 @@ export async function getLectureByIdAction(
 
 export async function getReviewByIdAction(
   lectureId: number,
+  page: number,
 ): Promise<ActionState<any>> {
-  const state = await getReviewById(lectureId);
+  const state = await getReviewById(lectureId, page);
   return state;
 }

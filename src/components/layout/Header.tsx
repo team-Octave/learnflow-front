@@ -1,12 +1,15 @@
 'use client';
 
-import { Button } from '../ui/button';
 import Link from 'next/link';
+import { Button } from '../ui/button';
 import { useUserStore } from '@/store/userStore';
-import { useEffect, useState } from 'react';
-import MyDropdown from './MyDropdown';
 import { User } from '@/features/auth/types';
+import dynamic from 'next/dynamic';
 
+const MyDropdown = dynamic(() => import('./MyDropdown'), {
+  ssr: false,
+  loading: () => <div className="w-8 h-8 bg-muted rounded-full"></div>,
+});
 interface HeaderProps {
   initialUser: Pick<User, 'email' | 'nickname' | 'role'>;
 }
@@ -26,8 +29,8 @@ export default function Header({ initialUser }: HeaderProps) {
         {isLoggedIn ? (
           <MyDropdown
             user={{
-              email: user?.email || '이메일',
-              nickname: user?.nickname || '닉네임',
+              email: user.email || '이메일',
+              nickname: user.nickname || '닉네임',
             }}
           />
         ) : (
