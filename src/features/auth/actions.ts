@@ -16,18 +16,27 @@ export async function loginAction(user: {
   }
 
   const cookieStore = await cookies();
-  cookieStore.set('accessToken', state.accessToken, {
+  cookieStore.set('accessToken', state.data.accessToken, {
     httpOnly: true, // 자바스크립트 접근 불가
     maxAge: 60 * 60, // 1시간
     path: '/',
   });
-  cookieStore.set('refreshToken', state.refreshToken, {
+  cookieStore.set('refreshToken', state.data.refreshToken, {
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60, //7일
     path: '/',
   });
 
-  return state;
+  const stateWithoutToken = {
+    ...state,
+    data: {
+      email: state.data.email,
+      nickname: state.data.nickname,
+      role: state.data.role,
+    },
+  };
+
+  return stateWithoutToken;
 }
 
 export async function logoutAction() {
