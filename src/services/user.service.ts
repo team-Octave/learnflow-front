@@ -1,4 +1,4 @@
-import { commonFetch } from '@/shared/api';
+import { authFetch, commonFetch } from '@/shared/api';
 
 export async function checkNickname(nickname: string) {
   const response = await commonFetch(
@@ -11,6 +11,13 @@ export async function signup(user: SignupRequest) {
   const response = await commonFetch(`/api/v1/users`, {
     method: 'POST',
     body: JSON.stringify(user),
+  });
+  return response.json();
+}
+
+export async function deleteAccount() {
+  const response = await authFetch(`/api/v1/users/me`, {
+    method: 'DELETE',
   });
   return response.json();
 }

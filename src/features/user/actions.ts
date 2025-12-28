@@ -1,6 +1,6 @@
 'use server';
 
-import { checkNickname, signup } from '@/services/user.service';
+import { checkNickname, deleteAccount, signup } from '@/services/user.service';
 import { ActionState } from '@/shared/types/ActionState';
 
 export async function signupAction(
@@ -14,5 +14,10 @@ export async function checkNicknameAction(
   nickname: string,
 ): Promise<ActionState<any>> {
   const state = await checkNickname(nickname);
+  return state;
+}
+
+export async function deleteAccountAction(): Promise<ActionState<any>> {
+  const state = await deleteAccount();
   return state;
 }
