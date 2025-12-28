@@ -1,21 +1,23 @@
 import { getCreatorLecturesAction } from '@/features/creator/actions';
 import LectureAddButton from '@/features/creator/components/manage/LectureAddButton';
 import LectureTable from '@/features/creator/components/manage/LectureTable';
-import { CreatorLecture } from '@/features/creator/types';
+import { getParam } from '@/shared/utils';
 import { notFound } from 'next/navigation';
 
-export default async function CreatorPage() {
-  const state = await getCreatorLecturesAction();
+interface CreatorPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function CreatorPage({ searchParams }: CreatorPageProps) {
+  const page = getParam((await searchParams).page) || '1';
+  const state = await getCreatorLecturesAction(parseInt(page));
 
   if (!state.success) {
     console.log(state.message);
     return notFound();
   }
 
-  const lectures: CreatorLecture[] = state.data.content;
-  const sortedLectures = lectures.sort((a, b) =>
-    b.createdAt.localeCompare(a.createdAt),
-  );
+  const lecturesData = state.data;
 
   return (
     <div className="flex flex-col mx-auto my-12 gap-8 w-[80%]">
@@ -28,7 +30,7 @@ export default async function CreatorPage() {
         </div>
         <LectureAddButton />
       </div>
-      <LectureTable lectures={sortedLectures} />
+      <LectureTable lecturesData={lecturesData} />
     </div>
   );
 }
