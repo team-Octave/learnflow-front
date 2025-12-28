@@ -11,18 +11,24 @@ import {
   getReviewByIdAction,
 } from '@/features/lectures/actions';
 import { notFound } from 'next/navigation';
+import { getParam } from '@/shared/utils';
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function LectureDetailPage({ params }: PageProps) {
+export default async function LectureDetailPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { id } = await params;
+  const page = getParam((await searchParams).page) || '1';
 
   // 강의 데이터 불러오기
   const [lectureState, reviewState] = await Promise.all([
     getLectureByIdAction(parseInt(id)),
-    getReviewByIdAction(parseInt(id)),
+    getReviewByIdAction(parseInt(id), parseInt(page)),
   ]);
   if (!lectureState.success || !reviewState.success) {
     console.log(lectureState.message || reviewState.message);
@@ -91,7 +97,7 @@ export default async function LectureDetailPage({ params }: PageProps) {
                   reviews={reviewData}
                   ratingAverage={lecture.ratingAverage}
                 />
-                <Reviews reviews={reviewData.content} />
+                <Reviews reviewData={reviewData} />
               </TabsContent>
             </Tabs>
           </div>

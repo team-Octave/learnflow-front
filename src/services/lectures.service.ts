@@ -16,7 +16,11 @@ export async function getLectureById(lectureId: number) {
   return response.json();
 }
 
-export async function getReviewById(lectureId: number) {
-  const response = await commonFetch(`/api/v1/reviews/lectures/${lectureId}`);
+export async function getReviewById(lectureId: number, page: number) {
+  const response = await commonFetch(
+    `/api/v1/reviews/lectures/${lectureId}?page=${
+      page - 1
+    }&size=3&sort=createdAt,desc`,
+  );
   return response.json();
 }
