@@ -16,7 +16,6 @@ interface Props {
 }
 
 export default function ReviewPagination({ currentPage, totalPages }: Props) {
-  console.log(currentPage, totalPages);
   const router = useRouter();
   const searchParams = useSearchParams();
 
