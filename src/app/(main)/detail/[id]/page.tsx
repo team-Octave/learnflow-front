@@ -10,7 +10,7 @@ import {
   getLectureByIdAction,
   getReviewByIdAction,
 } from '@/features/lectures/actions';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getParam } from '@/shared/utils';
 
 interface PageProps {
@@ -23,12 +23,14 @@ export default async function LectureDetailPage({
   searchParams,
 }: PageProps) {
   const { id } = await params;
-  const page = getParam((await searchParams).page) || '1';
+  const pageParam = getParam((await searchParams).page) || '1';
+
+  const page = pageParam ? parseInt(pageParam) : 1;
 
   // 강의 데이터 불러오기
   const [lectureState, reviewState] = await Promise.all([
     getLectureByIdAction(parseInt(id)),
-    getReviewByIdAction(parseInt(id), parseInt(page)),
+    getReviewByIdAction(parseInt(id), page),
   ]);
   if (!lectureState.success || !reviewState.success) {
     console.log(lectureState.message || reviewState.message);
@@ -37,6 +39,10 @@ export default async function LectureDetailPage({
 
   const lecture = lectureState.data!;
   const reviewData = reviewState.data!;
+
+  if (isNaN(page) || page <= 0 || page > reviewData.totalPages) {
+    redirect(`/detail/${id}`);
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20 w-[90%] md:w-[70%]">

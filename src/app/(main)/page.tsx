@@ -8,7 +8,7 @@ import MainPagination from '@/features/lectures/components/main/MainPagination';
 import { getParam } from '@/shared/utils';
 import { Category, Lecture, Level, Sort } from '@/features/lectures/types';
 import { getLecturesAction } from '@/features/lectures/actions';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 const DEFAULT_CATEGORY = 'ALL';
 const DEFAULT_LEVEL = 'ALL';
@@ -56,6 +56,10 @@ export default async function MainPage({ searchParams }: PageProps) {
   const lectures: Lecture[] = data.content;
   const pageNumber = data.pageable.pageNumber + 1;
   const totalPages = data.totalPages;
+
+  if (isNaN(page) || page <= 0 || page > totalPages) {
+    redirect(`/`);
+  }
 
   return (
     <div className="flex flex-col min-h-screen w-full">
