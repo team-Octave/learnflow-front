@@ -7,6 +7,7 @@ const AUTH_ROUTES = ['/login', '/signup'];
 
 // 미들웨어는 URL 경로가 변동될 때마다 실행되어 유저 정보 검증
 export async function middleware(request: NextRequest) {
+  // 현재 입장하려고 하는 URL 주소
   const { pathname } = request.nextUrl;
 
   // 1. 현재 쿠키에서 토큰 추출

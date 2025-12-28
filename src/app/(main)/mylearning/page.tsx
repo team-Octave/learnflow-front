@@ -24,13 +24,14 @@ export default async function MyLearningPage({
       ? (params.sort as LearningSortOptions)
       : 'RECENT-LEARNED';
 
-  const response = await getLearningLecturesAction();
+  const state = await getLearningLecturesAction();
 
-  if (!response.success) {
-    return <div>{response.error}</div>;
+  if (!state.success) {
+    console.log(state.message);
+    return notFound();
   }
 
-  const learningLectures = response.data! as LearningLecture[];
+  const learningLectures = state.data! as LearningLecture[];
   const completedLectures = learningLectures.filter(
     (lecture) => lecture.enrollmentStatus === 'COMPLETED',
   );
