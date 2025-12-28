@@ -1,7 +1,7 @@
 // learnflow-front/src/app/(main)/layout.tsx
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { cookies } from 'next/headers';
+import { getUserAction } from '@/features/auth/actions';
 
 //MainLayout이라는 레이아웃 컴포넌트를 정의.
 //페이지 전체 레이아웃을 잡아주는 컴포넌트.
@@ -11,13 +11,11 @@ export default async function MainLayout({
   //children을 수정 못 하게 하는 타입 설정(그냥 타입 안정성용).
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  // 리프레시 토큰으로 서버쪽에서 로그인 여부 체크
-  const hasToken = cookieStore.has('refreshToken');
-
+  const state = await getUserAction();
+  const user = state.success ? state.data : null;
   return (
     <div className="flex flex-col min-h-screen">
-      <Header serverLoginCheck={hasToken} />
+      <Header initialUser={user} />
       <main className="flex-1 w-full flex flex-col items-center">
         {/* 실제 각 페이지 내용이 여기 들어감. */}
         {children}

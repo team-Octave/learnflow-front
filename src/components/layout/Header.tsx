@@ -4,30 +4,17 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { useUserStore } from '@/store/userStore';
 import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-
-const MyDropdown = dynamic(() => import('./MyDropdown'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-10 h-10 rounded-full bg-zinc-800 animate-pulse" />
-  ),
-});
+import MyDropdown from './MyDropdown';
+import { User } from '@/features/auth/types';
 
 interface HeaderProps {
-  serverLoginCheck: boolean;
+  initialUser: Pick<User, 'email' | 'nickname' | 'role'>;
 }
 
-export default function Header({ serverLoginCheck }: HeaderProps) {
-  const [isRendered, setIsRendered] = useState(false);
-  const { user, isLoading } = useUserStore();
+export default function Header({ initialUser }: HeaderProps) {
+  const user = useUserStore((state) => state.user) ?? initialUser;
 
-  // 렌더링이 다 되면, true로 변경(새로고침 시 로그인 버튼이 잠깐 보이는 현상 해결)
-  useEffect(() => {
-    setIsRendered(true);
-  }, []);
-
-  // 렌더링 중이거나, 유저 정보를 다시 불러오는 중이면, serverLoginCheck를 반영(refreshToken 유/무로 로그인 여부 판단)
-  const showProfileUI = !isRendered || isLoading ? serverLoginCheck : user;
+  const isLoggedIn = user !== null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-900/40 flex justify-between items-center h-16 w-full px-8 bg-zinc-950 backdrop-blur-md supports-backdrop-filter:bg-zinc-950/60">
@@ -36,7 +23,7 @@ export default function Header({ serverLoginCheck }: HeaderProps) {
         <div className="text-indigo-500 text-2xl font-bold">Flow</div>
       </Link>
       <div>
-        {showProfileUI ? (
+        {isLoggedIn ? (
           <MyDropdown
             user={{
               email: user?.email || '이메일',
