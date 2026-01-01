@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { decodeJwt } from 'jose';
 
 //cn()은 className 문자열 합치기 + Tailwind 충돌 해결을 한 번에 해주는 함수.
 export function cn(...inputs: ClassValue[]) {
@@ -23,4 +24,18 @@ export async function convertURLtoFile(
   const response = await fetch(url);
   const blob = await response.blob();
   return new File([blob], filename, { type: blob.type });
+}
+
+export function checkIsExpired(token: string | undefined): boolean {
+  if (!token) return true;
+
+  try {
+    const payload = decodeJwt(token);
+    if (!payload.exp) return true;
+
+    const now = Math.floor(Date.now() / 1000); // 현재 시간 (초 단위)
+    return payload.exp < now + 60; // 만료 1분 전이면 미리 만료된 것으로 간주 (여유 대역폭)
+  } catch (error) {
+    return true;
+  }
 }
