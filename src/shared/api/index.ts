@@ -1,13 +1,11 @@
 'use server';
 import { cookies } from 'next/headers';
-import { reissue } from './reissue';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function authFetch(endpoint: string, options: RequestInit = {}) {
   const cookieStore = await cookies();
   let accessToken = cookieStore.get('accessToken')?.value;
-  const refreshToken = cookieStore.get('refreshToken')?.value;
 
   const getHeaders = (token?: string) => {
     const headers = new Headers(options.headers || {});

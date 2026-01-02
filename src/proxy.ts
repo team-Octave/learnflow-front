@@ -3,6 +3,7 @@ import { checkIsExpired } from '@/shared/utils';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// 보호된 경로 및 인증 관련 경로 정의
 const PROTECTED_ROUTES = ['/creator', '/mypage', '/mylearning', '/play'];
 const AUTH_ROUTES = ['/login', '/signup'];
 
@@ -13,13 +14,14 @@ export async function proxy(request: NextRequest) {
   let accessToken = request.cookies.get('accessToken')?.value;
   const refreshToken = request.cookies.get('refreshToken')?.value;
 
-  // 1. 토큰 만료 체크 및 재발급 (이게 핵심!)
+  // 1. 토큰 만료 체크 및 재발급
   if (checkIsExpired(accessToken) && refreshToken) {
     try {
       const newAccessToken = await reissue(refreshToken);
       if (newAccessToken) {
         response.cookies.set('accessToken', newAccessToken, {
           httpOnly: true,
+          maxAge: 60 * 60,
           secure: true,
           sameSite: 'lax',
           path: '/',
@@ -28,26 +30,45 @@ export async function proxy(request: NextRequest) {
       }
     } catch (error) {
       console.error('Proxy 토큰 갱신 실패:', error);
+
+      // 갱신 실패 시 기존 쿠키 삭제 및 상태 초기화
+      response.cookies.delete('accessToken');
+      response.cookies.delete('refreshToken');
+      accessToken = undefined;
+
+      // 보호된 경로 접근 중이었다면 즉시 로그인 페이지로 리다이렉트
+      if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
+        const loginUrl = new URL('/login', request.url);
+        const redirectResponse = NextResponse.redirect(loginUrl);
+        redirectResponse.cookies.delete('accessToken');
+        redirectResponse.cookies.delete('refreshToken');
+        return redirectResponse;
+      }
     }
   }
 
-  // 2. 권한 가드 (기존 미들웨어 로직)
-  const isProtectedRoute = ['/mypage', '/creator'].some((route) =>
+  // 2. 권한 가드
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
     pathname.startsWith(route),
   );
-  if (isProtectedRoute && !accessToken) {
+
+  // 토큰이 없거나 만료된 경우 리다이렉트
+  if (isProtectedRoute && (!accessToken || checkIsExpired(accessToken))) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // 3. 이미 로그인된 유저가 로그인창 가려는 경우
-  if (pathname.startsWith('/login') && accessToken) {
+  // 3. 이미 로그인된 유저가 로그인/회원가입 페이지에 접근하려는 경우
+  if (
+    AUTH_ROUTES.some((route) => pathname.startsWith(route)) &&
+    accessToken &&
+    !checkIsExpired(accessToken)
+  ) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
   return response;
 }
 
-// 기존 matcher 설정은 그대로 유지하거나 더 정교하게 다듬습니다.
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
