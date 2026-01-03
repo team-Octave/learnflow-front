@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
   // 1. 토큰 만료 체크 및 재발급
   if (checkIsExpired(accessToken) && refreshToken) {
     try {
-      const body = await reissue();
+      const body = await reissue(refreshToken);
       if (body) {
         response.cookies.set('accessToken', body.data.accessToken, {
           httpOnly: true,

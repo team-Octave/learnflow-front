@@ -1,9 +1,12 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+import { commonFetch } from '.';
 
 // 리프레시 토큰으로 엑세스 토큰 재발급 함수
-export async function reissue() {
-  const res = await fetch(`${BASE_URL}/api/v1/auth/reissue`, {
+export async function reissue(refreshToken: string) {
+  const res = await commonFetch(`/api/v1/auth/reissue`, {
     method: 'POST',
+    headers: {
+      Cookie: `refresh_token=${refreshToken}`,
+    },
   });
 
   const body = await res.json();
