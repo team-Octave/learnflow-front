@@ -17,16 +17,23 @@ export async function proxy(request: NextRequest) {
   // 1. 토큰 만료 체크 및 재발급
   if (checkIsExpired(accessToken) && refreshToken) {
     try {
-      const newAccessToken = await reissue(refreshToken);
-      if (newAccessToken) {
-        response.cookies.set('accessToken', newAccessToken, {
+      const body = await reissue();
+      if (body) {
+        response.cookies.set('accessToken', body.data.accessToken, {
           httpOnly: true,
           maxAge: 60 * 60,
           secure: true,
           sameSite: 'lax',
           path: '/',
         });
-        accessToken = newAccessToken;
+        accessToken = body.data.accessToken;
+        response.cookies.set('refreshToken', body.data.refreshToken, {
+          httpOnly: true,
+          maxAge: 60 * 60 * 24 * 7,
+          secure: true,
+          sameSite: 'lax',
+          path: '/',
+        });
       }
     } catch (error) {
       console.error('Proxy 토큰 갱신 실패:', error);
