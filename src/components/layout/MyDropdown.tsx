@@ -15,6 +15,7 @@ import { Book, LogOut, PresentationIcon, User } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { logoutAction } from '@/features/auth/actions';
+import { useTransition } from 'react';
 
 interface MyDropdownProps {
   user: {
@@ -26,9 +27,12 @@ interface MyDropdownProps {
 export default function MyDropdown({ user }: MyDropdownProps) {
   const router = useRouter();
   const { clearUser } = useUserStore();
+  const [isPending, startTransition] = useTransition();
 
   const handleLogout = () => {
-    logoutAction();
+    startTransition(async () => {
+      await logoutAction();
+    });
     clearUser();
     router.replace('/');
   };
@@ -71,6 +75,7 @@ export default function MyDropdown({ user }: MyDropdownProps) {
         <DropdownMenuItem
           className="text-red-500 hover:text-red-500 cursor-pointer"
           onClick={handleLogout}
+          disabled={isPending}
         >
           <LogOut className="text-red-500" />
           <span className="text-red-500">로그아웃</span>

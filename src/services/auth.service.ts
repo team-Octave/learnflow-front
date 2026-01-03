@@ -17,6 +17,11 @@ async function getUser() {
   return response.json();
 }
 
-// async function logout() {}
+async function logout() {
+  const response = await authFetch('/api/v1/auth/logout', {
+    method: 'POST',
+  });
+  return response.json();
+}
 
-export { login, getUser };
+export { login, getUser, logout };
