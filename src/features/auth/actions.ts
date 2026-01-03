@@ -1,7 +1,7 @@
 // src/features/auth/actions.ts
 'use server';
 
-import { getUser, login } from '@/services/auth.service';
+import { getUser, login, logout } from '@/services/auth.service';
 import { cookies } from 'next/headers';
 import { ActionState } from '@/shared/types/ActionState';
 
@@ -44,9 +44,13 @@ export async function loginAction(user: {
 }
 
 export async function logoutAction() {
+  const state = await logout();
+
   const cookieStore = await cookies();
   cookieStore.delete('accessToken');
   cookieStore.delete('refreshToken');
+
+  return state;
 }
 
 export async function getUserAction(): Promise<ActionState<any>> {
