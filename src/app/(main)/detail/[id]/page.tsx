@@ -40,7 +40,7 @@ export default async function LectureDetailPage({
   const lecture = lectureState.data!;
   const reviewData = reviewState.data!;
 
-  if (isNaN(page) || page <= 0 || page > reviewData.totalPages) {
+  if (isNaN(page) || page <= 0 || page - 1 > reviewData.totalPages) {
     redirect(`/detail/${id}`);
   }
 

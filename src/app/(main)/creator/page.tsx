@@ -19,7 +19,7 @@ export default async function CreatorPage({ searchParams }: CreatorPageProps) {
   }
   const lecturesData = state.data;
 
-  if (isNaN(page) || page <= 0 || page > lecturesData.totalPages) {
+  if (isNaN(page) || page <= 0 || page - 1 > lecturesData.totalPages) {
     redirect('/creator');
   }
   return (
