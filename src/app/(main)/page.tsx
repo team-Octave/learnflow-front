@@ -57,7 +57,7 @@ export default async function MainPage({ searchParams }: PageProps) {
   const pageNumber = data.pageable.pageNumber + 1;
   const totalPages = data.totalPages;
 
-  if (isNaN(page) || page <= 0 || page > totalPages) {
+  if (isNaN(page) || page <= 0 || page - 1 > totalPages) {
     redirect(`/`);
   }
 
