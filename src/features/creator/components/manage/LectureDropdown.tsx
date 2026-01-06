@@ -28,13 +28,12 @@ export default function LectureDropdown({
   const handleDelete = () => {
     if (confirm(`${lectureTitle} 강의를 정말 삭제하시겠습니까?`)) {
       startTransition(async () => {
-        const response = await deleteCreatorLectureAction(lectureId);
-        if (!response.success) {
-          alert(response.error);
-          return;
-        } else {
+        const state = await deleteCreatorLectureAction(lectureId);
+        if (state.success) {
           alert(`${lectureTitle} 강의가 성공적으로 삭제되었습니다.`);
           router.refresh();
+        } else {
+          alert(state.message || '강의 삭제에 실패하였습니다.');
         }
       });
     }

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
+import { loginAction } from '../actions';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -13,8 +14,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
 
-  const login = useUserStore((state) => state.login);
-  const isLoading = useUserStore((state) => state.isLoading);
+  const { setUser, isLoading, setIsLoading } = useUserStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,11 +24,20 @@ export default function LoginForm() {
       setError('이메일과 비밀번호를 모두 입력해주세요.');
       return;
     }
-    try {
-      await login(email, password);
+
+    setIsLoading(true);
+
+    // 로그인 액션 요청
+    const state = await loginAction({ email, password });
+
+    // 로그인 성공 여부에 따라 zustand에 전역 정보 저장
+    if (state.success) {
+      setUser(state.data!);
+      setIsLoading(false);
       router.replace('/');
-    } catch (error) {
-      setError(error instanceof Error ? error.message : '로그인 실패');
+    } else {
+      setError(state.message!);
+      setIsLoading(false);
     }
   };
 

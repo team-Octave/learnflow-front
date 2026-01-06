@@ -27,15 +27,15 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
         <img
           src={lecture.thumbnailUrl}
           alt={lecture.title}
-          className="w-full h-full object-cover opacity-60" // ← 여기만 바뀜!
+          className="w-full h-full object-cover opacity-60"
         />
 
         <div className="absolute inset-0 bg-linear-to-r from-zinc-950/70 via-zinc-950/50 to-zinc-950/20" />
       </div>
 
       {/* Content */}
-      <div className="relative z-20 container px-4 md:px-8 py-12 md:py-16 flex flex-col md:flex-row gap-8 items-end">
-        <div className="flex-1 space-y-6">
+      <div className="relative z-20 container px-8 py-12 flex flex-col md:flex-row gap-8 items-end">
+        <div className="w-full flex-1 space-y-6">
           {/* Category + Level + Rating */}
           <div className="flex items-center gap-2">
             <Badge
@@ -91,7 +91,9 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
         </div>
 
         {/* Action Button */}
-        <div className="w-full md:w-80 lg:w-96 shrink-0">{actionButton}</div>
+        <div className="md:absolute right-8 w-full md:w-80 shrink-0">
+          {actionButton}
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 // src/app/(main)/detail/[id]/page.tsx
 
-import LectureSummary from '@/features/lectures/components/detail/LectureSummry';
+import LectureSummary from '@/features/lectures/components/detail/LectureSummary';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';
 import Reviews from '@/features/lectures/components/detail/Reviews';
 import ButtonApply from '@/features/lectures/components/detail/ButtonApply';
@@ -10,28 +10,42 @@ import {
   getLectureByIdAction,
   getReviewByIdAction,
 } from '@/features/lectures/actions';
+import { notFound, redirect } from 'next/navigation';
+import { getParam } from '@/shared/utils';
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function LectureDetailPage({ params }: PageProps) {
+export default async function LectureDetailPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { id } = await params;
+  const pageParam = getParam((await searchParams).page) || '1';
+
+  const page = pageParam ? parseInt(pageParam) : 1;
 
   // 강의 데이터 불러오기
-  const [lectureRes, reviewRes] = await Promise.all([
+  const [lectureState, reviewState] = await Promise.all([
     getLectureByIdAction(parseInt(id)),
-    getReviewByIdAction(parseInt(id)),
+    getReviewByIdAction(parseInt(id), page),
   ]);
-  if (!lectureRes.success || !reviewRes.success) {
-    return <div>{lectureRes.error || reviewRes.error}</div>;
+  if (!lectureState.success || !reviewState.success) {
+    console.log(lectureState.message || reviewState.message);
+    return notFound();
   }
 
-  const lecture = lectureRes.data!;
-  const reviews = reviewRes.data!;
+  const lecture = lectureState.data!;
+  const reviewData = reviewState.data!;
+
+  if (isNaN(page) || page <= 0 || page - 1 > reviewData.totalPages) {
+    redirect(`/detail/${id}`);
+  }
 
   return (
-    <div className="min-h-screen bg-background pb-20 w-[60%]">
+    <div className="min-h-screen bg-background pb-20 w-[90%] md:w-[70%]">
       {/* 상단 요약 영역 */}
       <LectureSummary
         lecture={lecture}
@@ -86,10 +100,10 @@ export default async function LectureDetailPage({ params }: PageProps) {
               {/* 수강평 탭 */}
               <TabsContent value="reviews" className="space-y-6">
                 <AverageReview
-                  reviews={reviews}
+                  reviews={reviewData}
                   ratingAverage={lecture.ratingAverage}
                 />
-                <Reviews reviews={reviews} />
+                <Reviews reviewData={reviewData} />
               </TabsContent>
             </Tabs>
           </div>

@@ -8,7 +8,7 @@ import { signupAction, checkNicknameAction } from '@/features/user/actions';
 import Link from 'next/link';
 import { Check, X, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils';
 
 export default function SignupForm() {
   const router = useRouter();
@@ -94,7 +94,6 @@ export default function SignupForm() {
     setNickname(e.target.value);
   };
 
-  // 닉네임 중복 확인
   const handleCheckNickname = async () => {
     setNicknameError('');
     setNicknameOk(false);
@@ -105,19 +104,12 @@ export default function SignupForm() {
     }
 
     startTransition(async () => {
-      try {
-        const result = await checkNicknameAction(nickname);
-
-        if (result.success) {
-          setNicknameOk(true);
-        } else {
-          setNicknameError(result.error || '이미 사용 중인 닉네임입니다.');
-          setNicknameOk(false);
-        }
-      } catch (error) {
-        setNicknameError(
-          '중복 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        );
+      const state = await checkNicknameAction(nickname);
+      if (state.success) {
+        setNicknameOk(true);
+      } else {
+        setNicknameError(state.message || '이미 사용 중인 닉네임입니다.');
+        setNicknameOk(false);
       }
     });
   };
@@ -147,21 +139,19 @@ export default function SignupForm() {
     }
 
     startTransition(async () => {
-      try {
-        const result = await signupAction({
-          email,
-          password,
-          nickname,
-        });
-        if (result.success) {
-          alert('회원가입이 완료되었습니다.');
-          router.push('/login');
-        } else {
-          setServerError(result.error!);
-        }
-      } catch (error) {
+      const state = await signupAction({
+        email,
+        password,
+        nickname,
+      });
+
+      if (state.success) {
+        alert('회원가입이 완료되었습니다.');
+        router.push('/login');
+      } else {
         setServerError(
-          '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+          state.message ||
+            '회원가입이 실패하였습니다. 잠시 후 다시 시도해주세요.',
         );
       }
     });

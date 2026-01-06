@@ -31,7 +31,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { BasicInfo, CreatorLecture } from '../../types';
 import { Category, Lecture, Level } from '@/features/lectures/types';
 import { useRouter } from 'next/navigation';
-import { convertURLtoFile } from '@/lib/utils';
+import { convertURLtoFile } from '@/shared/utils';
 import { createBasicLectureAction } from '../../actions';
 
 interface LectureFormProps {
@@ -111,12 +111,13 @@ export default function LectureForm({ lecture }: LectureFormProps) {
       // CASE C: [수정 모드]인데 파일을 안 올린 경우 (basicInfo.file === null)
       // -> 아무것도 보내지 않음 (서버는 기존 이미지 유지)
 
-      const response = await createBasicLectureAction(formData);
-      if (!response.success) {
-        alert(response.error);
-      } else {
-        const lecture = response.data!;
+      const state = await createBasicLectureAction(formData);
+
+      if (state.success) {
+        const lecture = state.data!;
         router.replace(`/creator/${lecture.id}?step=2`);
+      } else {
+        alert(state.message || '강의 저장에 실패하였습니다.');
       }
     });
   };

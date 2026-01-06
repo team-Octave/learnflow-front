@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,6 +14,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { deleteAccountAction } from '../actions';
+import { logoutAction } from '@/features/auth/actions';
+import { useUserStore } from '@/store/userStore';
 
 interface AccountDeleteButtonProps {
   email: string;
@@ -22,6 +26,9 @@ interface AccountDeleteButtonProps {
 export default function AccountDeleteButton({
   email,
 }: AccountDeleteButtonProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const [isOpen, setIsOpen] = useState(false);
   const [inputEmail, setInputEmail] = useState('');
   const [error, setError] = useState('');
@@ -41,21 +48,29 @@ export default function AccountDeleteButton({
       return;
     }
 
-    // ✅ 지금은 mock
-    console.log('회원 탈퇴 진행 (지금은 mock)');
+    startTransition(async () => {
+      const state = await deleteAccountAction();
+      if (state.success) {
+        alert('회원 탈퇴가 완료되었습니다.');
+        setIsOpen(false);
 
-    // ✅ 사용자에게 "처리됐다"는 UI 변화 제공
-    setIsOpen(false);
-    handleClose();
-    // 원하면 alert도 가능:
-    // alert('탈퇴 요청이 처리되었습니다. (mock)');
+        useUserStore.getState().clearUser();
+        handleClose();
+        await logoutAction();
+        router.replace('/');
+      } else {
+        setError(state.message || '회원 탈퇴에 실패하였습니다.');
+      }
+    });
   };
 
   return (
     <Dialog
       open={isOpen}
       onOpenChange={(next) => {
-        if (!next) handleClose();
+        if (!next) {
+          handleClose();
+        }
         setIsOpen(next);
       }}
     >
@@ -102,16 +117,10 @@ export default function AccountDeleteButton({
             <Button variant="outline">취소</Button>
           </DialogClose>
 
-          {/* <Button
-            className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
-            onClick={handleDelete}
-            disabled={!isEqual}
-          >
-            탈퇴하기
-          </Button> */}
           <Button
             className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
-            disabled={!isEqual}
+            disabled={!isEqual || isPending}
+            onClick={handleDelete}
           >
             탈퇴하기
           </Button>

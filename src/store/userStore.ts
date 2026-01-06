@@ -1,59 +1,24 @@
-import { loginAction, logoutAction } from '@/features/auth/actions';
-import { AuthState, LoginRequest } from '@/features/auth/types';
-import { getMe } from '@/services/auth.service';
+import { User } from '@/features/auth/types';
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 
-interface UserStore extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  checkAuth: () => Promise<void>; // 앱 시작 시 로그인 여부 체크
+// 전역에 저장할 정보는 이렇게 3가지임 (이메일, 닉네임, 역할(MEMBER or ADMIN))
+type UserState = Pick<User, 'email' | 'nickname' | 'role'> | null;
+
+interface UserStore {
+  user: UserState; // 전역으로 관리할 유저 정보(이메일, 닉네임, 역할(MEMBER or ADMIN))
+  isLoading: boolean; // API 요청 중에 로딩 중을 확인하기 위한 정보 (true or false)
+  setIsLoading: (value: boolean) => void; // 로딩 중 상태 변경 함수
+  setUser: (userData: UserState) => void; // 유저를 전역상태에 저장하는 함수(로그인 / 새로고침 시 사용)
+  clearUser: () => void; // 로그아웃 시 전역상태에 있는 유저를 제거하는 함수
 }
 
-export const useUserStore = create<UserStore>()(
-  persist(
-    (set) => ({
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-      login: async (email, password) => {
-        set({ isLoading: true });
-        try {
-          // authservice 호출
-          const data = await loginAction(email, password);
-          if (data.success) {
-            set({ user: data.data, isAuthenticated: true, isLoading: false });
-          } else {
-            throw new Error(data.error);
-          }
-        } catch (error) {
-          set({ isLoading: false });
-          throw error;
-        }
-      },
+export const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  isLoading: false,
 
-      logout: async () => {
-        await logoutAction(); // 서버 쿠키 삭제
-        set({ user: null, isAuthenticated: false });
-      },
+  setIsLoading: (value) => set({ isLoading: value }),
 
-      checkAuth: async () => {
-        set({ isLoading: true });
-        try {
-          const user = await getMe();
-          set({ user, isAuthenticated: true, isLoading: false });
-        } catch (error) {
-          set({ user: null, isAuthenticated: false, isLoading: false });
-        }
-      },
-    }),
-    {
-      name: 'user-storage', // localStorage에 저장될 키 이름
-      storage: createJSONStorage(() => localStorage), // 저장소 설정 (기본값 localStorage)
-      partialize: (state) => ({
-        user: state.user,
-        isAuthenticated: state.isAuthenticated,
-      }),
-    },
-  ),
-);
+  setUser: (userData) => set({ user: userData as UserState }),
+
+  clearUser: () => set({ user: null }),
+}));

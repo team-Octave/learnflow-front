@@ -1,21 +1,27 @@
 import { getCreatorLecturesAction } from '@/features/creator/actions';
 import LectureAddButton from '@/features/creator/components/manage/LectureAddButton';
 import LectureTable from '@/features/creator/components/manage/LectureTable';
-import { notFound } from 'next/navigation';
+import { getParam } from '@/shared/utils';
+import { notFound, redirect } from 'next/navigation';
 
-export default async function CreatorPage() {
-  const response = await getCreatorLecturesAction();
+interface CreatorPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-  if (!response.success) {
-    console.log(response.error);
-    return <div>{response.error}</div>;
+export default async function CreatorPage({ searchParams }: CreatorPageProps) {
+  const pageParam = getParam((await searchParams).page);
+  const page = pageParam ? parseInt(pageParam) : 1;
+  const state = await getCreatorLecturesAction(page);
+
+  if (!state.success) {
+    console.log(state.message);
+    return notFound();
   }
+  const lecturesData = state.data;
 
-  const lectures = response.data!;
-  const sortedLectures = lectures.sort((a, b) =>
-    b.createdAt.localeCompare(a.createdAt),
-  );
-
+  if (isNaN(page) || page <= 0 || page - 1 > lecturesData.totalPages) {
+    redirect('/creator');
+  }
   return (
     <div className="flex flex-col mx-auto my-12 gap-8 w-[80%]">
       <div className="flex justify-between items-center">
@@ -27,7 +33,7 @@ export default async function CreatorPage() {
         </div>
         <LectureAddButton />
       </div>
-      <LectureTable lectures={sortedLectures} />
+      <LectureTable lecturesData={lecturesData} />
     </div>
   );
 }

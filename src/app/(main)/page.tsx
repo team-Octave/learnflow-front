@@ -5,11 +5,10 @@ import LevelFilter from '@/features/lectures/components/main/LevelFilter';
 import SortSelect from '@/features/lectures/components/main/SortSelect';
 import LectureCard from '@/features/lectures/components/main/LectureCard';
 import MainPagination from '@/features/lectures/components/main/MainPagination';
-
-import { getLectures } from '@/services/lectures.service';
-import { getParam } from '@/lib/utils';
+import { getParam } from '@/shared/utils';
 import { Category, Lecture, Level, Sort } from '@/features/lectures/types';
 import { getLecturesAction } from '@/features/lectures/actions';
+import { notFound, redirect } from 'next/navigation';
 
 const DEFAULT_CATEGORY = 'ALL';
 const DEFAULT_LEVEL = 'ALL';
@@ -39,7 +38,7 @@ export default async function MainPage({ searchParams }: PageProps) {
   const sort = normalize(params.sort, DEFAULT_SORT) as Sort;
   const page = parsePage(params.page);
 
-  const response = await getLecturesAction({
+  const state = await getLecturesAction({
     category,
     level,
     sort,
@@ -47,16 +46,20 @@ export default async function MainPage({ searchParams }: PageProps) {
     limit: ITEMS_PER_PAGE,
   });
 
-  if (!response.success) {
-    alert(response.error);
-    return;
+  if (!state.success) {
+    console.log(state.message);
+    return notFound();
   }
 
-  const data = response.data;
+  const data = state.data;
 
   const lectures: Lecture[] = data.content;
   const pageNumber = data.pageable.pageNumber + 1;
   const totalPages = data.totalPages;
+
+  if (isNaN(page) || page <= 0 || page - 1 > totalPages) {
+    redirect(`/`);
+  }
 
   return (
     <div className="flex flex-col min-h-screen w-full">

@@ -1,7 +1,7 @@
 // src/features/learning/components/play/AsideLesson.tsx
 
 import { Lesson } from '@/features/lectures/types';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils';
 import { PlayCircle, PencilLine, CheckCircle } from 'lucide-react';
 
 type LessonType = 'VIDEO' | 'QUIZ';

@@ -1,13 +1,16 @@
 'use client';
 
 import type { Review } from '../../types';
+import MainPagination from '../main/MainPagination';
 import ReviewItem from './ReviewItem';
+import ReviewPagination from './ReviewPagination';
 
-interface Props {
-  reviews: Review[];
+interface ReviewsProps {
+  reviewData: any;
 }
 
-export default function Reviews({ reviews }: Props) {
+export default function Reviews({ reviewData }: ReviewsProps) {
+  const reviews: Review[] = reviewData.content;
   return (
     <section className="space-y-6">
       {/* 리뷰 없는 경우 */}
@@ -18,10 +21,17 @@ export default function Reviews({ reviews }: Props) {
       )}
 
       {/* 리뷰 리스트 */}
-      {reviews.length > 0 &&
-        reviews.map((review) => (
-          <ReviewItem key={review.reviewId} review={review} />
-        ))}
+      {reviews.length > 0 && (
+        <>
+          {reviews.map((review) => (
+            <ReviewItem key={review.reviewId} review={review} />
+          ))}
+          <ReviewPagination
+            currentPage={reviewData.pageable.pageNumber + 1}
+            totalPages={reviewData.totalPages}
+          />
+        </>
+      )}
     </section>
   );
 }

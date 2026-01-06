@@ -1,7 +1,7 @@
 'use server';
 
 import { ReviewRequest } from '@/features/learning/types';
-import { authFetch } from '@/lib/api';
+import { authFetch } from '@/shared/api';
 
 export async function enrollLecture(lectureId: number): Promise<any> {
   const response = await authFetch(`/api/v1/enrollment`, {
