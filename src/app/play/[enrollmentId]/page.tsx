@@ -23,7 +23,7 @@ export default async function PlayPage({
   const { enrollmentId } = await params;
   const { lectureId, lessonId } = await searchParams;
 
-  if (!enrollmentId || !lectureId || !lectureId) {
+  if (!enrollmentId || !lectureId || !lessonId) {
     alert('수강 정보가 없습니다.');
     redirect('/mylearning');
   }
