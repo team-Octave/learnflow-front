@@ -30,6 +30,7 @@ export async function deleteReview(reviewId: number) {
   return response.json();
 }
 
+// 수강 ID(enrollmentId)를 서버로 보내서 해당 수강 정보를 조회하는 비동기 함수
 export async function getEnrollmentById(enrollmentId: number) {
   const response = await authFetch(`/api/v1/enrollment/select-enrollment`, {
     method: 'POST',
