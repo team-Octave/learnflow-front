@@ -23,8 +23,8 @@ export default async function PlayPage({
   const { enrollmentId } = await params;
   const { lectureId, lessonId } = await searchParams;
 
-  if (!enrollmentId || !lectureId || !lessonId) {
-    alert('수강 정보가 없습니다.');
+  // 리팩토링1) 서버 컴포넌트에서 alert() 사용 불가
+  if (!enrollmentId || !lessonId || !lectureId) {
     redirect('/mylearning');
   }
 
@@ -33,23 +33,49 @@ export default async function PlayPage({
     getLectureByIdAction(parseInt(lectureId)),
   ]);
 
-  if (!enrollmentState.success || !lectureState.success) {
-    console.log(enrollmentState.message || lectureState.message);
+  // if (!enrollmentState.success || !lectureState.success) {
+  //   console.log(enrollmentState.message || lectureState.message);
+  //   return notFound();
+  // }
+
+  // 리팩토링 6) 데이터 로드 실패 처리: console.log 대신 notFound()/redirect() 분리 권장
+  // 수강 정보 로딩 실패
+  if (!enrollmentState.success) {
+    console.error(
+      '[PlayPage] enrollment load failed:',
+      enrollmentState.message,
+    );
+    redirect('/mylearning');
+  }
+
+  // 강의 정보 로딩 실패
+  if (!lectureState.success) {
+    console.error('[PlayPage] lecture load failed:', lectureState.message);
     return notFound();
   }
 
   const enrollmentInfo = enrollmentState.data as Enrollment;
   const lecture = lectureState.data as Lecture;
 
-  // 2) 전체 레슨을 flat 구조로 변환
-  const allLessons = lecture.chapters!.flatMap(
-    (chapter: Chapter) => chapter.lessons,
-  );
+  // 리팩토링3) lecture.chapters! 강제 단언 제거
+  // const allLessons = lecture.chapters!.flatMap(
+  //   (chapter: Chapter) => chapter.lessons,
+  // );
+  const chapters = lecture.chapters;
+  if (!chapters || chapters.length === 0) {
+    redirect('/mylearning');
+  }
+  const allLessons = chapters.flatMap((chapter: Chapter) => chapter.lessons);
 
   // 3) URL의 lessonId와 일치하는 레슨 찾기
   const currentLesson = allLessons.find(
     (l: Lesson) => Number(l.id) === Number(lessonId),
   );
+
+  // 리팩토링3) lecture 내에 해당 lesson이 없으면 오류 처리 (리다이렉트)
+  if (!currentLesson) {
+    redirect('/mylearning');
+  }
 
   // 4) 비디오 / 퀴즈 타입 분기
   const isVideoLesson = currentLesson!.lessonTypeDisplayName === 'VIDEO';
