@@ -3,7 +3,7 @@
 import { ReviewRequest } from '@/features/learning/types';
 import { authFetch } from '@/shared/api';
 
-export async function enrollLecture(lectureId: number): Promise<any> {
+export async function enrollLecture(lectureId: number) {
   const response = await authFetch(`/api/v1/enrollment`, {
     method: 'POST',
     body: JSON.stringify({ lectureId }),
