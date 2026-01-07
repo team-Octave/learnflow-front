@@ -25,8 +25,8 @@ export default async function PlayPage({
   searchParams,
 }: PlayPageProps) {
   // 3) URL에서 값 꺼내기
-  const { enrollmentId } = await params;
-  const { lectureId, lessonId } = await searchParams;
+  const { enrollmentId } = await params; //path param(URL의 “경로(path)” 자체에 포함된 값): enrollmentId
+  const { lectureId, lessonId } = await searchParams; //query string(URL 뒤에 ?로 붙는 옵션 값들): lectureId, lessonId
 
   // 4) 필수 값 없으면 리다이렉트
   // URL에 필요한 값이 하나라도 없으면 “수강 정보 없음” 처리 후 /mylearning으로 보내기.
