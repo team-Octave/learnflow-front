@@ -9,6 +9,11 @@ import { AsideCurriculum } from '@/features/learning/components/play/AsideCurric
 import { getEnrollmentByIdAction } from '@/features/learning/actions';
 import { notFound, redirect } from 'next/navigation';
 
+/*
+흐름 요약(한 줄)
+URL 파라미터 파싱 → 수강/강의 데이터 조회 → 레슨 flatten → 현재 레슨 선택 → VIDEO면 Video, 아니면 Quiz 렌더 → 옆에 커리큘럼 표시
+*/
+
 // 1) 사용자가 페이지 진입
 // URL : /play/[enrollmentId]?lectureId=LEC1&lessonId=LES123
 interface PlayPageProps {
@@ -31,28 +36,28 @@ export default async function PlayPage({
   // 4) 필수 값 없으면 리다이렉트
   // URL에 필요한 값이 하나라도 없으면 “수강 정보 없음” 처리 후 /mylearning으로 보내기.
   if (!enrollmentId || !lessonId || !lectureId) {
-    alert('수강 정보가 없습니다.');
-    // @ 서버 컴포넌트에서 alert()는 동작하지 않습니다. (브라우저 API라서)
     redirect('/mylearning');
   }
 
+  // 5) 수강 정보 + 강의 정보 동시에 가져오기(병렬)
   // Promise.all로 두 요청을 동시에 실행해서 성능을 올립니다.
   const [enrollmentState, lectureState] = await Promise.all([
+    // getEnrollmentByIdAction 특정 enrollmentId를 받아서 해당 Enrollment 정보를 조회한 뒤 그대로 반환하는 함수 호출
+    getEnrollmentByIdAction(parseInt(enrollmentId)), //enrollmentId로 수강 정보 조회
+    // 1단계: 함수 호출
+    getLectureByIdAction(parseInt(lectureId)), //lectureId로 강의(챕터/레슨 포함) 조회
     // parseInt(...)로 string을 number로 변환해서 Action에 전달합니다.
-    // parseInt는 문자열(string)을 정수(number)로 변환해주는 자바스크립트 함수
-    getEnrollmentByIdAction(parseInt(enrollmentId)),
-    getLectureByIdAction(parseInt(lectureId)),
   ]);
 
-  // 조회 실패 처리 (404)
-  // || 는 둘 중 하나라도 true이면 전체가 true
+  // 6) 둘 중 하나라도 실패하면 404 처리
   if (!enrollmentState.success || !lectureState.success) {
+    // || 는 둘 중 하나라도 true이면 전체가 true
     //둘 중 하나라도 실패하면:
     console.log(enrollmentState.message || lectureState.message); //메시지 로그 남기고
     return notFound(); //notFound()로 404 페이지를 띄움 (Next.js App Router 기본)
   }
 
-  // 데이터 꺼내기 (타입 단언)
+  // 7) 데이터 꺼내기 (타입 단언)
   /*
     enrollmentState.data → 어떤 타입인지 컴파일 시점에 명확하지 않은 값
     as Enrollment → “이 값은 Enrollment 타입이라고 내가 확신한다”라고 TypeScript에게 알려주는 것
@@ -62,42 +67,32 @@ export default async function PlayPage({
   const enrollmentInfo = enrollmentState.data as Enrollment;
   const lecture = lectureState.data as Lecture;
 
-  // 2) 전체 레슨을 flat 구조로 변환
-  // 레슨 전체를 “일렬(flat)”로 펴기
-  // 모든 챕터(chapter)에 들어있는 레슨(lesson)들을 하나의 배열로 모으는 코드
+  // 8) 강의의 모든 레슨을 1차원 배열로 만들기
+  // 레슨 전체를 “일렬(flat)”로 펴기 : 모든 챕터(chapter)에 들어있는 레슨(lesson)들을 하나의 배열로 모으는 코드
   const allLessons = lecture.chapters!.flatMap(
-    // chapters! 는 null이나 undefined가 아니다”라고 TypeScript에게 강제로 알려주는 것
-    // TypeScript에게 이렇게 말하는 효과 : lecture.chapters는 반드시 존재한다!
+    // chapters! 는 null이나 undefined가 아니다”라고 TypeScript에게 강제로 알려주는 것, TypeScript에게 이렇게 말하는 효과 : lecture.chapters는 반드시 존재한다!
     (chapter: Chapter) => chapter.lessons,
   );
 
-  // 3) URL의 lessonId와 일치하는 레슨 찾기
+  // 9) 현재 레슨 찾기
+  // URL의 lessonId와 같은 레슨을 찾아서 currentLesson로 지정
+  // Number(...)로 타입 맞춰 비교합니다.
   const currentLesson = allLessons.find(
     (l: Lesson) => Number(l.id) === Number(lessonId),
   );
-  /*
-  URL의 lessonId와 일치하는 레슨을 find로 찾습니다.
 
-Number(...)로 타입 맞춰 비교합니다.
-
-⚠️ 여기서 currentLesson이 없을 수도 있는데(잘못된 lessonId),
-아래에서 currentLesson!을 쓰고 있어서 없으면 바로 터집니다.
-*/
-
-  // 4) 비디오 / 퀴즈 타입 분기
+  // 10) 레슨 타입에 따라 Video / 논리적으로 “VIDEO가 아닌 모든 경우 결정
   const isVideoLesson = currentLesson!.lessonTypeDisplayName === 'VIDEO';
-  // 오류처리 액션 로직 만들어야함 @@
-  // currentLesson! : ! 사용 → 레슨이 반드시 존재한다고 가정
-  //currentLesson! → 없을 경우 방어 로직 필요 @@
+  // lessonTypeDisplayName === 'VIDEO' 👉 VIDEO인지 아닌지만 체크
 
-  // 5) 실제 UI 렌더링
+  // 11) 최종 렌더링(화면 구성)
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* 상단 타이틀 바 */}
       <TitleBar lectureTitle={lecture.title} />
 
       <div className="flex flex-1  mx-auto w-full">
-        {/* 메인 영역 */}
+        {/* 중앙: 메인 영역(Video 또는 Quiz) */}
         <main className="flex-1 flex items-center">
           {isVideoLesson ? (
             <Video enrollmentInfo={enrollmentInfo} lesson={currentLesson!} />
@@ -109,7 +104,7 @@ Number(...)로 타입 맞춰 비교합니다.
           )}
         </main>
 
-        {/* 오른쪽 사이드 커리큘럼 */}
+        {/* 우측: 커리큘럼(목차/진도) */}
         <AsideCurriculum
           lecture={lecture}
           currentLessonId={currentLesson!.id}

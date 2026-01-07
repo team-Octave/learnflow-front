@@ -39,18 +39,22 @@ export async function deleteReviewAction(
   return state;
 }
 
-// 수강(enrollment) ID를 이용해 수강 정보를 조회하는 역할
-// 수강 ID를 받아서, 실제 조회 함수(getEnrollmentById)를 호출하고 그 결과(ActionState)를 그대로 반환하는 서버 액션 함수”
+// 특정 enrollmentId를 받아서 해당 Enrollment 정보를 조회한 뒤 그대로 반환하는 함수
 export async function getEnrollmentByIdAction(
-  // enrollmentId 조회하려는 수강 ID
-  enrollmentId: number,
-  // 이 함수는 Promise를 반환 (비동기 함수)
+  enrollmentId: number, //조회할 대상의 ID
+  // 이 함수의 최종 반환값: Promise<any> (타입 지정 안 되어 있음)
 ): Promise<ActionState<any>> {
-  //<ActionState<any> 서버 액션의 결과 상태를 감싸는 타입
-  // 결과를 state 변수에 저장
-  const state = await getEnrollmentById(enrollmentId); // getEnrollmentById : 실제로 DB나 API에서 수강 정보를 조회하는 함수
-  return state; //조회 결과(ActionState)를 그대로 반환
+  const state = await getEnrollmentById(enrollmentId); //getEnrollmentById 실제 데이터를 가져오는 함수 (서비스/리포지토리 계층일 가능성 큼)
+  return state;
 }
+/*
+getEnrollmentByIdAction(enrollmentId) 호출
+내부에서await getEnrollmentById(enrollmentId)
+실행
+getEnrollmentById가:DB 조회, API 호출,혹은 다른 비동기 작업 수행 => 결과를 state 변수에 저장
+state를 그대로 반환
+호출한 쪽에서 await으로 결과 수신
+*/
 
 export async function completeLessonAction(
   enrollmentId: number,
