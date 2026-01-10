@@ -29,8 +29,9 @@ export default function Header({ initialUser }: HeaderProps) {
         {isLoggedIn ? (
           <MyDropdown
             user={{
-              email: user.email || '이메일',
-              nickname: user.nickname || '닉네임',
+              email: user.email,
+              nickname: user.nickname,
+              role: user.role,
             }}
           />
         ) : (

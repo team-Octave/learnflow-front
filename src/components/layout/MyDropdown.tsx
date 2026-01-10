@@ -11,23 +11,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Book, LogOut, PresentationIcon, User } from 'lucide-react';
+import {
+  Book,
+  LogOut,
+  PresentationIcon,
+  ShieldUserIcon,
+  UserIcon,
+} from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { logoutAction } from '@/features/auth/actions';
 import { useTransition } from 'react';
+import { User } from '@/features/auth/types';
 
 interface MyDropdownProps {
-  user: {
-    email: string;
-    nickname: string;
-  };
+  user: Pick<User, 'email' | 'nickname' | 'role'>;
 }
 
 export default function MyDropdown({ user }: MyDropdownProps) {
   const router = useRouter();
   const { clearUser } = useUserStore();
   const [isPending, startTransition] = useTransition();
+
+  // 관리자 메뉴 확인을 위한 가짜 역할
+  // 실제 사용에서는 user.role로 접근
+  const mockRole = 'ADMIN' as 'ADMIN' | 'MEMBER';
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -45,32 +53,52 @@ export default function MyDropdown({ user }: MyDropdownProps) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48 bg-zinc-900" align="end">
-        <DropdownMenuLabel>
-          <div>{user.nickname}</div>
-          <div className="text-xs text-zinc-400">{user.email}</div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <Link href="/mypage">
-            <DropdownMenuItem className="cursor-pointer">
-              <User />내 정보
-            </DropdownMenuItem>
-          </Link>
-          <Link href="/mylearning">
-            <DropdownMenuItem className="cursor-pointer">
-              <Book />내 학습
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <Link href="/creator">
-            <DropdownMenuItem className="cursor-pointer">
-              <PresentationIcon />
-              강의 관리
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuGroup>
+        {mockRole === 'ADMIN' ? (
+          <>
+            <DropdownMenuLabel>
+              <div>관리자</div>
+              <div className="text-xs text-zinc-400">{user.email}</div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <Link href="/admin/audit">
+                <DropdownMenuItem className="cursor-pointer">
+                  <ShieldUserIcon />
+                  관리자 페이지
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuGroup>
+          </>
+        ) : (
+          <>
+            <DropdownMenuLabel>
+              <div>{user.nickname}</div>
+              <div className="text-xs text-zinc-400">{user.email}</div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <Link href="/mypage">
+                <DropdownMenuItem className="cursor-pointer">
+                  <UserIcon />내 정보
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/mylearning">
+                <DropdownMenuItem className="cursor-pointer">
+                  <Book />내 학습
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <Link href="/creator">
+                <DropdownMenuItem className="cursor-pointer">
+                  <PresentationIcon />
+                  강의 관리
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuGroup>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-red-500 hover:text-red-500 cursor-pointer"
