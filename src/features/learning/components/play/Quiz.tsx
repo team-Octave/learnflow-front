@@ -21,7 +21,7 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
 
   const questions = lesson.quizQuestions!;
 
-  // ✅ 현재 URL 정보 사용
+  // 현재 URL 정보 사용
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -95,6 +95,9 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
               selected={selected[q.id]}
               onSelect={handleSelect}
               submitted={submitted}
+              correctAnswer={q.correct} //  추가: 정답 전달
+              // 각 질문의 정답을 자식 컴포넌트로 전달
+              // 정답/오답 표시용
             />
           ))}
         </div>
