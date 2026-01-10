@@ -1,4 +1,78 @@
-export default function AuditRow() {
-  // AuditTable에 들어가는 한 Row(가로 한 줄) 컴포넌트
-  return <div></div>;
+// src/features/audit/components/main/AuditRow.tsx
+import Link from 'next/link';
+import Image from 'next/image';
+import { ImageIcon } from 'lucide-react';
+
+import type { AuditLecture } from '@/features/audit/types';
+import { TableCell, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+
+type Props = {
+  lecture: AuditLecture;
+};
+
+function formatDateTime(iso: string) {
+  const d = new Date(iso);
+
+  const date = new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(d);
+
+  const time = new Intl.DateTimeFormat('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(d);
+
+  return { date, time };
+}
+
+export default function AuditRow({ lecture }: Props) {
+  const { date, time } = formatDateTime(lecture.requestedAt);
+
+  return (
+    <TableRow className="border-white/10 hover:bg-white/5">
+      <TableCell className="py-4">
+        <div className="w-[110px] h-[62px] rounded-lg overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center">
+          {lecture.thumbnailUrl ? (
+            <Image
+              src={lecture.thumbnailUrl}
+              alt={`${lecture.title} 썸네일`}
+              width={220}
+              height={124}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="text-white/30 flex flex-col items-center gap-1">
+              <ImageIcon size={18} />
+              <span className="text-[10px]">No Image</span>
+            </div>
+          )}
+        </div>
+      </TableCell>
+
+      <TableCell className="text-white/90">
+        <p className="text-sm font-medium line-clamp-2">{lecture.title}</p>
+      </TableCell>
+
+      <TableCell className="text-white/80 text-sm">
+        {lecture.instructorNickname}
+      </TableCell>
+
+      <TableCell className="text-white/70 text-sm">
+        <div className="flex flex-col gap-1">
+          <span>{date}</span>
+          <span className="text-white/50">{time}</span>
+        </div>
+      </TableCell>
+
+      <TableCell className="text-right">
+        <Button asChild size="sm" className="rounded-full">
+          <Link href={`/admin/audit/${lecture.id}`}>검토</Link>
+        </Button>
+      </TableCell>
+    </TableRow>
+  );
 }
