@@ -53,7 +53,7 @@ export default function MyDropdown({ user }: MyDropdownProps) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48 bg-zinc-900" align="end">
-        {mockRole === 'ADMIN' ? (
+        {user.role === 'ADMIN' ? (
           <>
             <DropdownMenuLabel>
               <div>관리자</div>
