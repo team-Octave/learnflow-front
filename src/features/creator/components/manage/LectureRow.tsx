@@ -1,16 +1,21 @@
 'use client';
 
 import { TableCell, TableRow } from '@/components/ui/table';
-import { Loader2, Lock, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { CreatorLecture } from '../../types';
+import { CreatorLecture, LectureStatus } from '../../types';
 import LectureDropdown from './LectureDropdown';
 import { CATEGORY_MAP } from '@/features/lectures/types';
 import { Button } from '@/components/ui/button';
 import { useTransition } from 'react';
 import { publishCreatorLectureAction } from '../../actions';
 import { useRouter } from 'next/navigation';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface LectureRowProps {
   lecture: CreatorLecture;
@@ -39,6 +44,63 @@ export default function LectureRow({ lecture }: LectureRowProps) {
     });
   };
 
+  const lectureStatus = (status: LectureStatus) => {
+    switch (status) {
+      case 'UNPUBLISHED': {
+        return (
+          <Button
+            variant="outline"
+            onClick={handlePublish}
+            disabled={isPending}
+            className="group w-16 h-6 rounded-xl border-gray-400 text-gray-500 hover:bg-green-50 text-xs cursor-pointer transition-all"
+          >
+            <span className="block group-hover:hidden">비공개</span>
+            <span className="hidden group-hover:block font-bold">
+              검토 요청
+            </span>
+          </Button>
+        );
+      }
+      case 'SUBMIT': {
+        return (
+          <Badge
+            variant="secondary"
+            className="w-16 border border-yellow-500 bg-yellow-500/10 text-yellow-500"
+          >
+            검토 중
+          </Badge>
+        );
+      }
+      case 'PUBLISHED': {
+        return (
+          <Badge
+            variant="secondary"
+            className="w-16 border border-green-500 bg-green-500/10 text-green-500"
+          >
+            공개
+          </Badge>
+        );
+      }
+      case 'REJECT': {
+        return (
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge
+                variant="secondary"
+                className="w-16 border border-red-500 bg-red-500/10 text-red-500 cursor-pointer"
+              >
+                반려 됨
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>반려 사유가 들어갈 자리</p>
+            </TooltipContent>
+          </Tooltip>
+        );
+      }
+    }
+  };
+
   return (
     <TableRow>
       <TableCell>
@@ -54,26 +116,7 @@ export default function LectureRow({ lecture }: LectureRowProps) {
       <TableCell>
         <Badge variant="secondary">{CATEGORY_MAP[lecture.categoryId]}</Badge>
       </TableCell>
-      <TableCell>
-        {lecture.statusDisplayName === 'PUBLISHED' ? (
-          <Badge
-            variant="secondary"
-            className="w-16 border border-green-500 bg-green-950 text-green-500"
-          >
-            공개 됨
-          </Badge>
-        ) : (
-          <Button
-            variant="outline"
-            onClick={handlePublish}
-            disabled={isPending}
-            className="group w-16 h-6 rounded-xl border-gray-400 text-gray-500 hover:bg-green-50 text-xs cursor-pointer transition-all"
-          >
-            <span className="block group-hover:hidden">작성 중</span>
-            <span className="hidden group-hover:block font-bold">공개하기</span>
-          </Button>
-        )}
-      </TableCell>
+      <TableCell>{lectureStatus(lecture.statusDisplayName)}</TableCell>
       <TableCell>
         {lecture.enrollmentCount ? lecture.enrollmentCount.toLocaleString() : 0}
         명
