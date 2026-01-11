@@ -82,6 +82,7 @@ export function Question({
                 value={String(option)}
                 checked={isActive}
                 disabled={submitted}
+                // 값이 변경되면(onChange), 해당 질문의 id와 선택한 옵션을 onSelect 함수에 전달한다.
                 onChange={() => onSelect(question.id, option)} // Quiz.tsx의 handleSelect가 submitted도 방어하지만,
                 className={inputClass} // 여기서 disabled로 한번 더 확실히 막음
               />

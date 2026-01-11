@@ -28,17 +28,20 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
 
   const handleSelect = (questionId: string, answer: boolean) => {
     if (submitted) return;
-    setSelected((prev) => ({ ...prev, [questionId]: answer }));
+    const key = String(questionId);
+    setSelected((prev) => ({ ...prev, [key]: answer }));
   };
 
   const handleSubmit = () => {
     if (submitted) return;
 
-    // 🔥 모든 문제 선택 여부 확인
-    const totalQuestions = questions.length;
-    const selectedCount = Object.keys(selected).length;
+    //  각 질문이 실제로 선택됐는지 검사
 
-    if (selectedCount !== totalQuestions) {
+    const unanswered = questions.filter(
+      (q) => selected[String(q.id)] === undefined,
+    );
+
+    if (unanswered.length > 0) {
       alert('모든 문항에 대해 O 또는 X를 선택해 주세요.');
       return;
     }
@@ -92,7 +95,7 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
               key={q.id}
               index={index}
               question={q}
-              selected={selected[q.id]}
+              selected={selected[String(q.id)]}
               onSelect={handleSelect}
               submitted={submitted}
               correctAnswer={q.correct} //  추가: 정답 전달
