@@ -33,11 +33,6 @@ export default async function PlayPage({
     getLectureByIdAction(parseInt(lectureId)),
   ]);
 
-  // if (!enrollmentState.success || !lectureState.success) {
-  //   console.log(enrollmentState.message || lectureState.message);
-  //   return notFound();
-  // }
-
   // 리팩토링 6) 데이터 로드 실패 처리: console.log 대신 notFound()/redirect() 분리 권장
   // 수강 정보 로딩 실패
   if (!enrollmentState.success) {
@@ -58,9 +53,6 @@ export default async function PlayPage({
   const lecture = lectureState.data as Lecture;
 
   // 리팩토링3) lecture.chapters! 강제 단언 제거
-  // const allLessons = lecture.chapters!.flatMap(
-  //   (chapter: Chapter) => chapter.lessons,
-  // );
   const chapters = lecture.chapters;
   if (!chapters || chapters.length === 0) {
     redirect('/mylearning');

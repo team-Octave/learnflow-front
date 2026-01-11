@@ -45,8 +45,7 @@ export function Question({
 
           //  제출 후 채점 상태
           const isCorrectOption = submitted && option === correctAnswer; // 정답 옵션 : 제출 후 정답과 일치→ 항상 초록색
-          const isWrongSelected =
-            submitted && isActive && option !== correctAnswer; // 내가 고른 오답 : 제출 후 내가 선택했고 정답이 아님→ 빨간색
+          const isWrongSelected = submitted && isActive && option !== correctAnswer; // 내가 고른 오답 : 제출 후 내가 선택했고 정답이 아님→ 빨간색
 
           const labelClass = cn(
             'flex-1 flex items-center justify-center gap-2 p-4 rounded-md border transition-all group',

@@ -29,7 +29,7 @@ export function Quiz({ enrollmentId, lesson, enrollmentInfo }: QuizProps) {
   // 제출 전: 사용자가 각 문항에 대해 선택한 답을 저장
   const [selected, setSelected] = useState<Record<string, boolean>>({});
 
-  // ✅ 제출 직후 채점 UI 유지용(내가 제출한 답 스냅샷)
+  // 제출 직후 채점 UI 유지용(내가 제출한 답 스냅샷)
   // - router.refresh()로 컴포넌트가 리마운트돼도 window 캐시에서 1회 복원
   // - 나갔다 들어오면 캐시가 없어서 정답만 표시(초록)
   const [submittedAnswers, setSubmittedAnswers] = useState<Record<
