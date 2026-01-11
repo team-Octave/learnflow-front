@@ -95,6 +95,7 @@ export default async function PlayPage({
             <Quiz
               enrollmentId={parseInt(enrollmentId)}
               lesson={currentLesson!}
+              enrollmentInfo={enrollmentInfo} //  추가
             />
           )}
         </main>

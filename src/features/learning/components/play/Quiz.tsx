@@ -1,41 +1,57 @@
 // src/features/learning/components/play/Quiz.tsx
 'use client';
 
-import { useState, useTransition } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // ✅ 추가
+import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { PencilLine } from 'lucide-react';
 import { ButtonSubmit } from './ButtonSubmit';
 import { Question } from './Question';
 import type { Lesson } from '@/features/lectures/types';
+import type { Enrollment } from '@/features/learning/types'; // ✅ 추가
 import { completeLessonAction } from '../../actions';
 
 type QuizProps = {
   enrollmentId: number;
   lesson: Lesson;
+  enrollmentInfo: Enrollment; // 추가
 };
 
-export function Quiz({ enrollmentId, lesson }: QuizProps) {
+export function Quiz({ enrollmentId, lesson, enrollmentInfo }: QuizProps) {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState<Record<string, boolean>>({});
-  const [submitted, setSubmitted] = useState(false);
 
-  const questions = lesson.quizQuestions!;
-
-  // 현재 URL 정보 사용
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const questions = lesson.quizQuestions ?? [];
+
+  //  완료 여부(서버 데이터 기반)
+  const isCompleted = useMemo(() => {
+    return (
+      enrollmentInfo.completedLessonIds?.some(
+        (id) => id === Number(lesson.id),
+      ) ?? false
+    );
+  }, [enrollmentInfo.completedLessonIds, lesson.id]);
+
+  //  처음부터 완료면 제출 완료 상태로 렌더링
+  const [submitted, setSubmitted] = useState<boolean>(isCompleted);
+
+  //  lesson 이동/새로고침 등으로 isCompleted가 바뀌면 동기화
+  useEffect(() => {
+    setSubmitted(isCompleted);
+    setSelected({}); // 선택값은 저장 안 하는 구조라면 초기화가 자연스러움
+  }, [isCompleted, lesson.id]);
+
   const handleSelect = (questionId: string, answer: boolean) => {
-    if (submitted) return;
+    if (submitted) return; // ✅ 완료면 클릭 막기
     const key = String(questionId);
     setSelected((prev) => ({ ...prev, [key]: answer }));
   };
 
   const handleSubmit = () => {
     if (submitted) return;
-
-    //  각 질문이 실제로 선택됐는지 검사
 
     const unanswered = questions.filter(
       (q) => selected[String(q.id)] === undefined,
@@ -53,9 +69,12 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
       );
       if (state.success) {
         setSubmitted(true);
+
         const params = new URLSearchParams(searchParams.toString());
         params.set('lessonId', lesson.id);
         router.replace(`${pathname}?${params.toString()}`);
+
+        router.refresh(); // 서버컴포넌트(enrollmentInfo) 갱신해서 재진입/사이드바 진행률도 즉시 반영
       } else {
         alert(state.message || '레슨 완료 처리에 실패하였습니다.');
       }
@@ -72,8 +91,7 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
 
   return (
     <div className="w-full flex items-center justify-center p-4 md:p-8 lg:p-12">
-      <div className="w-full max-w-3xl bg-zinc-900 rounded-xl border border-zinc-800 p-8 shadow-2xl space-y-6 overflow-y-auto scrollbar-hide h-[600px] ">
-        {/* 상단 타이틀 영역 */}
+      <div className="w-full max-w-3xl bg-zinc-900 rounded-xl border border-zinc-800 p-8 shadow-2xl space-y-6 overflow-y-auto scrollbar-hide h-[600px]">
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-300">
             <PencilLine className="w-5 h-5" />
@@ -97,10 +115,8 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
               question={q}
               selected={selected[String(q.id)]}
               onSelect={handleSelect}
-              submitted={submitted}
-              correctAnswer={q.correct} //  추가: 정답 전달
-              // 각 질문의 정답을 자식 컴포넌트로 전달
-              // 정답/오답 표시용
+              submitted={submitted} //  완료면 true로 들어옴
+              correctAnswer={q.correct}
             />
           ))}
         </div>
@@ -110,7 +126,7 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
             총{' '}
             <span className="font-semibold text-zinc-200">
               {questions.length}
-            </span>
+            </span>{' '}
             문제
           </p>
 
