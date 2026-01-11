@@ -55,10 +55,10 @@ export function Quiz({ enrollmentId, lesson, enrollmentInfo }: QuizProps) {
   // “이 화면에서 지금 제출 완료 상태로 보여줄까?”
   const [submitted, setSubmitted] = useState<boolean>(isCompleted);
 
-  // ✅ 캐시 키 (수강 + 레슨 단위)
+  //  캐시 키 (수강 + 레슨 단위)
   const cacheKey = `${enrollmentId}:${lesson.id}`;
 
-  // ✅ 레슨 변경 시에만 초기화 (refresh로 isCompleted 변해도 selected를 날리지 않음)
+  //  레슨 변경 시에만 초기화 (refresh로 isCompleted 변해도 selected를 날리지 않음)
   useEffect(() => {
     setSelected({});
     setSubmittedAnswers(null);
@@ -66,7 +66,7 @@ export function Quiz({ enrollmentId, lesson, enrollmentInfo }: QuizProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lesson.id]);
 
-  // ✅ refresh 후 리마운트 되었을 때: 전역 캐시에서 1회 복원
+  //  refresh 후 리마운트 되었을 때: 전역 캐시에서 1회 복원
   useEffect(() => {
     const cache = window.__QUIZ_CACHE__?.[cacheKey];
 
@@ -75,7 +75,7 @@ export function Quiz({ enrollmentId, lesson, enrollmentInfo }: QuizProps) {
       setSubmitted(true);
       setSubmittedAnswers(cache);
 
-      // ✅ 1회 복원 후 즉시 삭제 → 나갔다가 들어오면 답안 없음(정답만 초록)
+      //  1회 복원 후 즉시 삭제 → 나갔다가 들어오면 답안 없음(정답만 초록)
       if (window.__QUIZ_CACHE__) delete window.__QUIZ_CACHE__[cacheKey];
     } else {
       // 캐시가 없다면 서버 기준 완료 여부에 따름(재진입 케이스)
@@ -85,10 +85,10 @@ export function Quiz({ enrollmentId, lesson, enrollmentInfo }: QuizProps) {
 
     // cleanup: 언마운트 시 캐시 정리
     return () => {
-      // ✅ refresh로 인한 언마운트면 지우면 안 됨
+      //  refresh로 인한 언마운트면 지우면 안 됨
       if (window.__QUIZ_REFRESH_KEY__ === cacheKey) return;
 
-      // ✅ 페이지 이동 등 실제 언마운트면 캐시 제거
+      //  페이지 이동 등 실제 언마운트면 캐시 제거
       if (window.__QUIZ_CACHE__) delete window.__QUIZ_CACHE__[cacheKey];
     };
   }, [cacheKey, isCompleted]);
@@ -119,7 +119,7 @@ export function Quiz({ enrollmentId, lesson, enrollmentInfo }: QuizProps) {
       );
 
       if (state.success) {
-        // ✅ 제출 직후: refresh로 리마운트돼도 오답/정답 채점 UI 유지하기 위해 window에 1회 저장
+        //  제출 직후: refresh로 리마운트돼도 오답/정답 채점 UI 유지하기 위해 window에 1회 저장
         window.__QUIZ_CACHE__ = window.__QUIZ_CACHE__ ?? {};
         window.__QUIZ_CACHE__[cacheKey] = { ...selected };
         window.__QUIZ_REFRESH_KEY__ = cacheKey;
@@ -155,7 +155,7 @@ export function Quiz({ enrollmentId, lesson, enrollmentInfo }: QuizProps) {
     );
   }
 
-  // ✅ 렌더링에서 사용할 선택값:
+  //  렌더링에서 사용할 선택값:
   // - 제출 직후: submittedAnswers(스냅샷) 우선
   // - 제출 전: selected 사용
   const renderedSelected = (qid: string) =>
