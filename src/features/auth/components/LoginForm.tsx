@@ -34,7 +34,11 @@ export default function LoginForm() {
     if (state.success) {
       setUser(state.data!);
       setIsLoading(false);
-      router.replace('/');
+      if (state.data.role === 'ADMIN') {
+        router.replace('/admin/audit');
+      } else {
+        router.replace('/');
+      }
     } else {
       setError(state.message!);
       setIsLoading(false);
