@@ -2,7 +2,6 @@
 'use client';
 
 import { QuizQuestion } from '@/features/lectures/types';
-// import { cn } from '@/lib/utils';
 import { cn } from '@/shared/utils';
 
 interface QuestionProps {
@@ -41,41 +40,38 @@ export function Question({
         aria-label={`quiz-${question.id}`}
       >
         {([true, false] as const).map((option) => {
+          // 현재 option이 내가 고른 값이면 true
           const isActive = hasSelected && selected === option;
 
-          // ✅ 제출 후 채점 상태
-          const isCorrectOption = submitted && option === correctAnswer; // 정답 옵션(항상 초록)
-          const isWrongSelected =
-            submitted && isActive && option !== correctAnswer; // 내가 고른 오답(빨강)
+          //  제출 후 채점 상태
+          const isCorrectOption = submitted && option === correctAnswer; // 정답 옵션 : 제출 후 정답과 일치→ 항상 초록색
+          const isWrongSelected = submitted && isActive && option !== correctAnswer; // 내가 고른 오답 : 제출 후 내가 선택했고 정답이 아님→ 빨간색
 
           const labelClass = cn(
             'flex-1 flex items-center justify-center gap-2 p-4 rounded-md border transition-all group',
-            // 제출 전 UI + hover
-            !submitted && 'cursor-pointer',
-            !submitted &&
-              (isActive
-                ? 'border-emerald-500 bg-emerald-500/20'
-                : 'border-zinc-700'),
-            !submitted && 'hover:bg-zinc-700/50 hover:border-emerald-500/50',
+            // 제출 전(!submitted) UI + hover
+            !submitted && 'cursor-pointer', //제출 전
+                    //  isActive 라디오버튼 active됐나 안됐나 (선택 여부  )
+            !submitted && (isActive ? 'border-emerald-500 bg-emerald-500/20' : 'border-zinc-700'),    // 선택 여부에 따른 기본 스타일? 선택됨 :  미선택 
+            !submitted && 'hover:bg-zinc-700/50 hover:border-emerald-500/50', //hover
 
             // 제출 후 채점 UI
-            submitted &&
-              (isCorrectOption
-                ? 'border-green-500 bg-green-500/20 cursor-default'
-                : isWrongSelected
-                ? 'border-red-500 bg-red-500/20 cursor-default'
-                : 'opacity-80 cursor-default'),
+            // 제출 후: 정답은 초록, 선택한 오답은 빨강, 나머지는 흐리게 표시 (모두 클릭 불가)
+            submitted && (isCorrectOption? 'border-green-500 bg-green-500/20 cursor-default'
+                          : isWrongSelected ? 'border-red-500 bg-red-500/20 cursor-default'
+                        : 'opacity-80 cursor-default'),
           );
 
+          // 라디오 버튼 색상 ui
           const inputClass = cn(
             'w-4 h-4',
-            submitted
-              ? isWrongSelected
-                ? 'accent-red-500'
-                : isCorrectOption
-                ? 'accent-green-500'
-                : 'accent-zinc-500'
-              : 'accent-emerald-500',
+          // submitted ? (제출 후 true) : (제출 전 false)
+            submitted? ( isWrongSelected  // 오답 → 빨강
+                          ? 'accent-red-500'
+                          : isCorrectOption // 정답 → 초록
+                            ? 'accent-green-500'
+                            //나머지 → 회색
+                            : 'accent-zinc-500'   ) : 'accent-emerald-500' //제출 전 false
           );
 
           return (
