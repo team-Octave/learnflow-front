@@ -23,7 +23,7 @@ jobs:
           port: 22
           script: |
             # 1. 프로젝트 폴더로 이동 (폴더명을 형의 실제 폴더명으로 수정해!)
-            cd ~/learnflow-frontend 
+            cd ~/learnflow-front
 
             # 2. 최신 코드 가져오기
             git pull origin main
@@ -32,8 +32,7 @@ jobs:
             npm install
             npm run build
 
-            # 4. PM2로 서버 재시작 
-            # (기존에 켜져있으면 restart, 없으면 새로 start 하라는 뜻이야)
+            # 4. PM2로 서버 재시작
             pm2 restart learnflow-fe || pm2 start npm --name "learnflow-fe" -- start
 
             echo "GCP 배포 로봇이 임무를 완수했습니다! 🎉"
