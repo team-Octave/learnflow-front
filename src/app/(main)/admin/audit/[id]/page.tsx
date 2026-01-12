@@ -5,9 +5,10 @@ import AuditAcceptButton from '@/features/audit/components/detail/AuditAcceptBut
 import AuditReturnButton from '@/features/audit/components/detail/AuditReturnButton';
 import { getAuditDetailAction } from '@/features/audit/actions';
 
-type PageProps = {
-  params: Record<string, string | string[] | undefined>;
-};
+interface AuditDetailPageProps {
+  params: Promise<{ id: string }>;
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
 function ErrorState({ message }: { message?: string }) {
   return (
@@ -22,28 +23,17 @@ function ErrorState({ message }: { message?: string }) {
   );
 }
 
-function pickFirstParam(params: Record<string, string | string[] | undefined>) {
-  // 1) 일반적으로는 params.id
-  const direct = params?.id;
-  if (typeof direct === 'string') return direct;
-  if (Array.isArray(direct)) return direct[0];
-
-  // 2) 혹시 폴더명이 [auditId] 같은 경우 대비: 첫 번째 값 꺼내기
-  const first = Object.values(params ?? {}).find(Boolean);
-  if (typeof first === 'string') return first;
-  if (Array.isArray(first)) return first[0];
-
-  return undefined;
-}
-
-export default async function AuditDetailPage({ params }: PageProps) {
-  const rawId = pickFirstParam(params);
+export default async function AuditDetailPage({
+  params,
+}: AuditDetailPageProps) {
+  // ✅ 정책대로 params는 Promise로 받고 await 해서 꺼내기
+  const { id: rawId } = await params;
 
   if (!rawId) {
     return <ErrorState message="잘못된 접근입니다. (id가 없습니다)" />;
   }
 
-  // 안전하게 디코딩(한글/특수문자 들어올 때 대비)
+  // 안전하게 디코딩(한글/특수문자 대비)
   const id = decodeURIComponent(rawId);
 
   const state = await getAuditDetailAction(id);
