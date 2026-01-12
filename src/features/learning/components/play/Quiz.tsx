@@ -122,3 +122,4 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
     </div>
   );
 }
+
