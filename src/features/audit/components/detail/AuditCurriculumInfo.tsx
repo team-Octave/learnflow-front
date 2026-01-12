@@ -29,6 +29,7 @@ export default function AuditCurriculumInfo({
     );
   }, [chapters]);
 
+
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
 
   const currentLesson = allLessons[currentLessonIndex];
