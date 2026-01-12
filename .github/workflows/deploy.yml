@@ -22,6 +22,10 @@ jobs:
           key: ${{ secrets.GCP_SSH_KEY }}
           port: 22
           script: |
+            # 0. 환경 변수 로드
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
             # 1. 프로젝트 폴더로 이동 (폴더명을 형의 실제 폴더명으로 수정해!)
             cd ~/learnflow-front
 
