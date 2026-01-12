@@ -71,6 +71,9 @@ export default async function PlayPage({
 
   // 4) 비디오 / 퀴즈 타입 분기
   const isVideoLesson = currentLesson!.lessonTypeDisplayName === 'VIDEO';
+  const isCompleted = enrollmentInfo.completedLessonIds.some(
+    (lessonId) => lessonId === parseInt(currentLesson.id),
+  );
 
   // 5) 실제 UI 렌더링
   return (
@@ -87,7 +90,7 @@ export default async function PlayPage({
             <Quiz
               enrollmentId={parseInt(enrollmentId)}
               lesson={currentLesson!}
-              enrollmentInfo={enrollmentInfo} //  추가
+              isCompleted={isCompleted}
             />
           )}
         </main>
