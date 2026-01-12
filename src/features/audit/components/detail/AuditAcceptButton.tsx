@@ -1,5 +1,3 @@
-// 강의 승인 버튼
-
 // src/features/audit/components/detail/AuditAcceptButton.tsx
 'use client';
 
@@ -9,11 +7,11 @@ import { toast } from 'sonner';
 import { approveAuditAction } from '@/features/audit/actions';
 import { useState } from 'react';
 
-export default function AuditAcceptButton({
-  auditId,
-}: {
+interface AuditAcceptButtonProps {
   auditId: string | number;
-}) {
+}
+
+export default function AuditAcceptButton({ auditId }: AuditAcceptButtonProps) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
 

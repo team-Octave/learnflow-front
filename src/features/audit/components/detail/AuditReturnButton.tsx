@@ -1,5 +1,3 @@
-// 반려 버튼(shadcn dialog 사용해주세요)
-
 // src/features/audit/components/detail/AuditReturnButton.tsx
 'use client';
 
@@ -20,11 +18,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { rejectAuditAction } from '@/features/audit/actions';
 
-export default function AuditReturnButton({
-  auditId,
-}: {
+interface AuditReturnButtonProps {
   auditId: string | number;
-}) {
+}
+
+export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
   const router = useRouter();
 
   const REJECTION_REASONS = useMemo(

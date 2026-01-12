@@ -1,6 +1,3 @@
-// 강의 검토 상세 페이지에서 커리큘럼 정보
-// Figma 상 Chapter 1. 리액트 시작하기 부터 다음 레슨 버튼 까지 포함.
-
 // src/features/audit/components/detail/AuditCurriculumInfo.tsx
 'use client';
 
@@ -12,12 +9,18 @@ import NextLessonButton from './NextLessonButton';
 import AuditVideo from './AuditVideo';
 import AuditQuizList from './AuditQuizList';
 
+interface AuditCurriculumInfoProps {
+  chapters: AuditChapter[];
+}
+
+type FlattenedLesson = AuditLesson & {
+  chapterTitle: string;
+};
+
 export default function AuditCurriculumInfo({
   chapters,
-}: {
-  chapters: AuditChapter[];
-}) {
-  const allLessons = useMemo(() => {
+}: AuditCurriculumInfoProps) {
+  const allLessons = useMemo<FlattenedLesson[]>(() => {
     return (chapters ?? []).flatMap((chapter) =>
       (chapter.lessons ?? []).map((lesson) => ({
         ...lesson,
@@ -28,11 +31,7 @@ export default function AuditCurriculumInfo({
 
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
 
-  const currentLesson = allLessons[currentLessonIndex] as
-    | (AuditLesson & {
-        chapterTitle: string;
-      })
-    | undefined;
+  const currentLesson = allLessons[currentLessonIndex];
 
   const isFirst = currentLessonIndex === 0;
   const isLast = currentLessonIndex === allLessons.length - 1;

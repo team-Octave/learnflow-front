@@ -1,11 +1,14 @@
-// 문제 하나
 // src/features/audit/components/detail/AuditQuiz.tsx
-
 'use client';
 
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/shared/utils';
 import type { AuditQuizQuestion } from '@/features/audit/types';
+
+interface AuditQuizProps {
+  question: AuditQuizQuestion;
+  index: number;
+}
 
 function normalizeAnswer(answer: AuditQuizQuestion['answer']): 'O' | 'X' {
   if (answer === true) return 'O';
@@ -13,13 +16,7 @@ function normalizeAnswer(answer: AuditQuizQuestion['answer']): 'O' | 'X' {
   return answer;
 }
 
-export default function AuditQuiz({
-  question,
-  index,
-}: {
-  question: AuditQuizQuestion;
-  index: number;
-}) {
+export default function AuditQuiz({ question, index }: AuditQuizProps) {
   const ans = normalizeAnswer(question.answer);
 
   return (

@@ -1,6 +1,4 @@
-// 강의 검토 상세 페이지에서 상단의 강의 기본정보
 // src/features/audit/components/detail/AuditBasicInfo.tsx
-
 'use client';
 
 import { Badge } from '@/components/ui/badge';
@@ -8,7 +6,11 @@ import { Card } from '@/components/ui/card';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import type { AuditDetail } from '@/features/audit/types';
 
-export default function AuditBasicInfo({ audit }: { audit: AuditDetail }) {
+interface AuditBasicInfoProps {
+  audit: AuditDetail;
+}
+
+export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
   return (
     <Card className="overflow-hidden border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
       <div className="flex flex-col md:flex-row gap-6 md:items-center">

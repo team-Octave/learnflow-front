@@ -1,16 +1,14 @@
-// 퀴즈 목록
 // src/features/audit/components/detail/AuditQuizList.tsx
-
 'use client';
 
 import type { AuditQuizQuestion } from '@/features/audit/types';
 import AuditQuiz from './AuditQuiz';
 
-export default function AuditQuizList({
-  questions,
-}: {
+interface AuditQuizListProps {
   questions?: AuditQuizQuestion[];
-}) {
+}
+
+export default function AuditQuizList({ questions }: AuditQuizListProps) {
   if (!questions?.length) {
     return (
       <div className="p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm text-zinc-500">
