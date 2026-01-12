@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev & npx open-cli -a chrome http://localhost:3000",
+    "dev": "next dev",
     "build": "next build",
-    "start": "set BROWSER=chrome && react-scripts start",
+    "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
