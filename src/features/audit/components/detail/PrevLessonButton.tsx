@@ -6,12 +6,15 @@
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 
-interface Props {
+interface PrevLessonButtonProps {
   disabled?: boolean;
   onClick: () => void;
 }
 
-export default function PrevLessonButton({ disabled, onClick }: Props) {
+export default function PrevLessonButton({
+  disabled,
+  onClick,
+}: PrevLessonButtonProps) {
   return (
     <Button
       variant="outline"
