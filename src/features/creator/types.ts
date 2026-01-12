@@ -2,6 +2,8 @@ import { Category, Chapter, LessonType, Level } from '../lectures/types';
 
 // --------------- 수정 후 -----------------
 
+export type LectureStatus = 'PUBLISHED' | 'UNPUBLISHED' | 'SUBMIT' | 'REJECT';
+
 export interface BasicInfo {
   title: string;
   categoryId: Category | '';
@@ -15,7 +17,7 @@ export interface CreatorLecture {
   description: string;
   categoryId: Category;
   level: Level;
-  statusDisplayName: 'PUBLISHED' | 'UNPUBLISHED';
+  statusDisplayName: LectureStatus;
   instructorId: string;
   instructorDisplayName: string;
   ratingAverage: number | null;
