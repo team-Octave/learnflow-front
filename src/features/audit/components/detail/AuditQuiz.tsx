@@ -1,6 +1,8 @@
 // 문제 하나
-
 // src/features/audit/components/detail/AuditQuiz.tsx
+
+'use client';
+
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/shared/utils';
 import type { AuditQuizQuestion } from '@/features/audit/types';

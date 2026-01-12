@@ -1,6 +1,8 @@
 // 강의 검토 상세 페이지에서 영상 컨텐츠 영역
 
 // src/features/audit/components/detail/AuditVideo.tsx
+'use client';
+
 import { PlayCircle } from 'lucide-react';
 
 export default function AuditVideo({ videoUrl }: { videoUrl?: string }) {

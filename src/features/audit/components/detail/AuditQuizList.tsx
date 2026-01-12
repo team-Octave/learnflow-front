@@ -1,6 +1,8 @@
 // 퀴즈 목록
-
 // src/features/audit/components/detail/AuditQuizList.tsx
+
+'use client';
+
 import type { AuditQuizQuestion } from '@/features/audit/types';
 import AuditQuiz from './AuditQuiz';
 
