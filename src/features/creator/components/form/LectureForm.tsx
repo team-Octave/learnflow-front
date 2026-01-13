@@ -52,7 +52,6 @@ export default function LectureForm({ lecture }: LectureFormProps) {
   // 수정 시 초기 값 로드
   useEffect(() => {
     if (lecture) {
-      console.log(lecture);
       setBasicInfo({
         title: lecture.title,
         categoryId: lecture.categoryId.toString() as Category,
