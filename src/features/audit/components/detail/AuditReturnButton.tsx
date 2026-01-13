@@ -1,7 +1,7 @@
 // src/features/audit/components/detail/AuditReturnButton.tsx
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,19 +22,16 @@ interface AuditReturnButtonProps {
   auditId: string | number;
 }
 
+const REJECTION_REASONS = [
+  '영상 화질/음질 부적합',
+  '컨텐츠 내용 부족',
+  '저작권 위반 의심',
+  '커리큘럼 불일치',
+  '부적절한 내용 포함',
+];
+
 export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
   const router = useRouter();
-
-  const REJECTION_REASONS = useMemo(
-    () => [
-      '영상 화질/음질 부적합',
-      '컨텐츠 내용 부족',
-      '저작권 위반 의심',
-      '커리큘럼 불일치',
-      '부적절한 내용 포함',
-    ],
-    [],
-  );
 
   const [open, setOpen] = useState(false);
   const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
@@ -99,11 +96,11 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
                 <div key={reason} className="flex items-center space-x-2">
                   <Checkbox
                     id={reason}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     checked={selectedReasons.includes(reason)}
                     onCheckedChange={(checked) =>
                       handleReasonChange(reason, Boolean(checked))
                     }
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                   <Label
                     htmlFor={reason}
