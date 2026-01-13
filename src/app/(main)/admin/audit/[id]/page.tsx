@@ -13,9 +13,6 @@ interface AuditDetailPageProps {
 function ErrorState({ message }: { message?: string }) {
   return (
     <div className="w-full max-w-5xl mx-auto space-y-4">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        강의 검토 상세
-      </h1>
       <p className="text-sm text-zinc-500 dark:text-zinc-400">
         {message ?? '강의 정보를 불러오지 못했습니다.'}
       </p>
@@ -49,12 +46,6 @@ export default async function AuditDetailPage({
 
   return (
     <div className="space-y-8 w-full max-w-5xl mx-auto">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-          강의 검토 상세
-        </h1>
-      </div>
-
       {/* 1) 강의 기본 정보 */}
       <AuditBasicInfo audit={audit} />
 
