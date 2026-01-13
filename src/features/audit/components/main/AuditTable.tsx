@@ -20,7 +20,6 @@ export default function AuditTable({ lecturesData, currentPage }: Props) {
   const { items, totalPages } = lecturesData;
 
   return (
-    // max-w-5xl 제거 (리뷰 반영)
     <section className="w-full">
       <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.35)] overflow-hidden">
         {/* 상단 요약 영역 */}
@@ -41,19 +40,12 @@ export default function AuditTable({ lecturesData, currentPage }: Props) {
           <Table>
             <TableHeader>
               <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="text-white/50 w-[140px] px-6">
-                  썸네일
-                </TableHead>
+                {/* w-[...] 제거 */}
+                <TableHead className="text-white/50 px-6">썸네일</TableHead>
                 <TableHead className="text-white/50 px-6">제목</TableHead>
-                <TableHead className="text-white/50 w-[160px] px-6">
-                  닉네임
-                </TableHead>
-                <TableHead className="text-white/50 w-[180px] px-6">
-                  신청일
-                </TableHead>
-                <TableHead className="text-white/50 w-[120px] px-6">
-                  검토
-                </TableHead>
+                <TableHead className="text-white/50 px-6">닉네임</TableHead>
+                <TableHead className="text-white/50 px-6">신청일</TableHead>
+                <TableHead className="text-white/50 px-6">검토</TableHead>
               </TableRow>
             </TableHeader>
 
