@@ -2,7 +2,11 @@ import { Category, Chapter, LessonType, Level } from '../lectures/types';
 
 // --------------- 수정 후 -----------------
 
-export type LectureStatus = 'PUBLISHED' | 'UNPUBLISHED' | 'SUBMIT' | 'REJECT';
+export type LectureStatus =
+  | 'PUBLISHED'
+  | 'UNPUBLISHED'
+  | 'SUBMITTED'
+  | 'REJECTED';
 
 export interface BasicInfo {
   title: string;

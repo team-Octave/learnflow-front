@@ -60,10 +60,10 @@ export interface Lesson {
   id: string;
   lessonTitle: string;
   isFreePreview: boolean;
-  lessonOrder: 0;
+  lessonOrder: number;
   lessonTypeDisplayName: LessonType;
   quizQuestions: null | QuizQuestion[];
-  videoUrl?: string;
+  videoUrl?: string | null;
   duration?: string;
 }
 

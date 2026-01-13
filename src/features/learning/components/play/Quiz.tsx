@@ -34,7 +34,7 @@ export function Quiz({ enrollmentId, lesson }: QuizProps) {
   const handleSubmit = () => {
     if (submitted) return;
 
-    // 🔥 모든 문제 선택 여부 확인
+    // 모든 문제 선택 여부 확인
     const totalQuestions = questions.length;
     const selectedCount = Object.keys(selected).length;
 
