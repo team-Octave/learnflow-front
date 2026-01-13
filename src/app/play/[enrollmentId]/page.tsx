@@ -1,4 +1,4 @@
-// src/app/play/[enrollmentId]?lectureId=LEC1&lessonId=LES1
+
 import { Chapter, Lecture, Lesson } from '@/features/lectures/types';
 import { Enrollment } from '@/features/learning/types';
 import { getLectureByIdAction } from '@/features/lectures/actions';
@@ -9,7 +9,6 @@ import { AsideCurriculum } from '@/features/learning/components/play/AsideCurric
 import { getEnrollmentByIdAction } from '@/features/learning/actions';
 import { notFound, redirect } from 'next/navigation';
 
-// URL : /play/[enrollmentId]?lectureId=LEC1&lessonId=LES1
 interface PlayPageProps {
   params: Promise<{ enrollmentId: string }>; // 수강 ID
   searchParams: Promise<{ lectureId: string; lessonId: string }>; // 강의 ID / 레슨 ID

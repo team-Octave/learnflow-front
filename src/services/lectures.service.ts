@@ -24,3 +24,14 @@ export async function getReviewById(lectureId: number, page: number) {
   );
   return response.json();
 }
+
+/**
+ * ✅ 레슨 단건 조회 (V2)
+ * GET /api/v2/lectures/{lectureId}/lessons/{lessonId}
+ */
+export async function getLessonById(lectureId: number, lessonId: number) {
+  const response = await commonFetch(
+    `/api/v2/lectures/${lectureId}/lessons/${lessonId}`,
+  );
+  return response.json();
+}
