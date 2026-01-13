@@ -47,13 +47,6 @@ export default function AuditCurriculumInfo({
 
   const isQuiz = currentLesson.lessonTypeDisplayName === 'QUIZ';
 
-  const auditQuizQuestions =
-    currentLesson.quizQuestions?.map((q) => ({
-      id: q.id,
-      question: q.question,
-      answer: q.correct,
-    })) ?? [];
-
   return (
     <div className="mt-6 space-y-6">
       {/* Header */}
@@ -65,7 +58,6 @@ export default function AuditCurriculumInfo({
 
           <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2 leading-snug">
             {currentLesson.lessonTitle}
-            {/* ✅ variant로 색상 처리 */}
             <Badge variant={isQuiz ? 'QUIZ' : 'VIDEO'}>
               {isQuiz ? 'QUIZ' : 'VIDEO'}
             </Badge>
@@ -79,7 +71,7 @@ export default function AuditCurriculumInfo({
 
       {/* Content */}
       {isQuiz ? (
-        <AuditQuizList questions={auditQuizQuestions} />
+        <AuditQuizList questions={currentLesson.quizQuestions ?? []} />
       ) : (
         <AuditVideo videoUrl={currentLesson.videoUrl} />
       )}
