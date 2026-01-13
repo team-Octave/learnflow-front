@@ -1,11 +1,10 @@
 // src/features/audit/components/main/AuditRow.tsx
-import Link from 'next/link';
 import Image from 'next/image';
 import { ImageIcon, Calendar, Clock } from 'lucide-react';
 
 import type { AuditLecture } from '@/features/audit/types';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+import AuditButton from './AuditButton';
 
 type Props = {
   lecture: AuditLecture;
@@ -36,7 +35,6 @@ export default function AuditRow({ lecture }: Props) {
     <TableRow className="border-white/10 hover:bg-white/5">
       {/* 썸네일 */}
       <TableCell className="py-4 px-6">
-        {/* 리뷰 반영: w-[110px] 제거 */}
         <div className="h-[62px] rounded-lg overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center">
           {lecture.thumbnailUrl ? (
             <Image
@@ -65,7 +63,7 @@ export default function AuditRow({ lecture }: Props) {
         {lecture.instructorNickname}
       </TableCell>
 
-      {/* 신청일 (아이콘 형태) */}
+      {/* 신청일 */}
       <TableCell className="text-white/70 text-sm px-6">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -79,11 +77,9 @@ export default function AuditRow({ lecture }: Props) {
         </div>
       </TableCell>
 
-      {/* 검토 버튼(왼쪽 정렬) */}
+      {/* 검토 버튼 → 클라이언트 컴포넌트 분리 */}
       <TableCell className="px-6">
-        <Button asChild size="sm" className="rounded-full">
-          <Link href={`/admin/audit/${lecture.id}`}>검토</Link>
-        </Button>
+        <AuditButton lectureId={lecture.id} />
       </TableCell>
     </TableRow>
   );
