@@ -1,15 +1,11 @@
-// src/app/(main)/admin/audit/page.tsx
 import AuditTable from '@/features/audit/components/main/AuditTable';
 import { getAuditLecturesAction } from '@/features/audit/actions';
+import { getParam } from '@/shared/utils';
 import { notFound, redirect } from 'next/navigation';
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
-
-function getParam(v: string | string[] | undefined) {
-  return Array.isArray(v) ? v[0] : v;
-}
 
 export default async function AdminAuditPage({ searchParams }: Props) {
   const sp = await searchParams;
