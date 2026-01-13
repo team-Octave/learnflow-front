@@ -1,5 +1,4 @@
 // src/features/audit/components/detail/AuditBasicInfo.tsx
-'use client';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
