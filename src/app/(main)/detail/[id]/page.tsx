@@ -47,12 +47,7 @@ export default async function LectureDetailPage({
   return (
     <div className="min-h-screen bg-background pb-20 w-[90%] md:w-[70%]">
       {/* 상단 요약 영역 */}
-      <LectureSummary
-        lecture={lecture}
-        actionButton={
-          <ButtonApply lectureId={lecture.id} lectureTitle={lecture.title} />
-        }
-      />
+      <LectureSummary lecture={lecture} />
 
       {/* 메인 컨텐츠 영역 */}
       <div className="container px-4 md:px-8 py-12 flex flex-col md:flex-row gap-12">
