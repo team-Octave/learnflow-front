@@ -1,7 +1,7 @@
 // src/features/audit/components/detail/AuditCurriculumInfo.tsx
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import type { AuditChapter, AuditLesson } from '@/features/audit/types';
 import PrevLessonButton from './PrevLessonButton';
@@ -20,15 +20,12 @@ type FlattenedLesson = AuditLesson & {
 export default function AuditCurriculumInfo({
   chapters,
 }: AuditCurriculumInfoProps) {
-  const allLessons = useMemo<FlattenedLesson[]>(() => {
-    return (chapters ?? []).flatMap((chapter) =>
-      (chapter.lessons ?? []).map((lesson) => ({
-        ...lesson,
-        chapterTitle: chapter.title,
-      })),
-    );
-  }, [chapters]);
-
+  const allLessons: FlattenedLesson[] = (chapters ?? []).flatMap((chapter) =>
+    (chapter.lessons ?? []).map((lesson) => ({
+      ...lesson,
+      chapterTitle: chapter.title,
+    })),
+  );
 
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
 
