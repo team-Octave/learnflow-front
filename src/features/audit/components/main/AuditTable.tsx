@@ -20,9 +20,10 @@ export default function AuditTable({ lecturesData, currentPage }: Props) {
   const { items, totalPages } = lecturesData;
 
   return (
-    <section className="w-full max-w-5xl">
+    // max-w-5xl 제거 (리뷰 반영)
+    <section className="w-full">
       <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.35)] overflow-hidden">
-        {/* 상단 요약 영역은 카드 padding 유지 */}
+        {/* 상단 요약 영역 */}
         <div className="px-6 pt-6 pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
             <h2 className="text-white font-semibold">대기 중인 목록</h2>
@@ -35,7 +36,7 @@ export default function AuditTable({ lecturesData, currentPage }: Props) {
           </p>
         </div>
 
-        {/* ✅ 테이블 영역은 좌우 패딩 제거 → 헤더 밑 선이 카드 끝까지 */}
+        {/* 테이블 영역 */}
         <div className="pb-2">
           <Table>
             <TableHeader>
