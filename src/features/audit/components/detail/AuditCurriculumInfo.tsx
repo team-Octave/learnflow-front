@@ -12,7 +12,6 @@ interface AuditCurriculumInfoProps {
   chapters: Lecture['chapters']; // Chapter[] | null
 }
 
-//  chapters가 null일 수 있으니 NonNullable로 요소 타입을 안전하게 추출
 type ChapterFromLecture = NonNullable<Lecture['chapters']>[number];
 type LessonFromLecture = ChapterFromLecture['lessons'][number];
 
@@ -52,7 +51,7 @@ export default function AuditCurriculumInfo({
     currentLesson.quizQuestions?.map((q) => ({
       id: q.id,
       question: q.question,
-      answer: q.correct, // boolean
+      answer: q.correct,
     })) ?? [];
 
   return (
@@ -66,7 +65,10 @@ export default function AuditCurriculumInfo({
 
           <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2 leading-snug">
             {currentLesson.lessonTitle}
-            <Badge variant="outline">{isQuiz ? 'QUIZ' : 'VIDEO'}</Badge>
+            {/* ✅ variant로 색상 처리 */}
+            <Badge variant={isQuiz ? 'QUIZ' : 'VIDEO'}>
+              {isQuiz ? 'QUIZ' : 'VIDEO'}
+            </Badge>
           </h2>
         </div>
 

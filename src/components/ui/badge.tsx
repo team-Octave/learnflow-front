@@ -22,6 +22,10 @@ const badgeVariants = cva(
         BEGINNER: 'bg-emerald-900/30 text-emerald-300 border-emerald-800',
         INTERMEDIATE: 'bg-yellow-900/30 text-yellow-300 border-yellow-800',
         ADVANCED: 'bg-red-900/30 text-red-300 border-red-800',
+
+        //  lesson type 추가
+        QUIZ: 'bg-emerald-900/30 text-emerald-300 border-emerald-800',
+        VIDEO: 'bg-indigo-900/30 text-indigo-300 border-indigo-800',
       },
     },
     defaultVariants: {
