@@ -4,8 +4,7 @@
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import type { AuditChapter, AuditLesson } from '@/features/audit/types';
-import PrevLessonButton from './PrevLessonButton';
-import NextLessonButton from './NextLessonButton';
+import MoveLessonButton from './MoveLessonButton';
 import AuditVideo from './AuditVideo';
 import AuditQuizList from './AuditQuizList';
 
@@ -70,13 +69,15 @@ export default function AuditCurriculumInfo({
         <AuditVideo videoUrl={currentLesson.videoUrl} />
       )}
 
-      {/* Navigation */}
+      {/* MoveLessonButton */}
       <div className="flex items-center justify-between pt-2">
-        <PrevLessonButton
+        <MoveLessonButton
+          move="PREV"
           disabled={isFirst}
           onClick={() => setCurrentLessonIndex((prev) => Math.max(0, prev - 1))}
         />
-        <NextLessonButton
+        <MoveLessonButton
+          move="NEXT"
           disabled={isLast}
           onClick={() =>
             setCurrentLessonIndex((prev) =>

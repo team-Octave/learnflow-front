@@ -38,6 +38,13 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
   const [detail, setDetail] = useState('');
   const [pending, setPending] = useState(false);
 
+  const handleClose = () => {
+    // ✅ 닫힐 때 입력값 초기화
+    setSelectedReasons([]);
+    setDetail('');
+    setPending(false);
+  };
+
   const handleReasonChange = (reason: string, checked: boolean) => {
     setSelectedReasons((prev) =>
       checked ? [...prev, reason] : prev.filter((r) => r !== reason),
@@ -60,7 +67,7 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
     }
 
     toast.error('강의가 반려되었습니다.');
-    setOpen(false);
+    setOpen(false); // ✅ 여기서 닫히면서 onOpenChange -> handleClose() 실행됨
     router.push('/admin/audit');
     router.refresh();
   };
@@ -69,7 +76,13 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
     pending || (selectedReasons.length === 0 && detail.trim().length === 0);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) handleClose(); // ✅ 닫힐 때만 초기화
+        setOpen(next);
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -118,7 +131,7 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
               상세 사유
             </Label>
             <Textarea
-              placeholder="상세한 반려 사유를 입력해주세요. 강사에게 전달됩니다."
+              placeholder="상세한 반려 사유를 입력해주세요."
               className="h-32 resize-none focus-visible:ring-primary"
               maxLength={200}
               value={detail}
