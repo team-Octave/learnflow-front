@@ -18,13 +18,13 @@ function formatDateTime(iso: string) {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-  }).format(d); // 2024-01-08
+  }).format(d);
 
   const time = new Intl.DateTimeFormat('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
-  }).format(d); // 12:30
+  }).format(d);
 
   return { date, time };
 }
@@ -36,7 +36,8 @@ export default function AuditRow({ lecture }: Props) {
     <TableRow className="border-white/10 hover:bg-white/5">
       {/* 썸네일 */}
       <TableCell className="py-4 px-6">
-        <div className="w-[110px] h-[62px] rounded-lg overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center">
+        {/* 리뷰 반영: w-[110px] 제거 */}
+        <div className="h-[62px] rounded-lg overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center">
           {lecture.thumbnailUrl ? (
             <Image
               src={lecture.thumbnailUrl}
