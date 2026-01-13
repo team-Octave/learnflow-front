@@ -12,7 +12,7 @@ interface AuditCurriculumInfoProps {
   chapters: Lecture['chapters']; // Chapter[] | null
 }
 
-// ✅ chapters가 null일 수 있으니 NonNullable로 요소 타입을 안전하게 추출
+//  chapters가 null일 수 있으니 NonNullable로 요소 타입을 안전하게 추출
 type ChapterFromLecture = NonNullable<Lecture['chapters']>[number];
 type LessonFromLecture = ChapterFromLecture['lessons'][number];
 
@@ -56,21 +56,21 @@ export default function AuditCurriculumInfo({
     })) ?? [];
 
   return (
-    <div className="space-y-4">
+    <div className="mt-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between px-1">
-        <div className="space-y-1">
-          <h3 className="text-sm font-medium text-primary">
+      <div className="flex items-start justify-between px-1 pt-4">
+        <div className="flex flex-col gap-1">
+          <h3 className="text-sm font-medium text-primary leading-tight">
             {currentLesson.chapterTitle}
           </h3>
 
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2 leading-snug">
             {currentLesson.lessonTitle}
             <Badge variant="outline">{isQuiz ? 'QUIZ' : 'VIDEO'}</Badge>
           </h2>
         </div>
 
-        <div className="text-sm font-medium text-zinc-500">
+        <div className="text-sm font-medium text-zinc-500 pt-1">
           Lesson {currentLessonIndex + 1} of {allLessons.length}
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function AuditCurriculumInfo({
       )}
 
       {/* MoveLessonButton */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center justify-between pt-2 mb-8">
         <MoveLessonButton
           move="PREV"
           disabled={isFirst}

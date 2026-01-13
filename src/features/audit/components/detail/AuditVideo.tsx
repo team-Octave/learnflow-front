@@ -4,7 +4,7 @@
 import { PlayCircle } from 'lucide-react';
 
 interface AuditVideoProps {
-  videoUrl?: string;
+  videoUrl?: string | null;
 }
 
 export default function AuditVideo({ videoUrl }: AuditVideoProps) {

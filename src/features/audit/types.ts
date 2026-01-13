@@ -4,3 +4,4 @@ export interface AuditRejectPayload {
   reasons: string[];
   detail?: string;
 }
+

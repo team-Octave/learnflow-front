@@ -11,10 +11,13 @@ interface AuditBasicInfoProps {
 }
 
 export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
-  const categoryLabel =
-    audit?.categoryId && audit.categoryId in CATEGORY_MAP
-      ? CATEGORY_MAP[audit.categoryId]
-      : undefined;
+  // 난이도 한글 변환 (LectureCard 방식)
+  const levelText =
+    audit.level === 'BEGINNER'
+      ? '초급'
+      : audit.level === 'INTERMEDIATE'
+      ? '중급'
+      : '고급';
 
   return (
     <Card className="overflow-hidden border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
@@ -35,23 +38,20 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
 
         <div className="flex flex-col justify-center flex-1 space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
-            {!!categoryLabel && (
-              <Badge
-                variant="outline"
-                className="border-primary/50 text-primary"
-              >
-                {categoryLabel}
-              </Badge>
-            )}
+            {/* 카테고리 */}
+            <Badge
+              variant="secondary"
+              className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20"
+            >
+              {CATEGORY_MAP[audit.categoryId]}
+            </Badge>
 
-            {!!audit.level && (
-              <Badge
-                variant="secondary"
-                className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-              >
-                {audit.level}
-              </Badge>
-            )}
+            {/* 난이도 (variant로 색상 처리) */}
+            <Badge
+              variant={audit.level as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'}
+            >
+              {levelText}
+            </Badge>
           </div>
 
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 leading-tight">

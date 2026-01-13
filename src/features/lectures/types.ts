@@ -63,7 +63,7 @@ export interface Lesson {
   lessonOrder: number;
   lessonTypeDisplayName: LessonType;
   quizQuestions: null | QuizQuestion[];
-  videoUrl?: string;
+  videoUrl?: string | null;
   duration?: string;
 }
 
