@@ -23,14 +23,11 @@ function ErrorState({ message }: { message?: string }) {
 export default async function AuditDetailPage({
   params,
 }: AuditDetailPageProps) {
-  const { id: rawId } = await params;
+  const { id } = await params;
 
-  if (!rawId) {
+  if (!id) {
     return <ErrorState message="잘못된 접근입니다. (id가 없습니다)" />;
   }
-
-  // 안전하게 디코딩(한글/특수문자 대비)
-  const id = decodeURIComponent(rawId);
 
   const state = await getAuditDetailAction(id);
 
@@ -49,10 +46,10 @@ export default async function AuditDetailPage({
       {/* 1) 강의 기본 정보 */}
       <AuditBasicInfo audit={audit} />
 
-      {/* 2) 커리큘럼 + 레슨 컨텐츠(영상/퀴즈) + 이전/다음 */}
+      {/* 2) 커리큘럼 + 레슨 컨텐츠(영상/퀴즈) */}
       <AuditCurriculumInfo chapters={audit.chapters} />
 
-      {/* 3) 승인/반려 */}
+      {/* 3) 승인 / 반려 */}
       <div className="flex justify-end gap-3 pt-8 border-t border-zinc-200 dark:border-zinc-800">
         <AuditReturnButton auditId={audit.id} />
         <AuditAcceptButton auditId={audit.id} />
