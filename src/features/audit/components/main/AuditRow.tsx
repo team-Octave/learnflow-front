@@ -1,7 +1,7 @@
 // src/features/audit/components/main/AuditRow.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import { ImageIcon } from 'lucide-react';
+import { ImageIcon, Calendar, Clock } from 'lucide-react';
 
 import type { AuditLecture } from '@/features/audit/types';
 import { TableCell, TableRow } from '@/components/ui/table';
@@ -14,17 +14,17 @@ type Props = {
 function formatDateTime(iso: string) {
   const d = new Date(iso);
 
-  const date = new Intl.DateTimeFormat('ko-KR', {
+  const date = new Intl.DateTimeFormat('en-CA', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-  }).format(d);
+  }).format(d); // => 2024-01-08 형태
 
   const time = new Intl.DateTimeFormat('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
-  }).format(d);
+  }).format(d); // => 12:30
 
   return { date, time };
 }
@@ -62,9 +62,15 @@ export default function AuditRow({ lecture }: Props) {
       </TableCell>
 
       <TableCell className="text-white/70 text-sm">
-        <div className="flex flex-col gap-1">
-          <span>{date}</span>
-          <span className="text-white/50">{time}</span>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <Calendar size={16} className="text-white/50" />
+            <span className="text-white/70">{date}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock size={16} className="text-white/50" />
+            <span className="text-white/60">{time}</span>
+          </div>
         </div>
       </TableCell>
 
