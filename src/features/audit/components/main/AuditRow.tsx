@@ -18,13 +18,13 @@ function formatDateTime(iso: string) {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-  }).format(d); // => 2024-01-08 형태
+  }).format(d); // 2024-01-08
 
   const time = new Intl.DateTimeFormat('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
-  }).format(d); // => 12:30
+  }).format(d); // 12:30
 
   return { date, time };
 }
@@ -34,7 +34,8 @@ export default function AuditRow({ lecture }: Props) {
 
   return (
     <TableRow className="border-white/10 hover:bg-white/5">
-      <TableCell className="py-4">
+      {/* 썸네일 */}
+      <TableCell className="py-4 px-6">
         <div className="w-[110px] h-[62px] rounded-lg overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center">
           {lecture.thumbnailUrl ? (
             <Image
@@ -53,15 +54,18 @@ export default function AuditRow({ lecture }: Props) {
         </div>
       </TableCell>
 
-      <TableCell className="text-white/90">
+      {/* 제목 */}
+      <TableCell className="text-white/90 px-6">
         <p className="text-sm font-medium line-clamp-2">{lecture.title}</p>
       </TableCell>
 
-      <TableCell className="text-white/80 text-sm">
+      {/* 닉네임 */}
+      <TableCell className="text-white/80 text-sm px-6">
         {lecture.instructorNickname}
       </TableCell>
 
-      <TableCell className="text-white/70 text-sm">
+      {/* 신청일 (아이콘 형태) */}
+      <TableCell className="text-white/70 text-sm px-6">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Calendar size={16} className="text-white/50" />
@@ -74,7 +78,8 @@ export default function AuditRow({ lecture }: Props) {
         </div>
       </TableCell>
 
-      <TableCell className="text-right">
+      {/* 검토 버튼(왼쪽 정렬) */}
+      <TableCell className="px-6">
         <Button asChild size="sm" className="rounded-full">
           <Link href={`/admin/audit/${lecture.id}`}>검토</Link>
         </Button>
