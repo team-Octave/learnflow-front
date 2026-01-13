@@ -1,17 +1,15 @@
-'use client';
-
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 import type { Lecture, Level } from '../../types';
 import { CATEGORY_MAP } from '../../types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import ButtonApply from './ButtonApply';
 
 interface Props {
   lecture: Lecture;
-  actionButton?: React.ReactNode; // 추가
 }
 
-export default function LectureSummary({ lecture, actionButton }: Props) {
+export default function LectureSummary({ lecture }: Props) {
   //난이도 텍스트
   const levelText =
     lecture.level === 'BEGINNER'
@@ -92,7 +90,7 @@ export default function LectureSummary({ lecture, actionButton }: Props) {
 
         {/* Action Button */}
         <div className="md:absolute right-8 w-full md:w-80 shrink-0">
-          {actionButton}
+          <ButtonApply lectureId={lecture.id} lectureTitle={lecture.title} />
         </div>
       </div>
     </div>

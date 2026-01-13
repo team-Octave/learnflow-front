@@ -10,7 +10,7 @@ interface SidebarMenuProps {
 
 export default function SidebarMenu({ href, children }: SidebarMenuProps) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive = href ? pathname.startsWith(href) : false;
   return (
     <>
       {href ? (
