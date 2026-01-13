@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { enrollLectureAction } from '@/features/learning/actions';
+import { useUserStore } from '@/store/userStore';
 
 interface Props {
   lectureId: string;
@@ -13,6 +14,7 @@ interface Props {
 export default function ButtonApply({ lectureId, lectureTitle }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const { user } = useUserStore();
 
   const handleApply = () => {
     if (!confirm(`${lectureTitle}강의를 수강 신청하시겠습니까?`)) return;
@@ -61,6 +63,7 @@ export default function ButtonApply({ lectureId, lectureTitle }: Props) {
       className=" w-full h-12 text-lg font-bold bg-white text-zinc-950 hover:bg-zinc-200 cursor-pointer"
       onClick={handleApply}
       disabled={isPending}
+      hidden={user?.role === 'ADMIN'}
     >
       수강 신청하기
     </Button>

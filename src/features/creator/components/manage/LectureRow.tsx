@@ -28,7 +28,7 @@ export default function LectureRow({ lecture }: LectureRowProps) {
   const handlePublish = () => {
     if (
       !confirm(
-        `${lecture.title} 강의를 공개하시겠습니까? 공개 후에는 삭제할 수 없습니다.`,
+        `${lecture.title} 강의 검토를 신청하시겠습니까? 검토가 시작되면 강의 내용을 수정하실 수 없으며 공개된 후에는 강의를 삭제할 수 없습니다.`,
       )
     ) {
       return;
@@ -61,7 +61,7 @@ export default function LectureRow({ lecture }: LectureRowProps) {
           </Button>
         );
       }
-      case 'SUBMIT': {
+      case 'SUBMITTED': {
         return (
           <Badge
             variant="secondary"
@@ -81,7 +81,7 @@ export default function LectureRow({ lecture }: LectureRowProps) {
           </Badge>
         );
       }
-      case 'REJECT': {
+      case 'REJECTED': {
         return (
           <Tooltip>
             <TooltipTrigger>

@@ -39,7 +39,6 @@ export async function getEnrollmentById(enrollmentId: number) {
 }
 
 export async function completeLesson(enrollmentId: number, lessonId: number) {
-  console.log(enrollmentId, lessonId);
   const response = await authFetch(`/api/v1/enrollment/complete-lesson`, {
     method: 'POST',
     body: JSON.stringify({ enrollmentId, lessonId }),

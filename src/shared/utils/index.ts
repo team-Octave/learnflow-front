@@ -39,3 +39,14 @@ export function checkIsExpired(token: string | undefined): boolean {
     return true;
   }
 }
+
+// 유저의 역할을 토큰에서 추출하는 함수
+export function getUserRole(token: string | undefined): string | null {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role; // 토큰에 담긴 role 필드명에 맞춰 수정!
+  } catch (e) {
+    return null;
+  }
+}
