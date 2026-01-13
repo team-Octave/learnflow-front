@@ -3,23 +3,29 @@
 
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import type { Chapter, Lesson } from '@/features/lectures/types';
+import type { Lecture } from '@/features/lectures/types';
 import MoveLessonButton from './MoveLessonButton';
 import AuditVideo from './AuditVideo';
 import AuditQuizList from './AuditQuizList';
 
 interface AuditCurriculumInfoProps {
-  chapters: Chapter[];
+  chapters: Lecture['chapters']; // Chapter[] | null
 }
 
-type FlattenedLesson = Lesson & {
+// ✅ chapters가 null일 수 있으니 NonNullable로 요소 타입을 안전하게 추출
+type ChapterFromLecture = NonNullable<Lecture['chapters']>[number];
+type LessonFromLecture = ChapterFromLecture['lessons'][number];
+
+type FlattenedLesson = LessonFromLecture & {
   chapterTitle: string;
 };
 
 export default function AuditCurriculumInfo({
   chapters,
 }: AuditCurriculumInfoProps) {
-  const allLessons: FlattenedLesson[] = (chapters ?? []).flatMap((chapter) =>
+  const safeChapters = chapters ?? [];
+
+  const allLessons: FlattenedLesson[] = safeChapters.flatMap((chapter) =>
     (chapter.lessons ?? []).map((lesson) => ({
       ...lesson,
       chapterTitle: chapter.chapterTitle,
@@ -27,7 +33,6 @@ export default function AuditCurriculumInfo({
   );
 
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
-
   const currentLesson = allLessons[currentLessonIndex];
 
   const isFirst = currentLessonIndex === 0;
@@ -43,7 +48,6 @@ export default function AuditCurriculumInfo({
 
   const isQuiz = currentLesson.lessonTypeDisplayName === 'QUIZ';
 
-  // AuditQuizList가 기존 AuditQuizQuestion 형태를 기대한다면, 여기서 변환해서 내려줌
   const auditQuizQuestions =
     currentLesson.quizQuestions?.map((q) => ({
       id: q.id,
