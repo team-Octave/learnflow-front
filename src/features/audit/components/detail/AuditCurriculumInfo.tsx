@@ -3,16 +3,16 @@
 
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import type { AuditChapter, AuditLesson } from '@/features/audit/types';
+import type { Chapter, Lesson } from '@/features/lectures/types';
 import MoveLessonButton from './MoveLessonButton';
 import AuditVideo from './AuditVideo';
 import AuditQuizList from './AuditQuizList';
 
 interface AuditCurriculumInfoProps {
-  chapters: AuditChapter[];
+  chapters: Chapter[];
 }
 
-type FlattenedLesson = AuditLesson & {
+type FlattenedLesson = Lesson & {
   chapterTitle: string;
 };
 
@@ -22,7 +22,7 @@ export default function AuditCurriculumInfo({
   const allLessons: FlattenedLesson[] = (chapters ?? []).flatMap((chapter) =>
     (chapter.lessons ?? []).map((lesson) => ({
       ...lesson,
-      chapterTitle: chapter.title,
+      chapterTitle: chapter.chapterTitle,
     })),
   );
 
@@ -41,7 +41,15 @@ export default function AuditCurriculumInfo({
     );
   }
 
-  const isQuiz = currentLesson.type === 'QUIZ';
+  const isQuiz = currentLesson.lessonTypeDisplayName === 'QUIZ';
+
+  // AuditQuizList가 기존 AuditQuizQuestion 형태를 기대한다면, 여기서 변환해서 내려줌
+  const auditQuizQuestions =
+    currentLesson.quizQuestions?.map((q) => ({
+      id: q.id,
+      question: q.question,
+      answer: q.correct, // boolean
+    })) ?? [];
 
   return (
     <div className="space-y-4">
@@ -51,8 +59,9 @@ export default function AuditCurriculumInfo({
           <h3 className="text-sm font-medium text-primary">
             {currentLesson.chapterTitle}
           </h3>
+
           <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
-            {currentLesson.title}
+            {currentLesson.lessonTitle}
             <Badge variant="outline">{isQuiz ? 'QUIZ' : 'VIDEO'}</Badge>
           </h2>
         </div>
@@ -64,7 +73,7 @@ export default function AuditCurriculumInfo({
 
       {/* Content */}
       {isQuiz ? (
-        <AuditQuizList questions={currentLesson.questions} />
+        <AuditQuizList questions={auditQuizQuestions} />
       ) : (
         <AuditVideo videoUrl={currentLesson.videoUrl} />
       )}

@@ -3,13 +3,19 @@
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import type { AuditDetail } from '@/features/audit/types';
+import type { Lecture } from '@/features/lectures/types';
+import { CATEGORY_MAP } from '@/features/lectures/types';
 
 interface AuditBasicInfoProps {
-  audit: AuditDetail;
+  audit: Lecture;
 }
 
 export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
+  const categoryLabel =
+    audit?.categoryId && audit.categoryId in CATEGORY_MAP
+      ? CATEGORY_MAP[audit.categoryId]
+      : undefined;
+
   return (
     <Card className="overflow-hidden border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
       <div className="flex flex-col md:flex-row gap-6 md:items-center">
@@ -20,7 +26,7 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={audit.thumbnail}
+              src={audit.thumbnailUrl}
               alt={audit.title}
               className="object-cover w-full h-full"
             />
@@ -29,20 +35,21 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
 
         <div className="flex flex-col justify-center flex-1 space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
-            {!!audit.category && (
+            {!!categoryLabel && (
               <Badge
                 variant="outline"
                 className="border-primary/50 text-primary"
               >
-                {audit.category}
+                {categoryLabel}
               </Badge>
             )}
-            {!!audit.difficulty && (
+
+            {!!audit.level && (
               <Badge
                 variant="secondary"
                 className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
               >
-                {audit.difficulty}
+                {audit.level}
               </Badge>
             )}
           </div>
@@ -58,7 +65,7 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
           <div className="pt-2 text-sm text-zinc-500 flex items-center gap-2">
             <span>닉네임:</span>
             <span className="font-semibold text-zinc-900 dark:text-zinc-200">
-              {audit.instructor ?? '-'}
+              {audit.instructorDisplayName ?? '-'}
             </span>
           </div>
         </div>
