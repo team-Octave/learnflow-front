@@ -25,7 +25,7 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
         <div className="w-full md:w-1/3 min-w-[300px]">
           <AspectRatio
             ratio={16 / 9}
-            className="bg-zinc-100 dark:bg-zinc-800 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800 overflow-hidden rounded-lg"
+            className="bg-zinc-100 dark:bg-zinc-800 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800 overflow-hidden rounded-sm"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img

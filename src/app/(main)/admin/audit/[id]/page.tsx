@@ -42,7 +42,7 @@ export default async function AuditDetailPage({
   const audit = state.data;
 
   return (
-    <div className="w-full">
+    <div className="flex-1">
       {/* 1) 강의 기본 정보 */}
       <AuditBasicInfo audit={audit} />
 

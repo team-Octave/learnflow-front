@@ -31,7 +31,7 @@ export default function AuditAcceptButton({ auditId }: AuditAcceptButtonProps) {
   return (
     <Button
       size="lg"
-      className="w-32 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
+      className="w-32 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 cursor-pointer"
       onClick={onApprove}
     >
       승인

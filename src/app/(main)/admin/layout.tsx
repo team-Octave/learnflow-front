@@ -6,7 +6,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex p-10 gap-10 w-full">
+    <div className="flex justify-center p-10 gap-10 w-[90%]">
       {/* AdminSidebar 자리 */}
       <AdminSidebar />
       {children}

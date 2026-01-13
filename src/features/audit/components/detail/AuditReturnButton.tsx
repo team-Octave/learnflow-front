@@ -87,7 +87,7 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
         <Button
           variant="outline"
           size="lg"
-          className="w-32 border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
+          className="w-32 border-destructive/50 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive cursor-pointer"
         >
           반려
         </Button>
@@ -151,7 +151,12 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
           >
             취소
           </Button>
-          <Button variant="destructive" onClick={onReject} disabled={disabled}>
+          <Button
+            variant="destructive"
+            onClick={onReject}
+            disabled={disabled}
+            className="cursor-pointer"
+          >
             최종 반려
           </Button>
         </DialogFooter>
