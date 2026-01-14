@@ -1,6 +1,6 @@
 // src/services/audit.service.ts
-import { authFetch } from '@/shared/api';
-import type { AuditRejectPayload } from '@/features/audit/types';
+// import { authFetch } from '@/shared/api';
+// import type { AuditRejectPayload } from '@/features/audit/types';
 
 // export async function getAuditDetail(id: string) {
 //   const response = await authFetch(`/api/v1/admin/audits/${id}`, {
