@@ -46,17 +46,16 @@ export async function getEnrollmentByIdAction(
   return state;
 }
 
+//변경
 export async function completeLessonAction(
   enrollmentId: number,
-  lectureId: number, // ✅ 추가
+  lectureId: number,
   lessonId: number,
 ): Promise<ActionState<any>> {
   const state = await completeLesson(enrollmentId, lessonId);
 
   if (state.success) {
     revalidatePath('/mylearning');
-
-    // ✅ 라우트가 /play/[enrollmentId]/[lectureId] 로 바뀌었으니 여기 맞춰서 갱신
     revalidatePath(`/play/${enrollmentId}/${lectureId}`);
   }
 

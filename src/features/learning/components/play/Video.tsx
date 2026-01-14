@@ -2,15 +2,22 @@
 'use client';
 
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import ButtonComplete from './ButtonComplete';
 import type { Lesson } from '@/features/lectures/types';
+import ButtonComplete from './ButtonComplete';
 
 export interface VideoProps {
   enrollmentId: number;
+  lectureId: number;
   lesson: Lesson;
+  completedLessonIds: number[]; // ✅ 추가
 }
 
-export function Video({ enrollmentId, lesson }: VideoProps) {
+export function Video({
+  enrollmentId,
+  lectureId,
+  lesson,
+  completedLessonIds,
+}: VideoProps) {
   const src =
     lesson.videoUrl ??
     'https://www.youtube.com/embed/Axlxk_PaSOg?si=5mlhFbRzOXnGYtJb';
@@ -35,7 +42,12 @@ export function Video({ enrollmentId, lesson }: VideoProps) {
             {lesson.lessonTitle}
           </h2>
 
-          <ButtonComplete enrollmentId={enrollmentId} lessonId={lesson.id} />
+          <ButtonComplete
+            enrollmentId={enrollmentId}
+            lectureId={lectureId}
+            lessonId={lesson.id}
+            completedLessonIds={completedLessonIds}
+          />
         </div>
       </div>
     </div>

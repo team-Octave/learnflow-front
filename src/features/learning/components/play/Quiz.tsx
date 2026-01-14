@@ -12,11 +12,17 @@ import type { Lesson } from '@/features/lectures/types';
 
 interface QuizProps {
   enrollmentId: number;
+  lectureId: number;
   lesson: Lesson;
   isCompleted: boolean;
 }
 
-export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
+export function Quiz({
+  enrollmentId,
+  lectureId,
+  lesson,
+  isCompleted,
+}: QuizProps) {
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [isPending, startTransition] = useTransition();
 
@@ -26,7 +32,7 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
 
   const questions = lesson.quizQuestions ?? [];
 
-  const handleSelect = (questionId: string, answer: boolean) => {
+  const handleSelect = (questionId: number, answer: boolean) => {
     if (isCompleted) return;
     setSelected((prev) => ({ ...prev, [String(questionId)]: answer }));
   };
@@ -34,7 +40,6 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
   const handleSubmit = () => {
     if (isCompleted) return;
 
-    // (1) 미응답 문항 체크
     const unanswered = questions.filter(
       (q) => selected[String(q.id)] === undefined,
     );
@@ -44,15 +49,19 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
       return;
     }
 
-    // (2) 레슨 완료 처리
     startTransition(async () => {
-      const state = await completeLessonAction(enrollmentId, lesson.id);
+      // ✅ lectureId 추가
+      const state = await completeLessonAction(
+        enrollmentId,
+        lectureId,
+        lesson.id,
+      );
 
       if (state.success) {
         const params = new URLSearchParams(searchParams.toString());
         params.set('lessonId', String(lesson.id));
         router.replace(`${pathname}?${params.toString()}`);
-        router.refresh(); // 사이드바/진행률 갱신
+        router.refresh();
       } else {
         alert(state.message || '레슨 완료 처리에 실패하였습니다.');
       }

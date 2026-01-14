@@ -33,7 +33,7 @@ export interface Query {
 
 // 강의 단위
 export interface Lecture {
-  id: string;
+  id: number;
   title: string;
   instructorId: string; // instructor → creatorName + creatorId 로 변경
   instructorDisplayName: string;
@@ -49,15 +49,15 @@ export interface Lecture {
 }
 
 export interface QuizQuestion {
-  id: string;
+  id: number;
   question: string; // 질문 텍스트
   correct: boolean; // 정답 여부 (true/false)
-  questionOrder: number; // 순서
+  orderIndex: number; // 백엔드와 동일하게
 }
 
 // 레슨 단위 (영상 또는 퀴즈)
 export interface Lesson {
-  id: string;
+  id: number;
   lessonTitle: string;
   isFreePreview: boolean;
   lessonOrder: number;
@@ -69,7 +69,7 @@ export interface Lesson {
 
 // 챕터 단위 (레슨 여러 개 포함)
 export interface Chapter {
-  id: string;
+  id: number;
   chapterTitle: string;
   lessons: Lesson[];
 }

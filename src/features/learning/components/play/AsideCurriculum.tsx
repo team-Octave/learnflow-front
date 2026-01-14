@@ -26,12 +26,11 @@ export function AsideCurriculum({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  //  URL에서 현재 lessonId 가져오기
   const currentLessonId = searchParams.get('lessonId');
 
-  const handleClickLesson = (lessonId: string) => {
+  const handleClickLesson = (lessonId: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set('lessonId', lessonId);
+    params.set('lessonId', String(lessonId));
     router.push(`${pathname}?${params.toString()}`);
   };
 
@@ -68,14 +67,12 @@ export function AsideCurriculum({
               <AccordionContent className="pb-0">
                 <div className="space-y-1 pt-1">
                   {chapter.lessons.map((lesson) => {
-                    // ✅ URL 기준 active 판단
                     const isActive =
                       String(lesson.id) === String(currentLessonId);
 
                     const isCompleted =
-                      enrollmentInfo.completedLessonIds?.some(
-                        (id) => id === Number(lesson.id),
-                      ) ?? false;
+                      enrollmentInfo.completedLessonIds?.includes(lesson.id) ??
+                      false;
 
                     return (
                       <AsideLesson

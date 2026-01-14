@@ -1,3 +1,5 @@
+//  레슨 + 수강정보   API 동시 호출
+
 // app/play/[enrollmentId]/[lectureId]/page.tsx
 import { notFound, redirect } from 'next/navigation';
 
@@ -15,7 +17,10 @@ interface PlayPageProps {
   searchParams: Promise<{ lessonId?: string }>;
 }
 
-export default async function PlayPage({ params, searchParams }: PlayPageProps) {
+export default async function PlayPage({
+  params,
+  searchParams,
+}: PlayPageProps) {
   const { enrollmentId, lectureId } = await params;
   const { lessonId } = await searchParams;
 
@@ -23,23 +28,9 @@ export default async function PlayPage({ params, searchParams }: PlayPageProps) 
     redirect('/mylearning');
   }
 
-  // parseInt 그대로 사용 (num 변수 선언 X)
-  const enrollmentIdParsed = parseInt(enrollmentId);
-  const lectureIdParsed = parseInt(lectureId);
-  const lessonIdParsed = parseInt(lessonId);
-
-  if (
-    Number.isNaN(enrollmentIdParsed) ||
-    Number.isNaN(lectureIdParsed) ||
-    Number.isNaN(lessonIdParsed)
-  ) {
-    redirect('/mylearning');
-  }
-
-  // ✅ 레슨 + 수강정보 동시 호출
   const [lessonState, enrollmentState] = await Promise.all([
-    getLessonByIdAction(lectureIdParsed, lessonIdParsed),
-    getEnrollmentByIdAction(enrollmentIdParsed),
+    getLessonByIdAction(parseInt(lectureId), parseInt(lessonId)),
+    getEnrollmentByIdAction(parseInt(enrollmentId)),
   ]);
 
   if (!lessonState?.success || !lessonState.data) {
@@ -48,22 +39,33 @@ export default async function PlayPage({ params, searchParams }: PlayPageProps) 
   }
 
   if (!enrollmentState?.success || !enrollmentState.data) {
-    console.error('[PlayPage] enrollment load failed:', enrollmentState?.message);
+    console.error(
+      '[PlayPage] enrollment load failed:',
+      enrollmentState?.message,
+    );
     redirect('/mylearning');
   }
 
   const currentLesson = lessonState.data as Lesson;
   const enrollmentInfo = enrollmentState.data as Enrollment;
 
-  const isCompleted = enrollmentInfo.completedLessonIds.includes(lessonIdParsed);
+  const isCompleted = enrollmentInfo.completedLessonIds.includes(
+    parseInt(lessonId),
+  );
 
   return (
     <main className="flex-1 flex items-center">
       {currentLesson.lessonTypeDisplayName === 'VIDEO' ? (
-        <Video enrollmentId={enrollmentIdParsed} lesson={currentLesson} />
+        <Video
+          enrollmentId={parseInt(enrollmentId)}
+          lectureId={parseInt(lectureId)}
+          lesson={currentLesson}
+          completedLessonIds={enrollmentInfo.completedLessonIds}
+        />
       ) : (
         <Quiz
-          enrollmentId={enrollmentIdParsed}
+          enrollmentId={parseInt(enrollmentId)}
+          lectureId={parseInt(lectureId)}
           lesson={currentLesson}
           isCompleted={isCompleted}
         />
