@@ -52,14 +52,14 @@ export async function createBasicLectureAction(
   const categoryId = formData.get('categoryId') as Category;
   const level = formData.get('level') as Level;
   const description = formData.get('description') as string;
-  const uploadUrl = thumbnailState.data.uploadUrl;
+  const thumbnailUrl = thumbnailState.data.uploadUrl;
 
   const payload = {
     title,
     categoryId,
     level,
     description,
-    uploadUrl,
+    thumbnailUrl,
   };
 
   const state = await createBasicLecture(payload);
