@@ -1,4 +1,8 @@
-import { BasicInfo, CurriculumFormValues } from '@/features/creator/types';
+import {
+  BasicInfo,
+  CreatorLesson,
+  CurriculumFormValues,
+} from '@/features/creator/types';
 import { authFetch } from '@/shared/api';
 
 export async function getCreatorLectures(page: number) {
@@ -44,5 +48,100 @@ export async function createCurriculum(
     method: 'POST',
     body: JSON.stringify(curriculum),
   });
+  return response.json();
+}
+
+// ------------------------------- 커리큘럼 등록 세분화 API ---------------------------------
+
+export async function createChapter(
+  lectureId: string,
+  payload: { chapterTitle: string },
+) {
+  const response = await authFetch(`/api/v2/lectures/${lectureId}/chapters`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  return response.json();
+}
+
+export async function updateChapter(
+  lectureId: string,
+  chapterId: string,
+  payload: { chapterTitle: string },
+) {
+  const response = await authFetch(
+    `/api/v2/lectures/${lectureId}/chapters/${chapterId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    },
+  );
+  return response.json();
+}
+
+export async function deleteChapter(lectureId: string, chapterId: string) {
+  const response = await authFetch(
+    `/api/v2/lectures/${lectureId}/chapters/${chapterId}`,
+    {
+      method: 'DELETE',
+    },
+  );
+  return response.json();
+}
+
+export async function createLesson(
+  lectureId: string,
+  chapterId: string,
+  payload: CreatorLesson,
+) {
+  const response = await authFetch(
+    `/api/v2/lectures/${lectureId}/chapters/${chapterId}/lessons`,
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    },
+  );
+  return response.json();
+}
+
+export async function updateLesson(
+  lectureId: string,
+  chapterId: string,
+  lessonId: string,
+  payload: any,
+) {
+  const response = await authFetch(
+    `/api/v2/lectures/${lectureId}/chapters/${chapterId}/lessons/${lessonId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    },
+  );
+  return response.json();
+}
+
+export async function deleteLesson(
+  lectureId: string,
+  chapterId: string,
+  lessonId: string,
+) {
+  const response = await authFetch(
+    `/api/v2/lectures/${lectureId}/chapters/${chapterId}/lessons/${lessonId}`,
+    {
+      method: 'DELETE',
+    },
+  );
+  return response.json();
+}
+
+// 커리큘럼 순서 확정
+export async function bindCurriculum(lectureId: string, payload: any) {
+  const response = await authFetch(
+    `/api/v2/lectures/${lectureId}/curriculum/bind`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    },
+  );
   return response.json();
 }

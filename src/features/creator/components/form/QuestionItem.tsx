@@ -1,12 +1,13 @@
 'use client';
 
 import { useFormContext, Controller } from 'react-hook-form';
-import { CurriculumFormValues } from '../../types';
+import { CurriculumFormValues } from '../../schemas';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+
 interface QuestionItemProps {
   chapterIndex: number;
   lessonIndex: number;
@@ -21,8 +22,6 @@ export default function QuestionItem({
   removeQuestion,
 }: QuestionItemProps) {
   const { register, control } = useFormContext<CurriculumFormValues>();
-
-  // 경로: chapters[i].lessons[j].quizQuestions[k]
   const basePath =
     `chapters.${chapterIndex}.lessons.${lessonIndex}.quizQuestions.${questionIndex}` as const;
 
@@ -33,33 +32,36 @@ export default function QuestionItem({
       </span>
 
       <div className="flex-1 space-y-3">
-        {/* 질문 입력 (question) */}
         <Input
           {...register(`${basePath}.question`, { required: true })}
           placeholder="문제를 입력하세요"
           className="h-9"
         />
 
-        {/* 정답 선택 (correct: boolean) */}
         <div className="flex items-center gap-4">
           <span className="text-xs text-zinc-400">정답:</span>
           <Controller
             control={control}
             name={`${basePath}.correct`}
-            defaultValue={true} // 기본값
             render={({ field }) => (
               <RadioGroup
                 className="flex gap-4"
-                value={field.value ? 'O' : 'X'} // boolean -> string 변환 (UI용)
-                onValueChange={(val) => field.onChange(val === 'O')} // string -> boolean 변환 (State용)
+                value={field.value ? 'O' : 'X'}
+                onValueChange={(val) => field.onChange(val === 'O')}
               >
                 <div className="flex items-center space-x-1">
-                  <RadioGroupItem value="O" id={`${basePath}-O`} />
-                  <Label htmlFor={`${basePath}-O`}>O</Label>
+                  <RadioGroupItem
+                    value="O"
+                    id={`${basePath}-O-${questionIndex}`}
+                  />
+                  <Label htmlFor={`${basePath}-O-${questionIndex}`}>O</Label>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <RadioGroupItem value="X" id={`${basePath}-X`} />
-                  <Label htmlFor={`${basePath}-X`}>X</Label>
+                  <RadioGroupItem
+                    value="X"
+                    id={`${basePath}-X-${questionIndex}`}
+                  />
+                  <Label htmlFor={`${basePath}-X-${questionIndex}`}>X</Label>
                 </div>
               </RadioGroup>
             )}
