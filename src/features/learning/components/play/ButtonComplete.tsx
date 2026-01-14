@@ -8,8 +8,8 @@ import { completeLessonAction } from '../../actions';
 import { Enrollment } from '../../types';
 
 interface ButtonCompleteProps {
-  lessonId: string;
-  enrollmentInfo: Enrollment;
+ enrollmentId: number;
+  lessonId: number;
 }
 
 export default function ButtonComplete({

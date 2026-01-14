@@ -1,13 +1,10 @@
 // app/play/[enrollmentId]/[lectureId]/layout.tsx
 import type { ReactNode } from 'react';
 import { notFound, redirect } from 'next/navigation';
-
 import { getEnrollmentByIdAction } from '@/features/learning/actions';
 import { getLectureByIdAction } from '@/features/lectures/actions';
-
 import type { Enrollment } from '@/features/learning/types';
 import type { Lecture } from '@/features/lectures/types';
-
 import { TitleBar } from '@/features/learning/components/play/TitleBar';
 import { AsideCurriculum } from '@/features/learning/components/play/AsideCurriculum';
 

@@ -26,7 +26,7 @@ export function AsideCurriculum({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // ✅ URL에서 현재 lessonId 가져오기
+  //  URL에서 현재 lessonId 가져오기
   const currentLessonId = searchParams.get('lessonId');
 
   const handleClickLesson = (lessonId: string) => {

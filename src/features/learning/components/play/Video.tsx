@@ -1,18 +1,16 @@
+// src/features/learning/components/play/Video.tsx
 'use client';
 
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import ButtonComplete from './ButtonComplete';
 import type { Lesson } from '@/features/lectures/types';
-import { useParams } from 'next/navigation';
 
 export interface VideoProps {
+  enrollmentId: number;
   lesson: Lesson;
 }
 
-export function Video({ lesson }: VideoProps) {
-  const params = useParams();
-  const enrollmentId = Number(params.enrollmentId);
-
+export function Video({ enrollmentId, lesson }: VideoProps) {
   const src =
     lesson.videoUrl ??
     'https://www.youtube.com/embed/Axlxk_PaSOg?si=5mlhFbRzOXnGYtJb';
@@ -37,10 +35,7 @@ export function Video({ lesson }: VideoProps) {
             {lesson.lessonTitle}
           </h2>
 
-          <ButtonComplete
-            enrollmentId={enrollmentId}
-            lessonId={lesson.id}
-          />
+          <ButtonComplete enrollmentId={enrollmentId} lessonId={lesson.id} />
         </div>
       </div>
     </div>
