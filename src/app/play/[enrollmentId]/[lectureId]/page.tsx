@@ -1,4 +1,5 @@
 //  레슨 + 수강정보   API 동시 호출
+// /play/33/65?lessonId=1
 
 // app/play/[enrollmentId]/[lectureId]/page.tsx
 import { notFound, redirect } from 'next/navigation';

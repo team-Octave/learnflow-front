@@ -1,6 +1,6 @@
 // src/services/lectures.service.ts
 import type { Query } from '@/features/lectures/types';
-import { commonFetch } from '@/shared/api';
+import { authFetch, commonFetch } from '@/shared/api';
 
 export async function getLectures({ category, level, sort, page }: Query) {
   const url = `/api/v1/lectures?category=${category}&level=${level}&sort=${sort}&page=${
@@ -30,7 +30,7 @@ export async function getReviewById(lectureId: number, page: number) {
  * GET /api/v2/lectures/{lectureId}/lessons/{lessonId}
  */
 export async function getLessonById(lectureId: number, lessonId: number) {
-  const response = await commonFetch(
+  const response = await authFetch(
     `/api/v2/lectures/${lectureId}/lessons/${lessonId}`,
   );
   return response.json();
