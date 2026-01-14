@@ -48,17 +48,16 @@ export async function getEnrollmentByIdAction(
 
 export async function completeLessonAction(
   enrollmentId: number,
-  lectureId: number,
+  lectureId: number, // ✅ 추가
   lessonId: number,
 ): Promise<ActionState<any>> {
   const state = await completeLesson(enrollmentId, lessonId);
 
   if (state.success) {
-    // 내 강의 목록 진행률 갱신
     revalidatePath('/mylearning');
 
-    // ✅ 현재 수강 플레이 레이아웃/사이드바 갱신 (라우트 구조 맞춤)
-    revalidatePath(`/play/${enrollmentId}/${lectureId}`, 'layout');
+    // ✅ 라우트가 /play/[enrollmentId]/[lectureId] 로 바뀌었으니 여기 맞춰서 갱신
+    revalidatePath(`/play/${enrollmentId}/${lectureId}`);
   }
 
   return state;
