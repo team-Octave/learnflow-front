@@ -9,6 +9,57 @@ import type {
 
 const PAGE_SIZE = 4;
 
+import type { ActionState } from '@/shared/types/ActionState';
+import type { Lecture } from '@/features/lectures/types';
+import { mockAuditDetail } from '@/features/audit/mocks/mockAuditDetail';
+
+/**
+ * 강의 검토 상세 조회 (mock)
+ */
+export async function getAuditDetailAction(
+  auditId: string,
+): Promise<ActionState<Lecture>> {
+  // auditId는 현재 mock에서 사용하지 않음
+  return {
+    success: true,
+    data: mockAuditDetail,
+    message: 'mock audit detail',
+    code: 'MOCK_SUCCESS',
+  };
+}
+
+/**
+ * 강의 승인 (mock)
+ */
+export async function approveAuditAction(
+  auditId: string,
+): Promise<ActionState<null>> {
+  return {
+    success: true,
+    data: null,
+    message: 'mock approve success',
+    code: 'MOCK_SUCCESS',
+  };
+}
+
+/**
+ * 강의 반려 (mock)
+ */
+export async function rejectAuditAction(
+  auditId: string,
+  payload: {
+    reasons: string[];
+    detail?: string;
+  },
+): Promise<ActionState<null>> {
+  return {
+    success: true,
+    data: null,
+    message: 'mock reject success',
+    code: 'MOCK_SUCCESS',
+  };
+}
+
 /**
  * ✅ API 오면 여기만 교체하면 됨.
  * 지금은 MOCK으로 동작.
