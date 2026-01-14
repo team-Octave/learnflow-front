@@ -31,25 +31,10 @@ export interface CreatorLecture {
   createdAt: string;
 }
 
-export interface CurriculumFormValues {
-  chapters: CreatorChapter[];
-}
-
-export interface CreatorChapter {
-  chapterTitle: string;
-  lessons: CreatorLesson[];
-}
-
-export interface CreatorLesson {
-  lessonTitle: string;
-  lessonType: LessonType;
-  isFreePreview: boolean;
-  videoUrl: string | null;
-  quizQuestions: CreatorQuizQuestion[] | null;
-}
-
-export interface CreatorQuizQuestion {
-  question: string;
-  correct: boolean;
-  questionOrder: number;
-}
+// 폼 관련 타입은 schemas.ts에서 통합 관리
+export type {
+  CurriculumFormValues,
+  Chapter as CreatorChapter,
+  Lesson as CreatorLesson,
+  QuizQuestion as CreatorQuizQuestion,
+} from './schemas';
