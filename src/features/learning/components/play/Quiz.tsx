@@ -17,19 +17,57 @@ interface QuizProps {
   isCompleted: boolean;
 }
 
+// Quiz라는 React 함수 컴포넌트를 정의
+/*
+“Quiz라는 컴포넌트를 만들 건데,
+이 컴포넌트는 enrollmentId, lectureId, lesson, isCompleted
+네 개의 값을 props로 받아서 사용한다
+*/
 export function Quiz({
   enrollmentId,
   lectureId,
   lesson,
   isCompleted,
 }: QuizProps) {
-  const [selected, setSelected] = useState<Record<string, boolean>>({});
+  //QuizProps 이 컴포넌트가 받는 props의 타입 정의
+  // 문제ID → 사용자가 고른 true/false를 저장하는 상태 객체를 만든다
+  const [selected, setSelected] = useState<Record<string, boolean>>({}); // Record< 키 string, 값 boolean> 객체 타입을 정의하는 방법
+
+  /*
+    selected = {
+      "101": false,
+      "102": true,
+    }
+
+    Record<string, boolean>
+    {
+      "1": true,
+      "2": false,
+      "abc": true
+    }
+
+    ({})→ 처음엔 아무 문제도 안 골랐으니까
+    빈 객체로 시작
+
+    selected = {}  문제를 클릭할 때마다 하나씩 채워짐.
+
+    setSelected((prev) => ({
+  ...prev,
+  [questionId]: answer,  // true or false
+}));
+  */
+
+  // 서버 액션 실행 중 상태 관리
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // 4️⃣ 퀴즈 데이터 정리
+  // lesson.quizQuestions : lesson 객체 안에 있는 퀴즈 질문 목록
+  // ?? : 왼쪽 값이 null 또는 undefined일 때만 오른쪽 값을 사용, 퀴즈가 없을 때 사용할 빈 배열
+  //lesson.quizQuestions가 있으면 그대로 쓰고, 없으면 빈 배열을 써라
   const questions = lesson.quizQuestions ?? [];
 
   const handleSelect = (questionId: number, answer: boolean) => {
@@ -37,6 +75,7 @@ export function Quiz({
     setSelected((prev) => ({ ...prev, [String(questionId)]: answer }));
   };
 
+  // 퀴즈 제출 버튼 클릭 시 실행되는 이벤트 핸들러
   const handleSubmit = () => {
     if (isCompleted) return;
 
