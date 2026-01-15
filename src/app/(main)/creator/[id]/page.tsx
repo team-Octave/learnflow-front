@@ -30,7 +30,7 @@ export default async function LectureEditPage({
   const lecture = state.data!;
 
   return (
-    <div className="flex flex-col mx-auto my-12 gap-8 w-[80%] md:w-[60%] ">
+    <div className="flex flex-col mx-auto my-12 gap-8 w-full">
       <div className="flex justify-between items-center">
         {step === 1 ? (
           <>
