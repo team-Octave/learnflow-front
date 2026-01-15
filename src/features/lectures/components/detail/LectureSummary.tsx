@@ -19,7 +19,7 @@ export default function LectureSummary({ lecture }: Props) {
       : '고급';
 
   return (
-    <div className="relative border-b border-zinc-800">
+    <div className="relative border-b border-zinc-800 w-full">
       {/* 🔥 Background Image Layer */}
       <div className="absolute inset-0">
         <img
@@ -32,7 +32,7 @@ export default function LectureSummary({ lecture }: Props) {
       </div>
 
       {/* Content */}
-      <div className="relative z-20 container px-8 py-12 flex flex-col md:flex-row gap-8 items-end">
+      <div className="w-full relative z-20 px-8 py-12 flex flex-col md:flex-row gap-8 items-end">
         <div className="w-full flex-1 space-y-6">
           {/* Category + Level + Rating */}
           <div className="flex items-center gap-2">

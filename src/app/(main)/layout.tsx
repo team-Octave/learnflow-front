@@ -14,10 +14,12 @@ export default async function MainLayout({
   const state = await getUserAction();
   const user = state.success ? state.data : null;
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen items-center relative">
       <Header initialUser={user} />
-      <main className="flex-1 w-full flex flex-col items-center">
+      <main className="flex-1 w-full flex flex-col items-center max-w-7xl">
         {/* 실제 각 페이지 내용이 여기 들어감. */}
+        <div className="absolute inset-0 bg-linear-to-b from-indigo-500/10 via-background to-background pointer-events-none -z-10" />
+
         {children}
       </main>
       {/* antigravity : <main className="flex-1 flex flex-col justify-start items-center">{children}</main> */}

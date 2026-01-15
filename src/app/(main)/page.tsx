@@ -65,7 +65,7 @@ export default async function MainPage({ searchParams }: PageProps) {
     <div className="flex flex-col min-h-screen w-full">
       <MainVisual />
 
-      <div className="py-12 md:py-20 bg-background flex justify-center">
+      <div className="py-12 md:py-20 flex justify-center">
         <div className="container px-4 md:px-8">
           {/* 필터 */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
