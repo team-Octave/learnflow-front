@@ -23,7 +23,7 @@ export default async function CreatorPage({ searchParams }: CreatorPageProps) {
     redirect('/creator');
   }
   return (
-    <div className="flex flex-col mx-auto my-12 gap-8 w-full">
+    <div className="flex flex-col mx-auto my-12 gap-8 w-full max-w-2xl">
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-1">
           <div className="text-2xl font-bold text-white">강의 관리</div>

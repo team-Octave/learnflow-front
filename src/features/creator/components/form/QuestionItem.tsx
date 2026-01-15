@@ -9,21 +9,18 @@ import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 
 interface QuestionItemProps {
-  chapterIndex: number;
-  lessonIndex: number;
+  lessonPath: string;
   questionIndex: number;
   removeQuestion: () => void;
 }
 
 export default function QuestionItem({
-  chapterIndex,
-  lessonIndex,
+  lessonPath,
   questionIndex,
   removeQuestion,
 }: QuestionItemProps) {
   const { register, control } = useFormContext<CurriculumFormValues>();
-  const basePath =
-    `chapters.${chapterIndex}.lessons.${lessonIndex}.quizQuestions.${questionIndex}` as const;
+  const basePath = `${lessonPath}.quizQuestions.${questionIndex}` as const;
 
   return (
     <div className="flex items-start gap-3 p-3 bg-zinc-950 rounded border border-zinc-800">
@@ -33,8 +30,7 @@ export default function QuestionItem({
 
       <div className="flex-1 space-y-3">
         <Input
-          {...register(`${basePath}.question`, { required: true })}
-          placeholder="문제를 입력하세요"
+          {...register(`${basePath}.question` as any, { required: true })}
           className="h-9"
         />
 
@@ -42,7 +38,7 @@ export default function QuestionItem({
           <span className="text-xs text-zinc-400">정답:</span>
           <Controller
             control={control}
-            name={`${basePath}.correct`}
+            name={`${basePath}.correct` as any}
             render={({ field }) => (
               <RadioGroup
                 className="flex gap-4"

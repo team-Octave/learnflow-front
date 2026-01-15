@@ -10,6 +10,7 @@ import {
   deleteCreatorLecture,
   deleteLesson,
   getCreatorLectures,
+  getVideoUploadUrl,
   publishCreatorLecture,
   updateChapter,
   updateLesson,
@@ -85,6 +86,7 @@ export async function createChapterAction(
   lectureId: string,
   payload: { chapterTitle: string },
 ) {
+  return;
   const state = await createChapter(lectureId, payload);
   return state;
 }
@@ -94,6 +96,8 @@ export async function updateChapterAction(
   chapterId: string,
   payload: { chapterTitle: string },
 ) {
+  return;
+
   const state = await updateChapter(lectureId, chapterId, payload);
   return state;
 }
@@ -103,6 +107,8 @@ export async function deleteChapterAction(
   lectureId: string,
   chapterId: string,
 ) {
+  return;
+
   const state = await deleteChapter(lectureId, chapterId);
   return state;
 }
@@ -113,6 +119,8 @@ export async function createLessonAction(
   chapterId: string,
   payload: CreatorLesson,
 ) {
+  return;
+
   const state = await createLesson(lectureId, chapterId, payload);
   return state;
 }
@@ -124,6 +132,8 @@ export async function updateLessonAction(
   lessonId: string,
   payload: CreatorLesson,
 ) {
+  return;
+
   const state = await updateLesson(lectureId, chapterId, lessonId, payload);
   return state;
 }
@@ -134,12 +144,34 @@ export async function deleteLessonAction(
   chapterId: string,
   lessonId: string,
 ) {
+  return;
+
   const state = await deleteLesson(lectureId, chapterId, lessonId);
   return state;
 }
 
 // 커리큘럼 순서 확정(최종 등록)
 export async function bindCurriculumAction(lectureId: string, payload: any) {
+  return;
+
   const state = await bindCurriculum(lectureId, payload);
+  return state;
+}
+
+// 비디오 업로드용 Signed URL 발급
+export async function getVideoUploadUrlAction(params: {
+  filename: string;
+  contentType: string;
+  filesize: number;
+}): Promise<
+  ActionState<{
+    mediaId: number;
+    uploadUrl: string;
+    fileKey: string;
+    bucketName: string;
+  }>
+> {
+  const state = await getVideoUploadUrl(params);
+  console.log(state);
   return state;
 }

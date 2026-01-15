@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, useTransition } from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { CurriculumFormValues, LessonSchema } from '../../schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,18 +12,18 @@ import {
   Trash2,
   PlayCircle,
   FileQuestion,
-  ChevronDown,
   ChevronUp,
   Loader2,
   SaveIcon,
 } from 'lucide-react';
-import QuestionItem from './QuestionItem';
 import {
   createLessonAction,
   deleteLessonAction,
   updateLessonAction,
 } from '../../actions';
 import { toast } from 'sonner';
+import QuizItem from './QuizItem';
+import VideoItem from './VideoItem';
 
 interface LessonItemProps {
   lectureId: string;
@@ -44,8 +44,7 @@ export default function LessonItem({
   registerOpenLesson,
   unregisterOpenLesson,
 }: LessonItemProps) {
-  const { register, control, watch, setValue } =
-    useFormContext<CurriculumFormValues>();
+  const { register, watch, setValue } = useFormContext<CurriculumFormValues>();
   const [isOpen, setIsOpen] = useState(true);
   const [isPending, startTransition] = useTransition();
 
@@ -76,14 +75,25 @@ export default function LessonItem({
     return JSON.stringify(currentLessonData) !== JSON.stringify(lastSavedData);
   }, [currentLessonData, lastSavedData]);
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `${lessonPath}.quizQuestions` as any,
-  });
-
   /// LessonItem.tsx 내부 저장 로직 수정
   const handleSaveLesson = async () => {
     const currentLessonData = watch(lessonPath);
+
+    // 레슨 타입별 사전 검증
+    if (currentLessonData.lessonType === 'VIDEO') {
+      if (!currentLessonData.videoUrl) {
+        toast.error('비디오를 업로드해주세요.');
+        return;
+      }
+    } else if (currentLessonData.lessonType === 'QUIZ') {
+      if (
+        !currentLessonData.quizQuestions ||
+        currentLessonData.quizQuestions.length === 0
+      ) {
+        toast.error('최소 1개 이상의 퀴즈 문제를 추가해주세요.');
+        return;
+      }
+    }
 
     const validation = LessonSchema.safeParse(currentLessonData);
 
@@ -197,52 +207,10 @@ export default function LessonItem({
           <Separator className="bg-zinc-800" />
 
           {/* VIDEO 타입 */}
-          {lessonType === 'VIDEO' && (
-            <div className="space-y-2">
-              <Label className="text-xs text-zinc-400">비디오 URL</Label>
-              <Input
-                {...register(`${lessonPath}.videoUrl`)}
-                placeholder="https://..."
-              />
-            </div>
-          )}
+          {lessonType === 'VIDEO' && <VideoItem lessonPath={lessonPath} />}
 
           {/* QUIZ 타입 */}
-          {lessonType === 'QUIZ' && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label className="text-xs text-zinc-400">퀴즈 문제 목록</Label>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => {
-                    append({
-                      question: '',
-                      correct: true,
-                      questionOrder: fields.length + 1,
-                    });
-                  }}
-                >
-                  + 문제 추가
-                </Button>
-              </div>
-
-              <div className="space-y-3">
-                {fields.map((field, qIdx) => (
-                  <QuestionItem
-                    key={field.id}
-                    chapterIndex={chapterIndex}
-                    lessonIndex={lessonIndex}
-                    questionIndex={qIdx}
-                    removeQuestion={() => {
-                      remove(qIdx);
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+          {lessonType === 'QUIZ' && <QuizItem lessonPath={lessonPath} />}
 
           <div className="flex justify-end pt-2">
             <Button size="sm" onClick={handleSaveLesson}>

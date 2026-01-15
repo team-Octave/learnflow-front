@@ -13,6 +13,7 @@ import {
 } from '../../actions';
 import LessonItem from './LessonItem';
 import { toast } from 'sonner';
+import VideoItem from './VideoItem';
 
 interface ChapterItemProps {
   lectureId: string;
@@ -27,7 +28,7 @@ const INIT_VIDEO_LESSON: Lesson = {
   lessonTitle: '',
   lessonType: 'VIDEO',
   isFreePreview: false,
-  videoUrl: 'https://www.youtube.com/embed/LclObYwGj90?si=_cIT_vmfRQgX1tZF',
+  videoUrl: '',
   quizQuestions: null,
 };
 
@@ -149,6 +150,8 @@ export default function ChapterItem({
           <Trash2 size={18} />
         </Button>
       </div>
+
+      <VideoItem lessonPath={''} />
 
       {/* 레슨 목록 */}
       {chapterId && (
