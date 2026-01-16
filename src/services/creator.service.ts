@@ -25,7 +25,7 @@ export async function publishCreatorLecture(id: number) {
 }
 
 export async function createBasicLecture(payload: Omit<BasicInfo, 'file'>) {
-  const response = await authFetch(`/api/v1/lectures`, {
+  const response = await authFetch(`/api/v2/lectures`, {
     method: 'POST',
     body: JSON.stringify(payload),
   });

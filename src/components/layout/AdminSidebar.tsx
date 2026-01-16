@@ -8,7 +8,7 @@ import SidebarMenu from './SidebarMenu';
 
 export default function AdminSidebar() {
   return (
-    <div className="flex flex-col w-fit lg:w-60 h-fit bg-white/5 backdrop-blur-md p-4 gap-4 rounded-md border border-zinc-800 sticky top-26">
+    <div className="flex flex-col w-fit lg:min-w-60 h-fit bg-white/5 backdrop-blur-md p-4 gap-4 rounded-md border border-zinc-800 sticky top-26">
       <h2 className="text-white text-xl font-bold pl-1 hidden lg:flex">
         ADMIN
       </h2>

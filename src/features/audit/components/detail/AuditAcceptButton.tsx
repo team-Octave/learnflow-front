@@ -7,17 +7,20 @@ import { toast } from 'sonner';
 import { approveAuditAction } from '@/features/audit/actions';
 
 interface AuditAcceptButtonProps {
-  auditId: string | number;
+  lectureId: number;
 }
 
-export default function AuditAcceptButton({ auditId }: AuditAcceptButtonProps) {
+export default function AuditAcceptButton({
+  lectureId,
+}: AuditAcceptButtonProps) {
   const router = useRouter();
 
   const onApprove = async () => {
     const confirmed = confirm('강의를 승인하시겠습니까?');
     if (!confirmed) return;
 
-    const state = await approveAuditAction(String(auditId));
+    // ✅ string 변환 제거
+    const state = await approveAuditAction(lectureId);
 
     if (!state.success) {
       toast.error(state.message ?? '승인에 실패했습니다.');
@@ -25,7 +28,7 @@ export default function AuditAcceptButton({ auditId }: AuditAcceptButtonProps) {
     }
 
     toast.success('강의가 승인되었습니다.');
-    router.push('/admin/audit');
+    router.replace('/admin/audit');
   };
 
   return (

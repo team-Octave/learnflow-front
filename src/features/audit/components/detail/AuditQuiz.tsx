@@ -2,10 +2,10 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import type { QuizQuestion } from '@/features/lectures/types';
+import { AdminQuizQuestion } from '../../types';
 
 interface AuditQuizProps {
-  question: QuizQuestion;
+  question: AdminQuizQuestion;
   index: number;
 }
 

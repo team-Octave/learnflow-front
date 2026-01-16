@@ -10,8 +10,8 @@ interface AuditVideoProps {
 export default function AuditVideo({ videoUrl }: AuditVideoProps) {
   if (videoUrl) {
     return (
-      <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 bg-black">
-        <video controls className="w-full h-auto">
+      <div className="aspect-video overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 bg-black">
+        <video controls className="w-full aspect-video">
           <source src={videoUrl} />
         </video>
       </div>
