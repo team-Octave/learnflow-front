@@ -7,7 +7,6 @@ import { getAuditDetailAction } from '@/features/audit/actions';
 
 interface AuditDetailPageProps {
   params: Promise<{ id: string }>;
-  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 function ErrorState({ message }: { message?: string }) {
@@ -25,11 +24,16 @@ export default async function AuditDetailPage({
 }: AuditDetailPageProps) {
   const { id } = await params;
 
-  if (!id) {
-    return <ErrorState message="잘못된 접근입니다. (id가 없습니다)" />;
+  if (!id) return <ErrorState message="잘못된 접근입니다. (id가 없습니다)" />;
+
+  // ✅ string -> number 변환
+  const lectureId = parseInt(id, 10);
+  if (Number.isNaN(lectureId)) {
+    return <ErrorState message="잘못된 접근입니다. (id가 숫자가 아닙니다)" />;
   }
 
-  const state = await getAuditDetailAction(id);
+  // ✅ getAuditDetailAction은 number 받도록 변경됨
+  const state = await getAuditDetailAction(lectureId);
 
   if (!state.success || !state.data) {
     return (
@@ -47,12 +51,15 @@ export default async function AuditDetailPage({
       <AuditBasicInfo audit={audit} />
 
       {/* 2) 커리큘럼 + 레슨 컨텐츠(영상/퀴즈) */}
-      <AuditCurriculumInfo chapters={audit.chapters} />
+      <AuditCurriculumInfo
+        lectureId={audit.lectureId}
+        chapters={audit.chapters}
+      />
 
       {/* 3) 승인 / 반려 */}
       <div className="flex justify-end gap-3 pt-8 border-t border-zinc-200 dark:border-zinc-800">
-        <AuditReturnButton auditId={audit.id} />
-        <AuditAcceptButton auditId={audit.id} />
+        <AuditReturnButton lectureId={audit.lectureId} />
+        <AuditAcceptButton lectureId={audit.lectureId} />
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ export default async function MyLearningPage({
   }
 
   return (
-    <div className="flex flex-col mx-auto my-12 gap-8 w-[80%]">
+    <div className="flex flex-col mx-auto my-12 gap-8 w-full">
       <div className="text-2xl font-bold text-white">내 학습</div>
       <LearningTabs defaultTab={currentTab}>
         <div className="flex justify-between">
