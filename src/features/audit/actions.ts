@@ -98,9 +98,3 @@ export async function rejectAuditAction(
 
   return state;
 }
-
-// export async function getAuditLecturesAction(
-//   page: number,
-// ): Promise<ActionState<AuditApprovalListApiResponse>> {
-//   return getApprovalsAction(page);
-// }
