@@ -43,6 +43,7 @@ export async function getEnrollmentByIdAction(
   enrollmentId: number,
 ): Promise<ActionState<any>> {
   const state = await getEnrollmentById(enrollmentId);
+  console.log('enrollment');
   return state;
 }
 
@@ -51,14 +52,8 @@ export async function completeLessonAction(
   lessonId: number,
 ): Promise<ActionState<any>> {
   const state = await completeLesson(enrollmentId, lessonId);
-
   if (state.success) {
-    //  내 강의 목록 진행률 갱신
-    revalidatePath('/mylearning');
-
-    //  현재 수강 플레이 페이지 갱신
     revalidatePath(`/play/${enrollmentId}`);
   }
-
   return state;
 }
