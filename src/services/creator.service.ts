@@ -147,12 +147,19 @@ export async function bindCurriculum(lectureId: number, payload: any) {
 }
 
 // 비디오 업로드용 Signed URL 발급
-export async function getVideoUploadUrl(params: {
-  filename: string;
-  contentType: string;
-  filesize: number;
-}) {
+export async function getVideoUploadUrl(params: { filename: string }) {
   const response = await authFetch(`/api/v1/contents/upload-video-init`, {
+    method: 'POST',
+    body: JSON.stringify(params),
+  });
+  return response.json();
+}
+
+export async function completeVideoUpload(params: {
+  mediaId: number;
+  durationSec: number;
+}) {
+  const response = await authFetch(`/api/v1/contents/upload-video-completed`, {
     method: 'POST',
     body: JSON.stringify(params),
   });

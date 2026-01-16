@@ -14,7 +14,7 @@ export const LessonSchema = z.discriminatedUnion('lessonType', [
     id: z.number().nullable().optional(),
     lessonType: z.literal('VIDEO'),
     lessonTitle: z.string().min(1, '레슨 제목을 입력하세요.'),
-    videoUrl: z.string().url('유효한 URL이 아닙니다.'),
+    mediaId: z.number().nullable().optional(),
     isFreePreview: z.boolean(),
     quizQuestions: z.null().optional(),
   }),
@@ -22,7 +22,7 @@ export const LessonSchema = z.discriminatedUnion('lessonType', [
     id: z.number().nullable().optional(),
     lessonType: z.literal('QUIZ'),
     lessonTitle: z.string().min(1, '레슨 제목을 입력하세요.'),
-    videoUrl: z.null().optional(),
+    mediaId: z.null().optional(),
     isFreePreview: z.boolean(),
     quizQuestions: z
       .array(QuizQuestionSchema)

@@ -7,7 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useFormContext } from 'react-hook-form';
 import { CurriculumFormValues } from '../../schemas';
-import { getVideoUploadUrlAction } from '../../actions';
+import {
+  completeVideoUploadAction,
+  getVideoUploadUrlAction,
+} from '../../actions';
 import { toast } from 'sonner';
 import { Loader2, Upload, CheckCircle, X } from 'lucide-react';
 
@@ -19,13 +22,12 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
   const { watch, setValue } = useFormContext<CurriculumFormValues>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadedUrl, setUploadedUrl] = useState<string | null>(
-    watch(`${lessonPath}.videoUrl` as any) || null,
-  );
+  const [duration, setDuration] = useState<number>(0);
 
   // 드래그 앤 드롭 핸들러
   const handleDragOver = (e: React.DragEvent) => {
@@ -46,12 +48,21 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
     setIsDragging(false);
 
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('video/')) {
+    if (file && file.type === 'video/mp4') {
       setSelectedFile(file);
+
+      // duration 추출
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => {
+        setDuration(Math.round(video.duration));
+      };
+
       const objectUrl = URL.createObjectURL(file);
+      video.src = objectUrl;
       setPreviewUrl(objectUrl);
     } else {
-      toast.error('비디오 파일만 업로드 가능합니다.');
+      toast.error('MP4 파일만 업로드 가능합니다.');
     }
   };
 
@@ -62,11 +73,21 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
   // 파일 선택 시 미리보기 생성
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (file && file.type === 'video/mp4') {
       setSelectedFile(file);
-      // 로컬 미리보기 URL 생성
+
+      // duration 추출
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => {
+        setDuration(Math.round(video.duration));
+      };
+
       const objectUrl = URL.createObjectURL(file);
+      video.src = objectUrl;
       setPreviewUrl(objectUrl);
+    } else if (file) {
+      toast.error('MP4 파일만 업로드 가능합니다.');
     }
   };
 
@@ -92,19 +113,16 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
     setProgress(0);
 
     try {
-      console.log(selectedFile.name, selectedFile.type, selectedFile.size);
       // 1. Server Action으로 Signed URL 요청
       const state = await getVideoUploadUrlAction({
         filename: selectedFile.name,
-        contentType: selectedFile.type,
-        filesize: selectedFile.size,
       });
 
       if (!state.success || !state.data) {
         throw new Error(state.message || 'Signed URL 발급 실패');
       }
 
-      const { uploadUrl, fileKey, bucketName } = state.data;
+      const { uploadUrl, mediaId } = state.data;
 
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -131,18 +149,22 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
         xhr.send(selectedFile);
       });
 
-      // 3. 업로드 완료 - GCS public URL 구성 및 폼에 저장
-      const publicUrl = `https://storage.googleapis.com/${bucketName}/${fileKey}`;
-      setValue(`${lessonPath}.videoUrl` as any, publicUrl);
-      setUploadedUrl(publicUrl);
+      // 2. 업로드 완료 - GCS public URL 구성 및 폼에 저장
+      const state2 = await completeVideoUploadAction({
+        mediaId,
+        durationSec: duration,
+      });
 
-      // 미리보기 정리
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
+      if (!state2.success || !state2.data) {
+        throw new Error(state2.message || '업로드 완료 실패');
       }
-      setPreviewUrl(null);
-      setSelectedFile(null);
+
+      // mediaId를 폼에 저장
+      setValue(`${lessonPath}.mediaId` as any, mediaId);
+
+      // previewUrl과 selectedFile은 유지하여 미리보기에 사용
       toast.success('비디오 업로드 완료');
+      setIsUploaded(true);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : '업로드 실패');
       setProgress(0);
@@ -152,8 +174,13 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
   };
 
   const handleChangeVideo = () => {
-    setUploadedUrl(null);
-    setValue(`${lessonPath}.videoUrl` as any, '');
+    setIsUploaded(false);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    setSelectedFile(null);
+    setValue(`${lessonPath}.mediaId` as any, null);
   };
 
   return (
@@ -161,11 +188,11 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
       <Label className="text-xs text-zinc-400">비디오 파일</Label>
 
       {/* 업로드 완료된 비디오 */}
-      {uploadedUrl ? (
+      {isUploaded && previewUrl ? (
         <div className="space-y-3">
           <div className="relative rounded-lg overflow-hidden bg-black aspect-video">
             <video
-              src={uploadedUrl}
+              src={previewUrl}
               controls
               className="w-full h-full object-contain"
             />
@@ -173,7 +200,7 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
           <div className="flex items-center gap-2 p-3 bg-zinc-800 rounded-md">
             <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
             <span className="text-sm text-zinc-300 truncate flex-1">
-              {uploadedUrl.split('/').pop()}
+              {selectedFile?.name}
             </span>
             <Button
               className="cursor-pointer"
@@ -228,7 +255,7 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
           <Button
             type="button"
             onClick={handleUpload}
-            disabled={isUploading}
+            disabled={isUploading || isUploaded}
             className="w-full cursor-pointer flex gap-0.5"
           >
             {isUploading ? (

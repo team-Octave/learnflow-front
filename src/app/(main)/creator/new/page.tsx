@@ -4,7 +4,7 @@ import StepInfo from '@/features/creator/components/form/StepInfo';
 
 export default function LectureNewPage() {
   return (
-    <div className="flex flex-col mx-auto my-12 gap-8 w-full">
+    <div className="flex flex-col mx-auto my-12 gap-8 w-full max-w-4xl">
       <div className="flex justify-between items-center">
         <div className="text-2xl font-bold text-white">새 강의 등록</div>
         <Button

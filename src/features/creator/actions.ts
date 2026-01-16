@@ -2,6 +2,7 @@
 
 import {
   bindCurriculum,
+  completeVideoUpload,
   createBasicLecture,
   createChapter,
   createCurriculum,
@@ -152,16 +153,20 @@ export async function bindCurriculumAction(lectureId: number, payload: any) {
 // 비디오 업로드용 Signed URL 발급
 export async function getVideoUploadUrlAction(params: {
   filename: string;
-  contentType: string;
-  filesize: number;
 }): Promise<
   ActionState<{
     mediaId: number;
     uploadUrl: string;
-    fileKey: string;
-    bucketName: string;
   }>
 > {
   const state = await getVideoUploadUrl(params);
+  return state;
+}
+
+export async function completeVideoUploadAction(params: {
+  mediaId: number;
+  durationSec: number;
+}) {
+  const state = await completeVideoUpload(params);
   return state;
 }

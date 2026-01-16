@@ -75,13 +75,28 @@ export default function LessonItem({
     return JSON.stringify(currentLessonData) !== JSON.stringify(lastSavedData);
   }, [currentLessonData, lastSavedData]);
 
+  // 저장 버튼 활성화 조건
+  const canSave = useMemo(() => {
+    if (!lessonTitle?.trim()) return false;
+
+    if (currentLessonData.lessonType === 'VIDEO') {
+      return !!currentLessonData.mediaId;
+    } else if (currentLessonData.lessonType === 'QUIZ') {
+      return (
+        currentLessonData.quizQuestions &&
+        currentLessonData.quizQuestions.length > 0
+      );
+    }
+    return false;
+  }, [currentLessonData, lessonTitle]);
+
   /// LessonItem.tsx 내부 저장 로직 수정
   const handleSaveLesson = async () => {
     const currentLessonData = watch(lessonPath);
 
     // 레슨 타입별 사전 검증
     if (currentLessonData.lessonType === 'VIDEO') {
-      if (!currentLessonData.videoUrl) {
+      if (!currentLessonData.mediaId) {
         toast.error('비디오를 업로드해주세요.');
         return;
       }
@@ -213,7 +228,11 @@ export default function LessonItem({
           {lessonType === 'QUIZ' && <QuizItem lessonPath={lessonPath} />}
 
           <div className="flex justify-end pt-2">
-            <Button size="sm" onClick={handleSaveLesson}>
+            <Button
+              size="sm"
+              onClick={handleSaveLesson}
+              disabled={!canSave || isPending}
+            >
               <SaveIcon />
               저장
             </Button>
