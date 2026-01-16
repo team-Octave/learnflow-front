@@ -1,7 +1,7 @@
 'use client';
 
 import { TableCell, TableRow } from '@/components/ui/table';
-import { CircleAlertIcon, Star } from 'lucide-react';
+import { CircleAlertIcon, CircleQuestionMarkIcon, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { CreatorLecture, LectureStatus } from '../../types';
@@ -52,7 +52,7 @@ export default function LectureRow({ lecture }: LectureRowProps) {
             variant="outline"
             onClick={handlePublish}
             disabled={isPending}
-            className="group w-16 h-6 rounded-xl border-gray-400 text-gray-500 hover:bg-green-50 text-xs cursor-pointer transition-all"
+            className="group w-16 h-6 rounded-xl border-gray-400 text-gray-500 hover:bg-white/10 text-xs cursor-pointer transition-all"
           >
             <span className="block group-hover:hidden">비공개</span>
             <span className="hidden group-hover:block font-bold">
@@ -84,25 +84,28 @@ export default function LectureRow({ lecture }: LectureRowProps) {
       case 'REJECTED': {
         return (
           <div className="flex gap-1">
-            <Tooltip>
-              <TooltipTrigger>
-                <CircleAlertIcon className="text-red-500 cursor-pointer" />
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>반려 사유가 들어갈 자리</p>
-              </TooltipContent>
-            </Tooltip>
             <Button
-              variant="outline"
+              variant={'none'}
               onClick={handlePublish}
               disabled={isPending}
-              className="group w-16 h-6 rounded-xl border-red-500 bg-red-500/10 text-red-500 hover:bg-whilte/10 hover:text-white hover:border-white text-xs cursor-pointer transition-all"
+              className="group w-16 h-6 rounded-xl border border-red-500 bg-red-500/10 text-red-500 hover:border-gray-400 hover:text-white hover:bg-white/10  text-xs cursor-pointer transition-all"
             >
               <span className="block group-hover:hidden">반려 됨</span>
               <span className="hidden group-hover:block font-bold">
                 검토 요청
               </span>
             </Button>
+            <Tooltip>
+              <TooltipTrigger>
+                <CircleQuestionMarkIcon
+                  size={24}
+                  className="text-red-500 cursor-pointer"
+                />
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>반려 사유가 들어갈 자리</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         );
       }
