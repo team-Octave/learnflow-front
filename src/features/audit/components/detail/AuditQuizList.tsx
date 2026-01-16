@@ -1,11 +1,11 @@
 // src/features/audit/components/detail/AuditQuizList.tsx
 'use client';
 
-import type { QuizQuestion } from '@/features/lectures/types';
 import AuditQuiz from './AuditQuiz';
+import { AdminQuizQuestion } from '../../types';
 
 interface AuditQuizListProps {
-  questions?: QuizQuestion[];
+  questions?: AdminQuizQuestion[];
 }
 
 export default function AuditQuizList({ questions }: AuditQuizListProps) {
