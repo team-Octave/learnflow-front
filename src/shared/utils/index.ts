@@ -50,3 +50,21 @@ export function getUserRole(token: string | undefined): string | null {
     return null;
   }
 }
+
+export function formatDateTime(iso: string) {
+  const d = new Date(iso);
+
+  const date = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(d);
+
+  const time = new Intl.DateTimeFormat('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(d);
+
+  return { date, time };
+}

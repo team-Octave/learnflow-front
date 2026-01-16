@@ -6,9 +6,6 @@ import { authFetch } from '@/shared/api';
 export async function getApprovals(page: number, size: number) {
   const response = await authFetch(
     `/api/v1/admin/approvals?page=${page}&size=${size}`,
-    {
-      cache: 'no-store', //항상 최신 데이터 요청 ??@@
-    },
   );
   return response.json();
 }
@@ -16,9 +13,7 @@ export async function getApprovals(page: number, size: number) {
 // 3️⃣ 강의 검토 상세 조회
 // lectureId : 수강(enrollmentId)랑 완전히 다른 개념, 감의 검토할 lectureId
 export async function getApprovalDetail(lectureId: number) {
-  const response = await authFetch(`/api/v1/admin/approvals/${lectureId}`, {
-    cache: 'no-store',
-  });
+  const response = await authFetch(`/api/v1/admin/approvals/${lectureId}`);
   return response.json();
 }
 
@@ -47,7 +42,6 @@ export async function getAdminLessonDetail(
 ) {
   const response = await authFetch(
     `/api/v1/admin/lectures/${lectureId}/lessons/${lessonId}`,
-    { cache: 'no-store' },
   );
   return response.json();
 }

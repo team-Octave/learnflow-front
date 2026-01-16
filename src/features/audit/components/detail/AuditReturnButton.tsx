@@ -70,8 +70,7 @@ export default function AuditReturnButton({
 
     toast.error('강의가 반려되었습니다.');
     setOpen(false);
-    router.push('/admin/audit');
-    router.refresh();
+    router.replace('/admin/audit');
   };
 
   const disabled =
