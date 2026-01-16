@@ -1,5 +1,5 @@
 // src/services/auth.service.ts
-
+import 'server-only';
 import { commonFetch, authFetch } from '@/shared/api'; //  authFetch 추가
 import { cookies } from 'next/headers';
 
@@ -19,14 +19,16 @@ async function getUser() {
 }
 
 async function logout() {
-  const cookieStore = await cookies();
-  const refreshToken = cookieStore.get('refreshToken');
+  const cookieStore = await cookies(); // ✅ 다시 await
+  const refreshToken = cookieStore.get('refreshToken')?.value;
+
   const response = await commonFetch('/api/v1/auth/logout', {
     method: 'POST',
     headers: {
-      Cookie: `refresh_token=${refreshToken}`,
+      Cookie: `refresh_token=${refreshToken ?? ''}`,
     },
   });
+
   return response.json();
 }
 

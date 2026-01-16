@@ -50,7 +50,7 @@ export async function logoutAction() {
   cookieStore.delete('accessToken');
   cookieStore.delete('refreshToken');
 
-  return state;
+  return logout();
 }
 
 export async function getUserAction(): Promise<ActionState<any>> {
