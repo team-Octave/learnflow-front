@@ -1,44 +1,10 @@
-/*
-강의 수강 화면(/play)의 공통 레이아웃
-강의 및 수강 정보 호출 (여기서 호출하면 lessonId가 바뀌어도 재호출 안 됨)
-수강 정보 + 강의 정보 한 번만 서버에서 가져오고
-상단 제목바 + 우측 커리큘럼을 항상 고정으로 깔아주는 역할
-
-여기서 바뀌는 것 / 안 바뀌는 것
-영역	lessonId 변경 시
-강의 제목	❌ 안 바뀜
-커리큘럼	❌ 안 바뀜
-수강 정보(진도)	❌ 안 바뀜
-영상 / 퀴즈	✅ 바뀜
-
-👉 lessonId는 “레슨만” 바뀌는 개념
-
-3️⃣ Next.js에서 이걸 어떻게 처리하냐면
-현재 폴더 구조
-app/
-└─ play/
-   └─ [enrollmentId]/
-      └─ [lectureId]/
-         ├─ layout.tsx   ← 껍데기
-         └─ page.tsx     ← 레슨 화면
-
- PlayLayout
- ├─ TitleBar        ← 강의 제목 (항상 고정)
- └─ main 영역
-     ├─ children    ← Video / Quiz (lessonId 바뀔 때마다 변경)
-     └─ AsideCurriculum ← 커리큘럼 + 진도 (항상 유지)
- */
-
 // app/play/[enrollmentId]/[lectureId]/layout.tsx
 import type { ReactNode } from 'react';
 import { notFound, redirect } from 'next/navigation';
-
 import { getEnrollmentByIdAction } from '@/features/learning/actions';
 import { getLectureByIdAction } from '@/features/lectures/actions';
-
 import type { Enrollment } from '@/features/learning/types';
 import type { Lecture } from '@/features/lectures/types';
-
 import { TitleBar } from '@/features/learning/components/play/TitleBar';
 import { AsideCurriculum } from '@/features/learning/components/play/AsideCurriculum';
 
