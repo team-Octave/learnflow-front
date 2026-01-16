@@ -6,7 +6,7 @@ import {
   getLectureById,
   getLectures,
   getReviewById,
-  getLessonById, // ✅ 추가
+  getLessonById,
 } from '@/services/lectures.service';
 
 import type { Query } from './types';
@@ -24,6 +24,7 @@ export async function getLectureByIdAction(
   lectureId: number,
 ): Promise<ActionState<any>> {
   const state = await getLectureById(lectureId);
+  console.log('lecture');
   return state;
 }
 
@@ -44,5 +45,6 @@ export async function getLessonByIdAction(
   lessonId: number,
 ): Promise<ActionState<any>> {
   const state = await getLessonById(lectureId, lessonId);
+  console.log('lesson');
   return state;
 }

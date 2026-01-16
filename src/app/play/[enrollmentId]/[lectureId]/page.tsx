@@ -89,14 +89,12 @@ export default async function PlayPage({
       {currentLesson.lessonTypeDisplayName === 'VIDEO' ? (
         <Video
           enrollmentId={parseInt(enrollmentId)}
-          lectureId={parseInt(lectureId)}
           lesson={currentLesson}
           completedLessonIds={enrollmentInfo.completedLessonIds}
         />
       ) : (
         <Quiz
           enrollmentId={parseInt(enrollmentId)}
-          lectureId={parseInt(lectureId)}
           lesson={currentLesson}
           isCompleted={isCompleted}
         />

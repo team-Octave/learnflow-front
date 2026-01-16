@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { PencilLine } from 'lucide-react';
 
 import { ButtonSubmit } from './ButtonSubmit';
@@ -12,7 +11,6 @@ import type { Lesson } from '@/features/lectures/types';
 
 interface QuizProps {
   enrollmentId: number;
-  lectureId: number;
   lesson: Lesson;
   isCompleted: boolean;
 }
@@ -20,49 +18,16 @@ interface QuizProps {
 // Quiz라는 React 함수 컴포넌트를 정의
 /*
 “Quiz라는 컴포넌트를 만들 건데,
-이 컴포넌트는 enrollmentId, lectureId, lesson, isCompleted
+이 컴포넌트는 enrollmentId, lesson, isCompleted
 네 개의 값을 props로 받아서 사용한다
 */
-export function Quiz({
-  enrollmentId,
-  lectureId,
-  lesson,
-  isCompleted,
-}: QuizProps) {
+export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
   //QuizProps 이 컴포넌트가 받는 props의 타입 정의
   // 문제ID → 사용자가 고른 true/false를 저장하는 상태 객체를 만든다
   const [selected, setSelected] = useState<Record<string, boolean>>({}); // Record< 키 string, 값 boolean> 객체 타입을 정의하는 방법
 
-  /*
-    selected = {
-      "101": false,
-      "102": true,
-    }
-
-    Record<string, boolean>
-    {
-      "1": true,
-      "2": false,
-      "abc": true
-    }
-
-    ({})→ 처음엔 아무 문제도 안 골랐으니까
-    빈 객체로 시작
-
-    selected = {}  문제를 클릭할 때마다 하나씩 채워짐.
-
-    setSelected((prev) => ({
-  ...prev,
-  [questionId]: answer,  // true or false
-}));
-  */
-
   // 서버 액션 실행 중 상태 관리
   const [isPending, startTransition] = useTransition();
-
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   // 4️⃣ 퀴즈 데이터 정리
   // lesson.quizQuestions : lesson 객체 안에 있는 퀴즈 질문 목록
@@ -89,19 +54,9 @@ export function Quiz({
     }
 
     startTransition(async () => {
-      // ✅ lectureId 추가
-      const state = await completeLessonAction(
-        enrollmentId,
-        lectureId,
-        lesson.id,
-      );
+      const state = await completeLessonAction(enrollmentId, lesson.id);
 
-      if (state.success) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('lessonId', String(lesson.id));
-        router.replace(`${pathname}?${params.toString()}`);
-        router.refresh();
-      } else {
+      if (!state.success) {
         alert(state.message || '레슨 완료 처리에 실패하였습니다.');
       }
     });
@@ -117,7 +72,11 @@ export function Quiz({
 
   return (
     <div className="w-full flex items-center justify-center p-4 md:p-8 lg:p-12">
-      <div className="w-full max-w-3xl bg-zinc-900 rounded-xl border border-zinc-800 p-8 shadow-2xl space-y-6 overflow-y-auto h-[600px]">
+      <div
+        className="w-full max-w-3xl bg-zinc-900 rounded-xl border border-zinc-800 p-8 shadow-2xl space-y-6 overflow-y-auto h-[600px]  [&::-webkit-scrollbar]:hidden
+    [scrollbar-width:none]
+    [-ms-overflow-style:none]"
+      >
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-300">
             <PencilLine className="w-5 h-5" />

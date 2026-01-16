@@ -10,7 +10,7 @@ interface QuestionProps {
   selected?: boolean;
   submitted: boolean;
   correctAnswer: boolean;
-  onSelect: (questionId: number, answer: boolean) => void; // ✅ number로 수정
+  onSelect: (questionId: number, answer: boolean) => void;
 }
 
 export function Question({
@@ -81,7 +81,7 @@ export function Question({
                 value={String(option)}
                 checked={isActive}
                 disabled={submitted}
-                onChange={() => onSelect(question.id, option)} // ✅ 이제 number라 정상
+                onChange={() => onSelect(question.id, option)}
                 className={inputClass}
               />
               <span className="text-xl font-bold text-zinc-300 group-hover:text-white">

@@ -7,14 +7,12 @@ import ButtonComplete from './ButtonComplete';
 
 export interface VideoProps {
   enrollmentId: number;
-  lectureId: number;
   lesson: Lesson;
   completedLessonIds: number[]; // ✅ 추가
 }
 
 export function Video({
   enrollmentId,
-  lectureId,
   lesson,
   completedLessonIds,
 }: VideoProps) {
@@ -44,7 +42,6 @@ export function Video({
 
           <ButtonComplete
             enrollmentId={enrollmentId}
-            lectureId={lectureId}
             lessonId={lesson.id}
             completedLessonIds={completedLessonIds}
           />

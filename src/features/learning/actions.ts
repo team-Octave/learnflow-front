@@ -43,21 +43,17 @@ export async function getEnrollmentByIdAction(
   enrollmentId: number,
 ): Promise<ActionState<any>> {
   const state = await getEnrollmentById(enrollmentId);
+  console.log('enrollment');
   return state;
 }
 
-//변경
 export async function completeLessonAction(
   enrollmentId: number,
-  lectureId: number,
   lessonId: number,
 ): Promise<ActionState<any>> {
   const state = await completeLesson(enrollmentId, lessonId);
-
   if (state.success) {
-    revalidatePath('/mylearning');
-    revalidatePath(`/play/${enrollmentId}/${lectureId}`);
+    revalidatePath(`/play/${enrollmentId}`);
   }
-
   return state;
 }
