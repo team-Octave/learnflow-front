@@ -69,7 +69,7 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
           <div className="pt-2 text-sm text-zinc-500 flex items-center gap-2">
             <span>닉네임:</span>
             <span className="font-semibold text-zinc-900 dark:text-zinc-200">
-              {audit.nickname  ?? '-'}
+              {audit.instructorName ?? '-'}
             </span>
           </div>
         </div>

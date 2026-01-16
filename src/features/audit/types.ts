@@ -1,5 +1,7 @@
 // src/features/audit/types.ts
 
+import { Category } from '../lectures/types';
+
 export type AuditApprovalItem = {
   approvalId: number;
   lectureId: number;
@@ -54,9 +56,9 @@ export type ApprovalDetail = {
   lectureId: number;
   title: string;
   description: string;
-  nickname: string;  //  강사(요청자) 닉네임
+  instructorName: string; //  강사(요청자) 닉네임
   level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
-  categoryId: number;
+  categoryId: Category;
   thumbnailUrl: string | null;
   chapters: ApprovalChapter[];
 };

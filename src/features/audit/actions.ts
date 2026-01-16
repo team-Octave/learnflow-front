@@ -61,7 +61,6 @@ export async function getAdminLessonDetailAction(
     lectureId,
     lessonId,
   )) as ActionState<AdminLessonDetail>;
-  console.log(state);
   return state;
 }
 
