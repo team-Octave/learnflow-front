@@ -13,10 +13,9 @@ import {
 } from '../../actions';
 import LessonItem from './LessonItem';
 import { toast } from 'sonner';
-import VideoItem from './VideoItem';
 
 interface ChapterItemProps {
-  lectureId: string;
+  lectureId: number;
   chapterIndex: number;
   removeChapter: () => void;
   registerOpenLesson: (lessonPath: string) => void;
@@ -150,9 +149,6 @@ export default function ChapterItem({
           <Trash2 size={18} />
         </Button>
       </div>
-
-      <VideoItem lessonPath={''} />
-
       {/* 레슨 목록 */}
       {chapterId && (
         <div className="flex flex-col gap-3 pl-4 border-l-2 border-zinc-800 ml-2">

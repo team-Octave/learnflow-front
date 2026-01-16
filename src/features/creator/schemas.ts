@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // 퀴즈 문제 스키마
 export const QuizQuestionSchema = z.object({
-  id: z.string().nullable().optional(),
+  id: z.number().nullable().optional(),
   question: z.string().min(1, '문제를 입력하세요.'),
   correct: z.boolean(),
   questionOrder: z.number(),
@@ -11,7 +11,7 @@ export const QuizQuestionSchema = z.object({
 // 레슨 스키마 (Union을 통한 타입 안전성)
 export const LessonSchema = z.discriminatedUnion('lessonType', [
   z.object({
-    id: z.string().nullable().optional(),
+    id: z.number().nullable().optional(),
     lessonType: z.literal('VIDEO'),
     lessonTitle: z.string().min(1, '레슨 제목을 입력하세요.'),
     videoUrl: z.string().url('유효한 URL이 아닙니다.'),
@@ -19,7 +19,7 @@ export const LessonSchema = z.discriminatedUnion('lessonType', [
     quizQuestions: z.null().optional(),
   }),
   z.object({
-    id: z.string().nullable().optional(),
+    id: z.number().nullable().optional(),
     lessonType: z.literal('QUIZ'),
     lessonTitle: z.string().min(1, '레슨 제목을 입력하세요.'),
     videoUrl: z.null().optional(),
@@ -32,7 +32,7 @@ export const LessonSchema = z.discriminatedUnion('lessonType', [
 
 // 챕터 스키마
 export const ChapterSchema = z.object({
-  id: z.string().nullable().optional(),
+  id: z.number().nullable().optional(),
   chapterTitle: z.string().min(1, '챕터 제목을 입력하세요.'),
   lessons: z.array(LessonSchema),
 });

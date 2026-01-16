@@ -7,7 +7,7 @@ import { enrollLectureAction } from '@/features/learning/actions';
 import { useUserStore } from '@/store/userStore';
 
 interface Props {
-  lectureId: string;
+  lectureId: number;
   lectureTitle: string;
 }
 
@@ -22,7 +22,7 @@ export default function ButtonApply({ lectureId, lectureTitle }: Props) {
     startTransition(async () => {
       // 구조 변경:
       // success, error, data에서 success, code, message(error), data로 구조 변경됨
-      const state = await enrollLectureAction(parseInt(lectureId));
+      const state = await enrollLectureAction(lectureId);
       // 성공한 경우
       if (state.success) {
         const confirmed = confirm(

@@ -41,7 +41,7 @@ export async function uploadThumbnail(formData: FormData) {
 }
 
 export async function createCurriculum(
-  lectureId: string,
+  lectureId: number,
   curriculum: CurriculumFormValues,
 ) {
   const response = await authFetch(`/api/v1/lectures/${lectureId}/curriculum`, {
@@ -54,7 +54,7 @@ export async function createCurriculum(
 // ------------------------------- 커리큘럼 등록 세분화 API ---------------------------------
 
 export async function createChapter(
-  lectureId: string,
+  lectureId: number,
   payload: { chapterTitle: string },
 ) {
   const response = await authFetch(`/api/v2/lectures/${lectureId}/chapters`, {
@@ -65,8 +65,8 @@ export async function createChapter(
 }
 
 export async function updateChapter(
-  lectureId: string,
-  chapterId: string,
+  lectureId: number,
+  chapterId: number,
   payload: { chapterTitle: string },
 ) {
   const response = await authFetch(
@@ -79,7 +79,7 @@ export async function updateChapter(
   return response.json();
 }
 
-export async function deleteChapter(lectureId: string, chapterId: string) {
+export async function deleteChapter(lectureId: number, chapterId: number) {
   const response = await authFetch(
     `/api/v2/lectures/${lectureId}/chapters/${chapterId}`,
     {
@@ -90,8 +90,8 @@ export async function deleteChapter(lectureId: string, chapterId: string) {
 }
 
 export async function createLesson(
-  lectureId: string,
-  chapterId: string,
+  lectureId: number,
+  chapterId: number,
   payload: CreatorLesson,
 ) {
   const response = await authFetch(
@@ -105,9 +105,9 @@ export async function createLesson(
 }
 
 export async function updateLesson(
-  lectureId: string,
-  chapterId: string,
-  lessonId: string,
+  lectureId: number,
+  chapterId: number,
+  lessonId: number,
   payload: any,
 ) {
   const response = await authFetch(
@@ -121,9 +121,9 @@ export async function updateLesson(
 }
 
 export async function deleteLesson(
-  lectureId: string,
-  chapterId: string,
-  lessonId: string,
+  lectureId: number,
+  chapterId: number,
+  lessonId: number,
 ) {
   const response = await authFetch(
     `/api/v2/lectures/${lectureId}/chapters/${chapterId}/lessons/${lessonId}`,
@@ -135,7 +135,7 @@ export async function deleteLesson(
 }
 
 // 커리큘럼 순서 확정
-export async function bindCurriculum(lectureId: string, payload: any) {
+export async function bindCurriculum(lectureId: number, payload: any) {
   const response = await authFetch(
     `/api/v2/lectures/${lectureId}/curriculum/bind`,
     {

@@ -26,8 +26,8 @@ import QuizItem from './QuizItem';
 import VideoItem from './VideoItem';
 
 interface LessonItemProps {
-  lectureId: string;
-  chapterId: string;
+  lectureId: number;
+  chapterId: number;
   chapterIndex: number;
   lessonIndex: number;
   removeLesson: () => void;
