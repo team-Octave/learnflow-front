@@ -1,7 +1,8 @@
-// src/features/learning/components/play/Video/ButtonComplete.tsx
+// src/features/learning/components/play/ButtonComplete.tsx
 'use client';
 
 import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { completeLessonAction } from '../../actions';
 
@@ -16,17 +17,24 @@ export default function ButtonComplete({
   lessonId,
   completedLessonIds,
 }: ButtonCompleteProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const isCompleted = completedLessonIds?.includes(lessonId) ?? false;
 
   const handleComplete = () => {
+    if (isCompleted) return;
+
     startTransition(async () => {
       const state = await completeLessonAction(enrollmentId, lessonId);
 
       if (!state.success) {
         alert(state.message || '레슨 완료 처리에 실패하였습니다.');
+        return;
       }
+
+      // ✅ 핵심: enrollment 최신 상태 다시 가져오게 함
+      router.refresh();
     });
   };
 

@@ -1,3 +1,5 @@
+// src/features/learning/types.ts
+
 export interface LearningLecture {
   lectureId: number;
   enrollmentId: number;

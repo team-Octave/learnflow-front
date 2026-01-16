@@ -34,6 +34,7 @@ export async function getEnrollmentById(enrollmentId: number) {
   const response = await authFetch(`/api/v1/enrollment/select-enrollment`, {
     method: 'POST',
     body: JSON.stringify({ enrollmentId }),
+    cache: 'no-store', // ✅ 추가: 항상 최신 enrollment
   });
   return response.json();
 }
@@ -42,6 +43,7 @@ export async function completeLesson(enrollmentId: number, lessonId: number) {
   const response = await authFetch(`/api/v1/enrollment/complete-lesson`, {
     method: 'POST',
     body: JSON.stringify({ enrollmentId, lessonId }),
+    cache: 'no-store',
   });
   return response.json();
 }

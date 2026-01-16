@@ -1,3 +1,4 @@
+// src/features/learning/actions.ts
 'use server';
 
 import {
@@ -39,21 +40,38 @@ export async function deleteReviewAction(
   return state;
 }
 
-export async function getEnrollmentByIdAction(
-  enrollmentId: number,
-): Promise<ActionState<any>> {
-  const state = await getEnrollmentById(enrollmentId);
-  console.log('enrollment');
-  return state;
-}
+// export async function getEnrollmentByIdAction(
+//   enrollmentId: number,
+// ): Promise<ActionState<any>> {
+//   const state = await getEnrollmentById(enrollmentId);
+//   console.log('enrollment');
+//   return state;
+// }
 
+// export async function completeLessonAction(
+//   enrollmentId: number,
+//   lessonId: number,
+// ): Promise<ActionState<any>> {
+//   const state = await completeLesson(enrollmentId, lessonId);
+//   return state;
+// }
 export async function completeLessonAction(
   enrollmentId: number,
   lessonId: number,
-): Promise<ActionState<any>> {
+) {
+  console.log('[completeLessonAction] called', { enrollmentId, lessonId });
   const state = await completeLesson(enrollmentId, lessonId);
-  if (state.success) {
-    revalidatePath(`/play/${enrollmentId}`);
-  }
+  console.log('[completeLessonAction] result', state.success);
+  return state;
+}
+
+export async function getEnrollmentByIdAction(enrollmentId: number) {
+  console.log('[getEnrollmentByIdAction] called', { enrollmentId });
+  const state = await getEnrollmentById(enrollmentId);
+  console.log(
+    '[getEnrollmentByIdAction] result',
+    state.success,
+    state.data?.completedLessonIds?.length,
+  );
   return state;
 }
