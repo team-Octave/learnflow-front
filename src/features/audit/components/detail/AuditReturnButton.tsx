@@ -1,4 +1,3 @@
-// src/features/audit/components/detail/AuditReturnButton.tsx
 'use client';
 
 import { useState } from 'react';
@@ -17,35 +16,37 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { rejectAuditAction } from '@/features/audit/actions';
+import type { RejectCategory } from '@/features/audit/types';
 
 interface AuditReturnButtonProps {
-  auditId: string | number;
+  lectureId: number;
 }
 
-const REJECTION_REASONS = [
-  '영상 화질/음질 부적합',
-  '컨텐츠 내용 부족',
-  '저작권 위반 의심',
-  '커리큘럼 불일치',
-  '부적절한 내용 포함',
+const REJECTION_REASONS: { label: string; value: RejectCategory }[] = [
+  { label: '컨텐츠 내용 부족', value: 'CONTENT_QUALITY_LOW' },
+  { label: '강좌 정보 불일치 또는 누락', value: 'LECTURE_INFO_MISMATCH' },
+  { label: '영상 화질/음질 부적합', value: 'MEDIA_QUALITY_ISSUE' },
+  { label: '정책 및 법적 기준 위반', value: 'POLICY_VIOLATION' },
+  { label: '기타', value: 'OTHER' },
 ];
 
-export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
+export default function AuditReturnButton({
+  lectureId,
+}: AuditReturnButtonProps) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
-  const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
+  const [selectedReasons, setSelectedReasons] = useState<RejectCategory[]>([]);
   const [detail, setDetail] = useState('');
   const [pending, setPending] = useState(false);
 
   const handleClose = () => {
-    // ✅ 닫힐 때 입력값 초기화
     setSelectedReasons([]);
     setDetail('');
     setPending(false);
   };
 
-  const handleReasonChange = (reason: string, checked: boolean) => {
+  const handleReasonChange = (reason: RejectCategory, checked: boolean) => {
     setSelectedReasons((prev) =>
       checked ? [...prev, reason] : prev.filter((r) => r !== reason),
     );
@@ -55,9 +56,10 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
     if (pending) return;
     setPending(true);
 
-    const state = await rejectAuditAction(String(auditId), {
-      reasons: selectedReasons,
-      detail: detail.trim() || undefined,
+    // ✅ string 변환 제거
+    const state = await rejectAuditAction(lectureId, {
+      rejectCategories: selectedReasons,
+      reason: detail.trim() || undefined,
     });
 
     if (!state.success) {
@@ -67,7 +69,7 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
     }
 
     toast.error('강의가 반려되었습니다.');
-    setOpen(false); // ✅ 여기서 닫히면서 onOpenChange -> handleClose() 실행됨
+    setOpen(false);
     router.push('/admin/audit');
     router.refresh();
   };
@@ -79,7 +81,7 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
     <Dialog
       open={open}
       onOpenChange={(next) => {
-        if (!next) handleClose(); // ✅ 닫힐 때만 초기화
+        if (!next) handleClose();
         setOpen(next);
       }}
     >
@@ -106,20 +108,20 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
 
             <div className="space-y-2">
               {REJECTION_REASONS.map((reason) => (
-                <div key={reason} className="flex items-center space-x-2">
+                <div key={reason.value} className="flex items-center space-x-2">
                   <Checkbox
-                    id={reason}
-                    checked={selectedReasons.includes(reason)}
+                    id={reason.value}
+                    checked={selectedReasons.includes(reason.value)}
                     onCheckedChange={(checked) =>
-                      handleReasonChange(reason, Boolean(checked))
+                      handleReasonChange(reason.value, Boolean(checked))
                     }
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary cursor-pointer"
                   />
                   <Label
-                    htmlFor={reason}
+                    htmlFor={reason.value}
                     className="font-normal cursor-pointer text-zinc-600 dark:text-zinc-300"
                   >
-                    {reason}
+                    {reason.label}
                   </Label>
                 </div>
               ))}
@@ -148,6 +150,7 @@ export default function AuditReturnButton({ auditId }: AuditReturnButtonProps) {
             variant="ghost"
             onClick={() => setOpen(false)}
             disabled={pending}
+            className="mr-3 cursor-pointer"
           >
             취소
           </Button>
