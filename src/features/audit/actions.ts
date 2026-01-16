@@ -1,183 +1,106 @@
-<<<<<<< HEAD
 // src/features/audit/actions.ts
 'use server';
 
+import type { ActionState } from '@/shared/types/ActionState';
 import type {
-  AuditActionState,
-  AuditLecture,
-  AuditLectureListResponse,
+  AuditApprovalListApiResponse,
+  ApprovalDetail,
+  AdminLessonDetail,
+  RejectCategory,
 } from './types';
+
+import {
+  getApprovals,
+  getApprovalDetail,
+  patchApprovalStatus,
+  getAdminLessonDetail,
+} from '@/services/audit.service';
 
 const PAGE_SIZE = 4;
 
 /**
- * ✅ API 오면 여기만 교체하면 됨.
- * 지금은 MOCK으로 동작.
+ * ✅ 강의 검토 목록 조회
+ * GET /api/v1/admin/approvals?page=&size=
+ *
+ * lectures/actions.ts 스타일: 서비스 호출 → 그대로 반환
  */
-async function fetchAuditLectures(
-  page: number,
-): Promise<AuditLectureListResponse> {
-  // TODO: API 받으면 아래처럼 교체
-  // const res = await fetch(
-  //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/audit?page=${page}&size=${PAGE_SIZE}`,
-  //   { cache: 'no-store' },
-  // );
-  // if (!res.ok) throw new Error('강의 검토 목록 API 요청 실패');
-  // return (await res.json()) as AuditLectureListResponse;
+export async function getApprovalsAction(
+  page: number, // 1-based
+): Promise<ActionState<AuditApprovalListApiResponse>> {
+  const apiPage = Math.max(0, page - 1);
+  const state = (await getApprovals(
+    apiPage,
+    PAGE_SIZE,
+  )) as ActionState<AuditApprovalListApiResponse>;
 
-  // MOCK
-  const all = mockAuditLectures();
-
-  const totalItems = all.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
-  const safePage = Math.min(Math.max(1, page), totalPages);
-
-  const start = (safePage - 1) * PAGE_SIZE;
-  const items = all.slice(start, start + PAGE_SIZE);
-
-  return {
-    items,
-    page: safePage,
-    pageSize: PAGE_SIZE,
-    totalItems,
-    totalPages,
-  };
+  return state;
 }
-
-export async function getAuditLecturesAction(
-  page: number,
-): Promise<AuditActionState<AuditLectureListResponse>> {
-  try {
-    const data = await fetchAuditLectures(page);
-    return { success: true, data };
-  } catch (e) {
-    const message =
-      e instanceof Error ? e.message : '강의 검토 목록을 불러오지 못했습니다.';
-    return { success: false, error: message };
-  }
-}
-
-function mockAuditLectures(): AuditLecture[] {
-  const base: Omit<AuditLecture, 'id' | 'requestedAt'>[] = [
-    {
-      title: '리액트 마스터 클래스: 기초부터 심화까지',
-      instructorNickname: 'frontend_master',
-      thumbnailUrl: null,
-    },
-    {
-      title: '실전! Next.js 14로 만드는 블로그',
-      instructorNickname: 'nextjs_guru',
-      thumbnailUrl: null,
-    },
-    {
-      title: '타입스크립트 디자인 패턴 완벽 가이드',
-      instructorNickname: 'ts_wizard',
-      thumbnailUrl: null,
-    },
-    {
-      title: '모던 자바스크립트 딥다이브',
-      instructorNickname: 'js_ninja',
-      thumbnailUrl: null,
-    },
-  ];
-
-  const now = Date.now();
-
-  return Array.from({ length: 12 }).map((_, i) => {
-    const seed = base[i % base.length];
-    return {
-      id: 1000 + i,
-      ...seed,
-      requestedAt: new Date(now - i * 1000 * 60 * 60 * 18).toISOString(),
-    };
-  });
-}
-=======
-'use server';
-// src/features/audit/actions.ts
-// 강의 검토(audit) 관련 액션 함수 모음
-
-import type { ActionState } from '@/shared/types/ActionState';
-import type { Lecture } from '@/features/lectures/types';
-import { mockAuditDetail } from '@/features/audit/mocks/mockAuditDetail';
 
 /**
- * 강의 검토 상세 조회 (mock)
+ * ✅ 강의 검토 상세 조회(챕터/레슨 목록)
+ * GET /api/v1/admin/approvals/{lectureId}
  */
 export async function getAuditDetailAction(
-  auditId: string,
-): Promise<ActionState<Lecture>> {
-  // auditId는 현재 mock에서 사용하지 않음
-  return {
-    success: true,
-    data: mockAuditDetail,
-    message: 'mock audit detail',
-    code: 'MOCK_SUCCESS',
-  };
+  lectureId: number,
+): Promise<ActionState<ApprovalDetail>> {
+  const state = (await getApprovalDetail(
+    lectureId,
+  )) as ActionState<ApprovalDetail>;
+  return state;
 }
 
 /**
- * 강의 승인 (mock)
+ * ✅ 관리자 레슨 상세 조회(영상/퀴즈)
+ * GET /api/... (admin lesson detail)
+ */
+export async function getAdminLessonDetailAction(
+  lectureId: number,
+  lessonId: number,
+): Promise<ActionState<AdminLessonDetail>> {
+  const state = (await getAdminLessonDetail(
+    lectureId,
+    lessonId,
+  )) as ActionState<AdminLessonDetail>;
+  console.log(state);
+  return state;
+}
+
+/**
+ * ✅ 승인
+ * PATCH /api/v1/admin/approvals/{lectureId}
  */
 export async function approveAuditAction(
-  auditId: string,
-): Promise<ActionState<null>> {
-  return {
-    success: true,
-    data: null,
-    message: 'mock approve success',
-    code: 'MOCK_SUCCESS',
-  };
+  lectureId: number,
+): Promise<ActionState<unknown>> {
+  const state = (await patchApprovalStatus(lectureId, {
+    status: 'APPROVED',
+  })) as ActionState<unknown>;
+
+  return state;
 }
 
 /**
- * 강의 반려 (mock)
+ * ✅ 반려
+ * PATCH /api/v1/admin/approvals/{lectureId}
  */
 export async function rejectAuditAction(
-  auditId: string,
+  lectureId: number,
   payload: {
-    reasons: string[];
-    detail?: string;
+    rejectCategories: RejectCategory[];
+    reason?: string;
   },
-): Promise<ActionState<null>> {
-  return {
-    success: true,
-    data: null,
-    message: 'mock reject success',
-    code: 'MOCK_SUCCESS',
-  };
+): Promise<ActionState<unknown>> {
+  const state = (await patchApprovalStatus(lectureId, {
+    status: 'REJECTED',
+    rejectCategories: payload.rejectCategories,
+    reason: payload.reason,
+  })) as ActionState<unknown>;
+
+  return state;
 }
 
-// import type { ActionState } from '@/shared/types/ActionState';
-// import type { Lecture } from '@/features/lectures/types';
-// import {
-//   getAuditDetail,
-//   approveAudit,
-//   rejectAudit,
-// } from '@/services/audit.service';
-
-// export async function getAuditDetailAction(
-//   auditId: string,
-// ): Promise<ActionState<Lecture>> {
-//   const state = await getAuditDetail(auditId);
-//   return state;
+// export async function getAuditLecturesAction(
+//   page: number,
+// ): Promise<ActionState<AuditApprovalListApiResponse>> {
+//   return getApprovalsAction(page);
 // }
-
-// export async function approveAuditAction(
-//   auditId: string,
-// ): Promise<ActionState<null>> {
-//   const state = await approveAudit(auditId);
-//   return state;
-// }
-
-// export async function rejectAuditAction(
-//   auditId: string,
-//   payload: {
-//     reasons: string[];
-//     detail?: string;
-//   },
-// ): Promise<ActionState<null>> {
-//   const state = await rejectAudit(auditId, payload);
-//   return state;
-// }
->>>>>>> af44723427c8f7eb06c3209a7b0647a2b17d4f6b
