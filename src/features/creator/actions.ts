@@ -33,33 +33,36 @@ export async function publishCreatorLectureAction(
   return state;
 }
 
-// 우선 두 개의 state를 return 하도록 구현
+// 강의 기본 정보 등록
 export async function createBasicLectureAction(
   formData: FormData,
 ): Promise<ActionState<any>> {
+  // 1. 썸네일 등록
+  const file = formData.get('file') as File;
+  const thumbnailFormData = new FormData();
+  thumbnailFormData.append('file', file);
+  const thumbnailState = await uploadThumbnail(thumbnailFormData);
+  // 썸네일 등록 실패시 바로 리턴
+  if (!thumbnailState.success) {
+    return thumbnailState;
+  }
+
+  // 2. 강의 기본정보 등록
   const title = formData.get('title') as string;
   const categoryId = formData.get('categoryId') as Category;
   const level = formData.get('level') as Level;
   const description = formData.get('description') as string;
-  const file = formData.get('file') as File;
+  const thumbnailUrl = thumbnailState.data.uploadUrl;
 
   const payload = {
     title,
     categoryId,
     level,
     description,
+    thumbnailUrl,
   };
 
-  // 강의 기본 정보로 먼저 등록하고, ID를 가져옴
   const state = await createBasicLecture(payload);
-
-  const lecture = state.data as Lecture;
-  const thumbnailFormData = new FormData();
-  thumbnailFormData.append('lectureId', lecture.id);
-  thumbnailFormData.append('file', file);
-  // 등록된 ID로 썸네일 등록 API 호출
-  const thumbnailState = await uploadThumbnail(thumbnailFormData);
-
   return state;
 }
 
