@@ -1,46 +1,34 @@
 // src/features/learning/components/play/Video/ButtonComplete.tsx
 'use client';
 
-import { useState, useTransition } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { completeLessonAction } from '../../actions';
-import { Enrollment } from '../../types';
 
 interface ButtonCompleteProps {
-  lessonId: string;
-  enrollmentInfo: Enrollment;
+  enrollmentId: number;
+  lessonId: number;
+  completedLessonIds?: number[];
 }
 
 export default function ButtonComplete({
-  enrollmentInfo,
+  enrollmentId,
   lessonId,
+  completedLessonIds,
 }: ButtonCompleteProps) {
   const [isPending, startTransition] = useTransition();
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const isCompleted = completedLessonIds?.includes(lessonId) ?? false;
 
-  const handleComplete = async () => {
+  const handleComplete = () => {
     startTransition(async () => {
-      const state = await completeLessonAction(
-        enrollmentInfo.enrollmentId,
-        parseInt(lessonId),
-      );
-      if (state.success) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('lessonId', lessonId);
-        router.replace(`${pathname}?${params.toString()}`);
-      } else {
+      const state = await completeLessonAction(enrollmentId, lessonId);
+
+      if (!state.success) {
         alert(state.message || '레슨 완료 처리에 실패하였습니다.');
       }
     });
   };
-
-  const isCompleted = enrollmentInfo.completedLessonIds
-    ? enrollmentInfo.completedLessonIds.some((cl) => cl === Number(lessonId))
-    : false;
 
   return (
     <Button

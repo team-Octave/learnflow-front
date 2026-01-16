@@ -15,7 +15,7 @@ export default function AuditQuiz({ question, index }: AuditQuizProps) {
   return (
     <div className="flex items-start gap-5 p-6 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm transition-all hover:shadow-md">
       {/* Q 번호 */}
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 dark:text-emerald-400 font-bold mt-1">
+      <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 dark:text-emerald-400 font-bold mt-1">
         Q{index + 1}
       </div>
 

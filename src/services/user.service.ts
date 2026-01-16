@@ -1,3 +1,4 @@
+//user.service.ts
 import { authFetch, commonFetch } from '@/shared/api';
 
 export async function checkNickname(nickname: string) {

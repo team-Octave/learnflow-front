@@ -11,13 +11,12 @@ interface MyLectureCardProps {
 }
 
 export default function MyLectureCard({ lecture }: MyLectureCardProps) {
-  const playURL = `/play/${lecture.enrollmentId}?lectureId=${
-    lecture.lectureId
-  }&lessonId=${
+  const lessonId =
     lecture.completedLessonIds.length === 0
       ? lecture.firstLessonId
-      : lecture.completedLessonIds.slice(-1)[0]
-  }`;
+      : lecture.completedLessonIds.slice(-1)[0];
+
+  const playURL = `/play/${lecture.enrollmentId}/${lecture.lectureId}?lessonId=${lessonId}`;
 
   return (
     <div className="flex flex-col w-full">
