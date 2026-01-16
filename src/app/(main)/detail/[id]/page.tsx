@@ -45,12 +45,12 @@ export default async function LectureDetailPage({
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 w-[90%] md:w-[70%]">
+    <div className="flex flex-col items-center min-h-screen pb-20 w-full">
       {/* 상단 요약 영역 */}
       <LectureSummary lecture={lecture} />
 
       {/* 메인 컨텐츠 영역 */}
-      <div className="container px-4 md:px-8 py-12 flex flex-col md:flex-row gap-12">
+      <div className="px-4 md:px-8 py-12 flex flex-col md:flex-row gap-12 w-full">
         {/* 왼쪽: 상세 + 탭(커리큘럼 / 리뷰) */}
         <div className="flex-1">
           {/* 탭 영역 */}

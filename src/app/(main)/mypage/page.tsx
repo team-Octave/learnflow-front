@@ -2,13 +2,7 @@
 import { getUserAction } from '@/features/auth/actions';
 import AccountDelete from '@/features/user/components/AccountDelete';
 import ProfileInfo from '@/features/user/components/ProfileInfo';
-import { notFound, redirect } from 'next/navigation';
-
-interface Me {
-  nickname: string;
-  email: string;
-  role: 'MEMBER' | 'ADMIN';
-}
+import { notFound } from 'next/navigation';
 
 export default async function MyPage() {
   const state = await getUserAction();
@@ -20,7 +14,7 @@ export default async function MyPage() {
 
   return (
     <div className="w-full flex justify-center my-12">
-      <div className="w-full max-w-[520px] flex flex-col items-center">
+      <div className="w-full max-w-2xl flex flex-col items-center">
         <h1 className="text-2xl font-bold text-white mb-8 w-full px-2">
           내 정보
         </h1>
