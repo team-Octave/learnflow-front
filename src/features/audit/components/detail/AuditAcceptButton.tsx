@@ -28,8 +28,7 @@ export default function AuditAcceptButton({
     }
 
     toast.success('강의가 승인되었습니다.');
-    router.push('/admin/audit');
-    router.refresh();
+    router.replace('/admin/audit');
   };
 
   return (

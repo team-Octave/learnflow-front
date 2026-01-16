@@ -3,20 +3,17 @@
 
 import type { ActionState } from '@/shared/types/ActionState';
 import type {
-  AuditApprovalListApiResponse,
   ApprovalDetail,
   AdminLessonDetail,
   RejectCategory,
+  AuditLectureListResponse,
 } from './types';
-
 import {
   getApprovals,
   getApprovalDetail,
   patchApprovalStatus,
   getAdminLessonDetail,
 } from '@/services/audit.service';
-
-const PAGE_SIZE = 4;
 
 /**
  * ✅ 강의 검토 목록 조회
@@ -26,13 +23,10 @@ const PAGE_SIZE = 4;
  */
 export async function getApprovalsAction(
   page: number, // 1-based
-): Promise<ActionState<AuditApprovalListApiResponse>> {
+  size: number,
+): Promise<ActionState<AuditLectureListResponse>> {
   const apiPage = Math.max(0, page - 1);
-  const state = (await getApprovals(
-    apiPage,
-    PAGE_SIZE,
-  )) as ActionState<AuditApprovalListApiResponse>;
-
+  const state = await getApprovals(apiPage, size);
   return state;
 }
 
