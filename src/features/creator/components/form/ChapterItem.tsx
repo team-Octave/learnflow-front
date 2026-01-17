@@ -37,7 +37,7 @@ const INIT_QUIZ_LESSON: Lesson = {
   lessonType: 'QUIZ',
   isFreePreview: false,
   mediaId: null,
-  quizQuestions: [{ question: '', correct: true, questionOrder: 1 }],
+  quizQuestions: [{ id: null, question: '', correct: true, questionOrder: 1 }],
 };
 
 export default function ChapterItem({

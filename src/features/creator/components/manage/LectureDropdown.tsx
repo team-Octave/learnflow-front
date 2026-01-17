@@ -12,6 +12,7 @@ import { Edit, EditIcon, MoreVertical, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { deleteCreatorLectureAction } from '../../actions';
+import { toast } from 'sonner';
 
 interface LectureDropdownProps {
   lectureId: number;
@@ -34,10 +35,10 @@ export default function LectureDropdown({
       startTransition(async () => {
         const state = await deleteCreatorLectureAction(lectureId);
         if (state.success) {
-          alert(`${lectureTitle} 강의가 성공적으로 삭제되었습니다.`);
+          toast.success(`${lectureTitle} 강의가 성공적으로 삭제되었습니다.`);
           router.refresh();
         } else {
-          alert(state.message || '강의 삭제에 실패하였습니다.');
+          toast.error(state.message || '강의 삭제에 실패하였습니다.');
         }
       });
     }

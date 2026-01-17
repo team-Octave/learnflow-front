@@ -8,6 +8,7 @@ import { Question } from './Question';
 import { completeLessonAction } from '../../actions';
 
 import type { Lesson } from '@/features/lectures/types';
+import { toast } from 'sonner';
 
 interface QuizProps {
   enrollmentId: number;
@@ -49,7 +50,7 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
     );
 
     if (unanswered.length > 0) {
-      alert('모든 문항에 대해 O 또는 X를 선택해 주세요.');
+      toast.error('모든 문항에 대해 O 또는 X를 선택해 주세요.');
       return;
     }
 
@@ -57,7 +58,7 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
       const state = await completeLessonAction(enrollmentId, lesson.id);
 
       if (!state.success) {
-        alert(state.message || '레슨 완료 처리에 실패하였습니다.');
+        toast.error(state.message || '레슨 완료 처리에 실패하였습니다.');
       }
     });
   };

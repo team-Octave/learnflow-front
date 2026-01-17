@@ -4,6 +4,7 @@
 import { useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { completeLessonAction } from '../../actions';
+import { toast } from 'sonner';
 
 interface ButtonCompleteProps {
   enrollmentId: number;
@@ -25,7 +26,7 @@ export default function ButtonComplete({
       const state = await completeLessonAction(enrollmentId, lessonId);
 
       if (!state.success) {
-        alert(state.message || '레슨 완료 처리에 실패하였습니다.');
+        toast.error(state.message || '레슨 완료 처리에 실패하였습니다.');
       }
     });
   };
