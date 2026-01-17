@@ -106,12 +106,11 @@ export async function createLesson(
 
 export async function updateLesson(
   lectureId: number,
-  chapterId: number,
   lessonId: number,
   payload: any,
 ) {
   const response = await authFetch(
-    `/api/v2/lectures/${lectureId}/chapters/${chapterId}/lessons/${lessonId}`,
+    `/api/v2/lectures/${lectureId}/lessons/${lessonId}`,
     {
       method: 'PATCH',
       body: JSON.stringify(payload),
@@ -120,13 +119,9 @@ export async function updateLesson(
   return response.json();
 }
 
-export async function deleteLesson(
-  lectureId: number,
-  chapterId: number,
-  lessonId: number,
-) {
+export async function deleteLesson(lectureId: number, lessonId: number) {
   const response = await authFetch(
-    `/api/v2/lectures/${lectureId}/chapters/${chapterId}/lessons/${lessonId}`,
+    `/api/v2/lectures/${lectureId}/lessons/${lessonId}`,
     {
       method: 'DELETE',
     },

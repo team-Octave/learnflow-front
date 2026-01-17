@@ -255,7 +255,7 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
           <Button
             type="button"
             onClick={handleUpload}
-            disabled={isUploading || isUploaded}
+            disabled={isUploading}
             className="w-full cursor-pointer flex gap-0.5"
           >
             {isUploading ? (

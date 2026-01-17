@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { CurriculumFormValues, LessonSchema } from '../../schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,6 @@ import {
   Trash2,
   PlayCircle,
   FileQuestion,
-  ChevronUp,
   Loader2,
   SaveIcon,
 } from 'lucide-react';
@@ -44,7 +43,8 @@ export default function LessonItem({
   registerOpenLesson,
   unregisterOpenLesson,
 }: LessonItemProps) {
-  const { register, watch, setValue } = useFormContext<CurriculumFormValues>();
+  const { register, watch, setValue, getValues, control } =
+    useFormContext<CurriculumFormValues>();
   const [isOpen, setIsOpen] = useState(true);
   const [isPending, startTransition] = useTransition();
 
@@ -63,54 +63,38 @@ export default function LessonItem({
     };
   }, [isOpen, lessonPath, registerOpenLesson, unregisterOpenLesson]);
 
-  // 데이터 관찰
-  const lessonId = watch(`${lessonPath}.id`);
-  const lessonType = watch(`${lessonPath}.lessonType`);
-  const lessonTitle = watch(`${lessonPath}.lessonTitle`);
-  const currentLessonData = watch(lessonPath); // 전체 레슨 데이터 (수정용)
+  const currentLessonData = useWatch({
+    control,
+    name: lessonPath,
+  });
+  const lessonId = currentLessonData?.id;
+  const lessonType = currentLessonData?.lessonType;
+  const lessonTitle = currentLessonData?.lessonTitle;
 
-  const [lastSavedData, setLastSavedData] = useState(currentLessonData);
+  const baseSnapshot = useRef(JSON.stringify(getValues(lessonPath)));
 
   const isDirty = useMemo(() => {
-    return JSON.stringify(currentLessonData) !== JSON.stringify(lastSavedData);
-  }, [currentLessonData, lastSavedData]);
-
-  // 저장 버튼 활성화 조건
-  const canSave = useMemo(() => {
-    if (!lessonTitle?.trim()) return false;
-
-    if (currentLessonData.lessonType === 'VIDEO') {
-      return !!currentLessonData.mediaId;
-    } else if (currentLessonData.lessonType === 'QUIZ') {
-      return (
-        currentLessonData.quizQuestions &&
-        currentLessonData.quizQuestions.length > 0
-      );
-    }
-    return false;
-  }, [currentLessonData, lessonTitle]);
+    return JSON.stringify(currentLessonData) !== baseSnapshot.current;
+  }, [currentLessonData]);
 
   /// LessonItem.tsx 내부 저장 로직 수정
   const handleSaveLesson = async () => {
-    const currentLessonData = watch(lessonPath);
+    const dataToSave = watch(lessonPath);
 
     // 레슨 타입별 사전 검증
-    if (currentLessonData.lessonType === 'VIDEO') {
-      if (!currentLessonData.mediaId) {
+    if (dataToSave.lessonType === 'VIDEO') {
+      if (!dataToSave.mediaId) {
         toast.error('비디오를 업로드해주세요.');
         return;
       }
-    } else if (currentLessonData.lessonType === 'QUIZ') {
-      if (
-        !currentLessonData.quizQuestions ||
-        currentLessonData.quizQuestions.length === 0
-      ) {
+    } else if (dataToSave.lessonType === 'QUIZ') {
+      if (!dataToSave.quizQuestions || dataToSave.quizQuestions.length === 0) {
         toast.error('최소 1개 이상의 퀴즈 문제를 추가해주세요.');
         return;
       }
     }
 
-    const validation = LessonSchema.safeParse(currentLessonData);
+    const validation = LessonSchema.safeParse(dataToSave);
 
     if (!validation.success) {
       const firstError = validation.error.issues[0].message;
@@ -125,19 +109,17 @@ export default function LessonItem({
 
     startTransition(async () => {
       const state = lessonId
-        ? await updateLessonAction(
-            lectureId,
-            chapterId,
-            lessonId,
-            validation.data,
-          )
+        ? await updateLessonAction(lectureId, lessonId, validation.data)
         : await createLessonAction(lectureId, chapterId, validation.data);
 
       if (state.success) {
-        setLastSavedData(validation.data);
+        const savedData = { ...dataToSave, id: state.data.id };
+        baseSnapshot.current = JSON.stringify(savedData);
         setValue(`${lessonPath}.id`, state.data.id);
         setIsOpen(false);
         toast.success('저장 성공');
+      } else {
+        toast.error('저장 실패');
       }
     });
   };
@@ -152,7 +134,7 @@ export default function LessonItem({
     if (!confirm('레슨을 삭제하시겠습니까?')) return;
 
     startTransition(async () => {
-      const state = await deleteLessonAction(lectureId, chapterId, lessonId);
+      const state = await deleteLessonAction(lectureId, lessonId);
       if (state.success) {
         removeLesson();
         toast.success('레슨이 삭제되었습니다.');
@@ -164,9 +146,7 @@ export default function LessonItem({
 
   return (
     <div
-      className={`border rounded-md bg-zinc-900 overflow-hidden transition-colors ${
-        isPending ? 'border-indigo-500/50' : 'border-zinc-800'
-      }`}
+      className={`border rounded-md bg-zinc-900 overflow-hidden transition-colors border-zinc-800`}
     >
       {/* 레슨 요약 헤더 */}
       <div className="flex items-center gap-3 p-3 bg-zinc-900 hover:bg-zinc-800/50 transition-colors">
@@ -183,20 +163,22 @@ export default function LessonItem({
         </span>
 
         <div className="flex items-center gap-1">
+          {!isOpen && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <Edit size={16} />
+            </Button>
+          )}
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <ChevronUp size={16} /> : <Edit size={16} />}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-zinc-500 hover:text-red-400"
+            className="h-8 w-8 text-zinc-500 hover:text-red-400 cursor-pointer"
             onClick={handleDeleteLesson}
             disabled={isPending}
           >
@@ -229,9 +211,10 @@ export default function LessonItem({
 
           <div className="flex justify-end pt-2">
             <Button
+              className={`cursor-pointer`}
               size="sm"
               onClick={handleSaveLesson}
-              disabled={!canSave || isPending}
+              disabled={isPending}
             >
               <SaveIcon />
               저장

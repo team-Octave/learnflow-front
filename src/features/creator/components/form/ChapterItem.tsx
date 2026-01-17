@@ -27,7 +27,7 @@ const INIT_VIDEO_LESSON: Lesson = {
   lessonTitle: '',
   lessonType: 'VIDEO',
   isFreePreview: false,
-  videoUrl: '',
+  mediaId: null,
   quizQuestions: null,
 };
 
@@ -36,7 +36,7 @@ const INIT_QUIZ_LESSON: Lesson = {
   lessonTitle: '',
   lessonType: 'QUIZ',
   isFreePreview: false,
-  videoUrl: null,
+  mediaId: null,
   quizQuestions: [{ question: '', correct: true, questionOrder: 1 }],
 };
 
@@ -82,7 +82,6 @@ export default function ChapterItem({
       // 챕터 아이디 설정(state.data.id)
       if (state.success) {
         setValue(`chapters.${chapterIndex}.id`, state.data.id);
-        console.log(state);
       } else {
         toast.error(state.message || '챕터 생성 실패');
       }
