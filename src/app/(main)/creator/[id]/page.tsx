@@ -30,7 +30,7 @@ export default async function LectureEditPage({
   const lecture = state.data!;
 
   return (
-    <div className="flex flex-col mx-auto my-12 gap-8 w-full">
+    <div className="flex flex-col mx-auto my-12 gap-8 w-full max-w-4xl">
       <div className="flex justify-between items-center">
         {step === 1 ? (
           <>
@@ -40,10 +40,10 @@ export default async function LectureEditPage({
               </Link>
               <div className="text-2xl font-bold text-white">강의 수정</div>
             </div>
-            {/* form id 지정 후 서버액션으로 할 것 */}
             <Button
+              type="submit"
               className="bg-white hover:bg-white/90 cursor-pointer"
-              form=""
+              form="basic-form"
             >
               저장하고 다음
             </Button>
@@ -58,6 +58,7 @@ export default async function LectureEditPage({
             </div>{' '}
             <div className="flex gap-2">
               <Button
+                type="submit"
                 className="bg-white hover:bg-white/90 cursor-pointer"
                 form="curriculum-form"
               >

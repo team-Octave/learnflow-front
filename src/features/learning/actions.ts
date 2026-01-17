@@ -43,7 +43,6 @@ export async function getEnrollmentByIdAction(
   enrollmentId: number,
 ): Promise<ActionState<any>> {
   const state = await getEnrollmentById(enrollmentId);
-  console.log('enrollment');
   return state;
 }
 
