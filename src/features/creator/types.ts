@@ -29,6 +29,8 @@ export interface CreatorLecture {
   thumbnailUrl: string;
   chapters: Chapter[] | null;
   createdAt: string;
+  rejectCategories?: string[];
+  rejectReason?: string;
 }
 
 // 폼 관련 타입은 schemas.ts에서 통합 관리
