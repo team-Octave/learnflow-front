@@ -113,9 +113,16 @@ export default function LessonItem({
         : await createLessonAction(lectureId, chapterId, validation.data);
 
       if (state.success) {
-        const savedData = { ...dataToSave, id: state.data.id };
-        baseSnapshot.current = JSON.stringify(savedData);
+        const savedData = {
+          ...dataToSave,
+          id: state.data.id,
+          quizQuestions: state.data.quizQuestions,
+        };
         setValue(`${lessonPath}.id`, state.data.id);
+        if (lessonType === 'QUIZ' && state.data.quizQuestions) {
+          setValue(`${lessonPath}.quizQuestions`, state.data.quizQuestions);
+        }
+        baseSnapshot.current = JSON.stringify(savedData);
         setIsOpen(false);
         toast.success('저장 성공');
       } else {
