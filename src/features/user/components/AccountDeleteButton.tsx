@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { deleteAccountAction } from '../actions';
 import { logoutAction } from '@/features/auth/actions';
 import { useUserStore } from '@/store/userStore';
+import { toast } from 'sonner';
 
 interface AccountDeleteButtonProps {
   email: string;
@@ -51,7 +52,7 @@ export default function AccountDeleteButton({
     startTransition(async () => {
       const state = await deleteAccountAction();
       if (state.success) {
-        alert('회원 탈퇴가 완료되었습니다.');
+        toast.success('회원 탈퇴가 완료되었습니다.');
         setIsOpen(false);
 
         useUserStore.getState().clearUser();

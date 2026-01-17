@@ -33,6 +33,7 @@ import { Category, Lecture, Level } from '@/features/lectures/types';
 import { useRouter } from 'next/navigation';
 import { convertURLtoFile } from '@/shared/utils';
 import { createBasicLectureAction } from '../../actions';
+import { toast } from 'sonner';
 
 interface LectureFormProps {
   lecture?: Lecture;
@@ -76,11 +77,11 @@ export default function LectureForm({ lecture }: LectureFormProps) {
       !basicInfo.level ||
       !basicInfo.description
     ) {
-      alert('모든 정보를 입력해 주세요.');
+      toast.error('모든 정보를 입력해 주세요.');
       return;
     }
     if (basicInfo.title.length >= 100) {
-      alert('제목은 최대 100자까지 입력 가능합니다.');
+      toast.error('제목은 최대 100자까지 입력 가능합니다.');
     }
     startTransition(async () => {
       const formData = new FormData();
@@ -116,7 +117,7 @@ export default function LectureForm({ lecture }: LectureFormProps) {
         const lecture = state.data!;
         router.replace(`/creator/${lecture.id}?step=2`);
       } else {
-        alert(state.message || '강의 저장에 실패하였습니다.');
+        toast.error(state.message || '강의 저장에 실패하였습니다.');
       }
     });
   };

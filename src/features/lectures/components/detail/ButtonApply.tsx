@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { enrollLectureAction } from '@/features/learning/actions';
 import { useUserStore } from '@/store/userStore';
+import { toast } from 'sonner';
 
 interface Props {
   lectureId: number;
@@ -45,12 +46,11 @@ export default function ButtonApply({ lectureId, lectureTitle }: Props) {
           }
           // 자신이 등록한 강의에 수강신청 하는 경우(우선 분리함)
           case 'SELF_ENROLLMENT_NOT_ALLOWED': {
-            alert(state.message);
+            toast.error(state.message);
             break;
           }
-          // 이 외의 상황이면 메시지 alert 후 리턴
           default: {
-            alert(state.message);
+            toast.error(state.message);
             break;
           }
         }

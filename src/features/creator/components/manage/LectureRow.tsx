@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
 
 interface LectureRowProps {
   lecture: CreatorLecture;
@@ -38,10 +39,10 @@ export default function LectureRow({ lecture }: LectureRowProps) {
     startTransition(async () => {
       const state = await publishCreatorLectureAction(lecture.id);
       if (state.success) {
-        alert(`${lecture.title} 강의가 공개되었습니다.`);
+        toast.success(`강의 검토 신청이 완료되었습니다.`);
         router.refresh();
       } else {
-        alert(state.message || '강의 공개에 실패하였습니다.');
+        toast.error(state.message || '강의 공개에 실패하였습니다.');
       }
     });
   };
