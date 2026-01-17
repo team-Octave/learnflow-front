@@ -24,8 +24,8 @@ interface AuditReturnButtonProps {
 
 const REJECTION_REASONS: { label: string; value: RejectCategory }[] = [
   { label: '컨텐츠 내용 부족', value: 'CONTENT_QUALITY_LOW' },
-  { label: '강좌 정보 불일치 또는 누락', value: 'LECTURE_INFO_MISMATCH' },
-  { label: '영상 화질/음질 부적합', value: 'MEDIA_QUALITY_ISSUE' },
+  { label: '강의 정보 불일치 또는 누락', value: 'LECTURE_INFO_MISMATCH' },
+  { label: '미디어 품질 문제', value: 'MEDIA_QUALITY_ISSUE' },
   { label: '정책 및 법적 기준 위반', value: 'POLICY_VIOLATION' },
   { label: '기타', value: 'OTHER' },
 ];

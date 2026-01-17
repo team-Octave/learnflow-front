@@ -52,7 +52,7 @@ export interface QuizQuestion {
   id: number;
   question: string; // 질문 텍스트
   correct: boolean; // 정답 여부 (true/false)
-  orderIndex: number; // 백엔드와 동일하게
+  questionOrder: number; // 백엔드와 동일하게
 }
 
 // 레슨 단위 (영상 또는 퀴즈)
