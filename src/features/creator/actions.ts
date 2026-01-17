@@ -125,27 +125,21 @@ export async function createLessonAction(
 // 레슨 수정
 export async function updateLessonAction(
   lectureId: number,
-  chapterId: number,
   lessonId: number,
   payload: CreatorLesson,
 ) {
-  const state = await updateLesson(lectureId, chapterId, lessonId, payload);
+  const state = await updateLesson(lectureId, lessonId, payload);
   return state;
 }
 
 // 레슨 삭제
-export async function deleteLessonAction(
-  lectureId: number,
-  chapterId: number,
-  lessonId: number,
-) {
-  const state = await deleteLesson(lectureId, chapterId, lessonId);
+export async function deleteLessonAction(lectureId: number, lessonId: number) {
+  const state = await deleteLesson(lectureId, lessonId);
   return state;
 }
 
 // 커리큘럼 순서 확정(최종 등록)
 export async function bindCurriculumAction(lectureId: number, payload: any) {
-  console.log('ㅇㅇ');
   const state = await bindCurriculum(lectureId, payload);
   return state;
 }
