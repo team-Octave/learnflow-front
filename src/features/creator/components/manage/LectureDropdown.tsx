@@ -3,12 +3,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Edit, EditIcon, MoreVertical, Trash } from 'lucide-react';
+import { EditIcon, MoreVertical, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { deleteCreatorLectureAction } from '../../actions';
@@ -55,14 +53,14 @@ export default function LectureDropdown({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-20" align="end">
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={handleEdit}
           className="cursor-pointer"
           disabled={isPending}
         >
           <EditIcon className="text-white" />
           <span className="text-white">강의 수정</span>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem
           onClick={handleDelete}
           className="cursor-pointer"
