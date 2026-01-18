@@ -62,7 +62,7 @@ export default function LectureDropdown({
           <span className="text-white">강의 수정</span>
         </DropdownMenuItem> */}
         <DropdownMenuItem
-          onClick={handleDelete}
+          onSelect={handleDelete}
           className="cursor-pointer"
           disabled={isPending}
         >
