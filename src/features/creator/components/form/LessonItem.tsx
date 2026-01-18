@@ -23,6 +23,7 @@ import {
 import { toast } from 'sonner';
 import QuizItem from './QuizItem';
 import VideoItem from './VideoItem';
+import { useConfirm } from '@/hooks/useConfirm';
 
 interface LessonItemProps {
   lectureId: number;
@@ -43,6 +44,7 @@ export default function LessonItem({
   registerOpenLesson,
   unregisterOpenLesson,
 }: LessonItemProps) {
+  const confirm = useConfirm();
   const { register, watch, setValue, getValues, control } =
     useFormContext<CurriculumFormValues>();
   const [isOpen, setIsOpen] = useState(true);
@@ -131,14 +133,18 @@ export default function LessonItem({
     });
   };
 
-  const handleDeleteLesson = () => {
+  const handleDeleteLesson = async () => {
     if (!lessonId) {
       toast.error('존재하지 않는 레슨입니다.');
       removeLesson();
       return;
     }
 
-    if (!confirm('레슨을 삭제하시겠습니까?')) return;
+    const ok = await confirm(
+      '레슨을 삭제하시겠습니까?',
+      '레슨이 영구적으로 삭제됩니다.',
+    );
+    if (!ok) return;
 
     startTransition(async () => {
       const state = await deleteLessonAction(lectureId, lessonId);
