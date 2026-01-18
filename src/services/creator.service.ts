@@ -32,6 +32,17 @@ export async function createBasicLecture(payload: Omit<BasicInfo, 'file'>) {
   return response.json();
 }
 
+export async function updateBasicLecture(
+  lectureId: number,
+  payload: Partial<Omit<BasicInfo, 'file'>>,
+) {
+  const response = await authFetch(`/api/v2/lectures/${lectureId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+  return response.json();
+}
+
 export async function uploadThumbnail(formData: FormData) {
   const response = await authFetch(`/api/v1/contents/upload-thumbnail`, {
     method: 'POST',

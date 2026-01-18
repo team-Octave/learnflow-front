@@ -12,13 +12,17 @@ import {
   getVideoUploadUrlAction,
 } from '../../actions';
 import { toast } from 'sonner';
-import { Loader2, Upload, CheckCircle, X } from 'lucide-react';
+import { Loader2, Upload, CheckCircle, X, PlayCircle } from 'lucide-react';
 
 interface VideoItemProps {
   lessonPath: string;
+  hasExistingVideo?: boolean;
 }
 
-export default function VideoItem({ lessonPath }: VideoItemProps) {
+export default function VideoItem({
+  lessonPath,
+  hasExistingVideo = false,
+}: VideoItemProps) {
   const { watch, setValue } = useFormContext<CurriculumFormValues>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -28,6 +32,12 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [duration, setDuration] = useState<number>(0);
+  // 기존 영상이 있을 때, 사용자가 변경을 원할 경우 true로 설정
+  const [wantsToChange, setWantsToChange] = useState(false);
+
+  // 기존 영상이 있고, 변경을 원하지 않으면 기존 영상 표시
+  const showExistingVideo =
+    hasExistingVideo && !wantsToChange && !previewUrl && !isUploaded;
 
   // 드래그 앤 드롭 핸들러
   const handleDragOver = (e: React.DragEvent) => {
@@ -187,8 +197,28 @@ export default function VideoItem({ lessonPath }: VideoItemProps) {
     <div className="space-y-3">
       <Label className="text-xs text-zinc-400">비디오 파일</Label>
 
-      {/* 업로드 완료된 비디오 */}
-      {isUploaded && previewUrl ? (
+      {/* 기존 영상이 있는 경우 (URL은 없지만 서버에 저장됨) */}
+      {showExistingVideo ? (
+        <div className="flex items-center gap-3 p-4 bg-zinc-800/50 rounded-lg border border-zinc-700">
+          <PlayCircle className="h-8 w-8 text-indigo-500 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm text-zinc-300">기존 영상이 있습니다</p>
+            <p className="text-xs text-zinc-500 mt-1">
+              영상을 변경하려면 "변경" 버튼을 클릭하세요
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setWantsToChange(true)}
+            className="cursor-pointer"
+          >
+            변경
+          </Button>
+        </div>
+      ) : /* 업로드 완료된 비디오 */
+      isUploaded && previewUrl ? (
         <div className="space-y-3">
           <div className="relative rounded-lg overflow-hidden bg-black aspect-video">
             <video

@@ -53,14 +53,14 @@ export default function LectureDropdown({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-20" align="end">
-        {/* <DropdownMenuItem
+        <DropdownMenuItem
           onClick={handleEdit}
           className="cursor-pointer"
           disabled={isPending}
         >
           <EditIcon className="text-white" />
           <span className="text-white">강의 수정</span>
-        </DropdownMenuItem> */}
+        </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={handleDelete}
           className="cursor-pointer"
