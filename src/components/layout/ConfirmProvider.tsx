@@ -21,8 +21,8 @@ export const ConfirmProvider = () => {
   const close = useConfirmStore((state) => state.close);
 
   const handleAction = (value: boolean) => {
-    resolve(value);
     close();
+    resolve(value);
   };
 
   return (
