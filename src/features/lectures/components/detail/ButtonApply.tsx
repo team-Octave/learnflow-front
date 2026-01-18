@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { enrollLectureAction } from '@/features/learning/actions';
 import { useUserStore } from '@/store/userStore';
 import { toast } from 'sonner';
+import { useConfirm } from '@/hooks/useConfirm';
 
 interface Props {
   lectureId: number;
@@ -16,9 +17,11 @@ export default function ButtonApply({ lectureId, lectureTitle }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { user } = useUserStore();
+  const confirm = useConfirm();
 
-  const handleApply = () => {
-    if (!confirm(`${lectureTitle}강의를 수강 신청하시겠습니까?`)) return;
+  const handleApply = async () => {
+    const ok = await confirm(`${lectureTitle}강의를 수강 신청하시겠습니까?`);
+    if (!ok) return;
 
     startTransition(async () => {
       // 구조 변경:
@@ -26,10 +29,10 @@ export default function ButtonApply({ lectureId, lectureTitle }: Props) {
       const state = await enrollLectureAction(lectureId);
       // 성공한 경우
       if (state.success) {
-        const confirmed = confirm(
+        const ok = await confirm(
           '수강 신청이 완료되었습니다. 내 학습 페이지로 이동하시겠습니까?',
         );
-        if (!confirmed) return;
+        if (!ok) return;
 
         router.push('/mylearning'); // 내 학습 페이지로 이동
       } else {
@@ -37,9 +40,10 @@ export default function ButtonApply({ lectureId, lectureTitle }: Props) {
         switch (state.code) {
           // 이미 수강 중인 강좌의 경우
           case 'ENROLLMENT_ALREADY_EXISTS': {
-            if (
-              confirm(`${state.message} 내 학습 페이지로 이동하시겠습니까?`)
-            ) {
+            const ok = await confirm(
+              `${state.message} 내 학습 페이지로 이동하시겠습니까?`,
+            );
+            if (ok) {
               router.push('/mylearning');
             }
             break;

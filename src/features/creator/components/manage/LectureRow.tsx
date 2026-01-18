@@ -19,21 +19,23 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import { useConfirm } from '@/hooks/useConfirm';
 
 interface LectureRowProps {
   lecture: CreatorLecture;
 }
 
 export default function LectureRow({ lecture }: LectureRowProps) {
+  const confirm = useConfirm();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const handlePublish = () => {
-    if (
-      !confirm(
-        `${lecture.title} 강의 검토를 신청하시겠습니까? 검토가 시작되면 강의 내용을 수정하실 수 없으며 공개된 후에는 강의를 삭제할 수 없습니다.`,
-      )
-    ) {
+  const handlePublish = async () => {
+    const ok = await confirm(
+      `${lecture.title} 강의 검토를 신청하시겠습니까?`,
+      '검토가 시작되면 강의 내용을 수정하실 수 없으며 공개된 후에는 강의를 삭제할 수 없습니다.',
+    );
+    if (!ok) {
       return;
     }
     startTransition(async () => {

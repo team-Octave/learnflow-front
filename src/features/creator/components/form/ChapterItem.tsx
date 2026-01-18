@@ -13,6 +13,7 @@ import {
 } from '../../actions';
 import LessonItem from './LessonItem';
 import { toast } from 'sonner';
+import { useConfirm } from '@/hooks/useConfirm';
 
 interface ChapterItemProps {
   lectureId: number;
@@ -47,6 +48,7 @@ export default function ChapterItem({
   registerOpenLesson,
   unregisterOpenLesson,
 }: ChapterItemProps) {
+  const confirm = useConfirm();
   const [isPending, startTransition] = useTransition();
   const chapterTitleRef = useRef('');
   const { register, control, watch, setValue } =
@@ -102,8 +104,12 @@ export default function ChapterItem({
     });
   };
 
-  const handleDeleteChapter = () => {
-    if (!confirm('챕터를 삭제하시겠습니까? 하위 레슨도 삭제됩니다.')) {
+  const handleDeleteChapter = async () => {
+    const ok = await confirm(
+      '챕터를 삭제하시겠습니까?',
+      '하위 레슨도 삭제됩니다.',
+    );
+    if (!ok) {
       return;
     }
     if (!chapterId) {
