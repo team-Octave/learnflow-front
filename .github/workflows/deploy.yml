@@ -22,21 +22,26 @@ jobs:
           key: ${{ secrets.GCP_SSH_KEY }}
           port: 22
           script: |
-            # 0. 환경 변수 로드
+            # 0. 실패 시 즉시 중단
+            set -euo pipefail
+
+            # 1. 환경 변수 로드
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            # 1. 프로젝트 폴더로 이동
-            cd ~/var/www/frontend
+            # 2. 프로젝트 폴더로 이동
+            cd /var/www/frontend
 
-            # 2. 최신 코드 가져오기
-            git pull origin main
+            # 3. 최신 코드 가져오기
+            git fetch origin
+            git reset --hard origin/main
 
-            # 3. 패키지 설치 및 빌드
-            npm install
+
+            # 4. 패키지 설치 및 빌드
+            npm ci
             npm run build
 
-            # 4. PM2로 서버 재시작
-            pm2 restart frontend || pm2 start npm --name "frontend" -- start
+            # 5. PM2로 서버 재시작
+            pm2 restart frontend || pm2 start npm --name "frontend" --cwd /var/www/frontend -- start
 
             echo "배포 완료됨"
