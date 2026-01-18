@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import CurriculumForm from '@/features/creator/components/form/CurriculumForm';
 import LectureForm from '@/features/creator/components/form/LectureForm';
+import PreviousButton from '@/features/creator/components/form/PreviousButton';
 import StepInfo from '@/features/creator/components/form/StepInfo';
 import { getLectureByIdAction } from '@/features/lectures/actions';
 import { getParam } from '@/shared/utils';
@@ -57,6 +58,7 @@ export default async function LectureEditPage({
               <div className="text-2xl font-bold text-white">커리큘럼</div>
             </div>{' '}
             <div className="flex gap-2">
+              <PreviousButton lectureId={lecture.id} />
               <Button
                 type="submit"
                 className="bg-white hover:bg-white/90 cursor-pointer"
