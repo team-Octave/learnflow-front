@@ -47,10 +47,13 @@ export default function LessonItem({
   const confirm = useConfirm();
   const { register, watch, setValue, getValues, control } =
     useFormContext<CurriculumFormValues>();
-  const [isOpen, setIsOpen] = useState(true);
-  const [isPending, startTransition] = useTransition();
 
   const lessonPath = `chapters.${chapterIndex}.lessons.${lessonIndex}` as const;
+
+  // 기존 데이터가 있으면(id가 있음) 닫힌 상태로, 새로 추가된 레슨은 열린 상태로
+  const initialLessonData = getValues(lessonPath);
+  const [isOpen, setIsOpen] = useState(!initialLessonData?.id);
+  const [isPending, startTransition] = useTransition();
 
   // isOpen 상태 변경 시 등록/해제
   useEffect(() => {
@@ -83,7 +86,13 @@ export default function LessonItem({
   const handleSaveLesson = async () => {
     const dataToSave = watch(lessonPath);
 
-    // 레슨 타입별 사전 검증
+    // 기존 레슨이고 변경이 없으면 검증 없이 바로 닫기
+    if (lessonId && !isDirty) {
+      setIsOpen(false);
+      return;
+    }
+
+    // 레슨 타입별 사전 검증 (새 레슨이거나 변경된 경우에만)
     if (dataToSave.lessonType === 'VIDEO') {
       if (!dataToSave.mediaId) {
         toast.error('비디오를 업로드해주세요.');
@@ -135,7 +144,6 @@ export default function LessonItem({
 
   const handleDeleteLesson = async () => {
     if (!lessonId) {
-      toast.error('존재하지 않는 레슨입니다.');
       removeLesson();
       return;
     }
@@ -217,13 +225,16 @@ export default function LessonItem({
           <Separator className="bg-zinc-800" />
 
           {/* VIDEO 타입 */}
-          {lessonType === 'VIDEO' && <VideoItem lessonPath={lessonPath} />}
+          {lessonType === 'VIDEO' && (
+            <VideoItem lessonPath={lessonPath} hasExistingVideo={!!lessonId} />
+          )}
 
           {/* QUIZ 타입 */}
           {lessonType === 'QUIZ' && <QuizItem lessonPath={lessonPath} />}
 
           <div className="flex justify-end pt-2">
             <Button
+              type="button"
               className={`cursor-pointer`}
               size="sm"
               onClick={handleSaveLesson}

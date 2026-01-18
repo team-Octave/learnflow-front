@@ -27,12 +27,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ImageUploadField } from './ImageUploadField';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { BasicInfo, CreatorLecture } from '../../types';
 import { Category, Lecture, Level } from '@/features/lectures/types';
 import { useRouter } from 'next/navigation';
 import { convertURLtoFile } from '@/shared/utils';
-import { createBasicLectureAction } from '../../actions';
+import {
+  createBasicLectureAction,
+  updateBasicLectureAction,
+} from '../../actions';
 import { toast } from 'sonner';
 
 interface LectureFormProps {
@@ -63,6 +66,26 @@ export default function LectureForm({ lecture }: LectureFormProps) {
     }
   }, [lecture]);
 
+  // 변경 감지: 기존 데이터와 현재 데이터 비교
+  const hasChanges = useMemo(() => {
+    if (!lecture) return true; // 신규 등록은 항상 변경됨
+
+    const titleChanged = basicInfo.title !== lecture.title;
+    const categoryChanged =
+      basicInfo.categoryId !== lecture.categoryId.toString();
+    const levelChanged = basicInfo.level !== lecture.level;
+    const descriptionChanged = basicInfo.description !== lecture.description;
+    const fileChanged = basicInfo.file !== null;
+
+    return (
+      titleChanged ||
+      categoryChanged ||
+      levelChanged ||
+      descriptionChanged ||
+      fileChanged
+    );
+  }, [lecture, basicInfo]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -82,7 +105,15 @@ export default function LectureForm({ lecture }: LectureFormProps) {
     }
     if (basicInfo.title.length >= 100) {
       toast.error('제목은 최대 100자까지 입력 가능합니다.');
+      return;
     }
+
+    // 수정 모드에서 변경 사항이 없으면 API 호출 없이 다음 페이지로 이동
+    if (lecture && !hasChanges) {
+      router.replace(`/creator/${lecture.id}?step=2`);
+      return;
+    }
+
     startTransition(async () => {
       const formData = new FormData();
 
@@ -111,11 +142,14 @@ export default function LectureForm({ lecture }: LectureFormProps) {
       // CASE C: [수정 모드]인데 파일을 안 올린 경우 (basicInfo.file === null)
       // -> 아무것도 보내지 않음 (서버는 기존 이미지 유지)
 
-      const state = await createBasicLectureAction(formData);
+      // 수정 모드인 경우 updateBasicLectureAction 호출
+      const state = lecture
+        ? await updateBasicLectureAction(lecture.id, formData)
+        : await createBasicLectureAction(formData);
 
       if (state.success) {
-        const lecture = state.data!;
-        router.replace(`/creator/${lecture.id}?step=2`);
+        const lectureData = state.data!;
+        router.replace(`/creator/${lectureData.id}?step=2`);
       } else {
         toast.error(state.message || '강의 저장에 실패하였습니다.');
       }

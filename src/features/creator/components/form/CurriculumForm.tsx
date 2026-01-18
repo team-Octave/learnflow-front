@@ -18,13 +18,14 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ChapterItem from './ChapterItem';
-import { useCallback, useRef, useTransition } from 'react';
+import { useCallback, useMemo, useRef, useTransition } from 'react';
 import { bindCurriculumAction, createCurriculumAction } from '../../actions';
 import { useRouter } from 'next/navigation';
 import {
   CurriculumFormSchema,
   CurriculumFormValues,
   Chapter,
+  Lesson,
 } from '../../schemas';
 import { toast } from 'sonner';
 
@@ -38,6 +39,43 @@ const DEFAULT_CHAPTER: Chapter = {
   chapterTitle: '',
   lessons: [],
 };
+
+// lecture.chapters를 폼 값으로 변환하는 함수
+function convertChaptersToFormValues(
+  chapters: Lecture['chapters'],
+): CurriculumFormValues {
+  if (!chapters || chapters.length === 0) {
+    return { chapters: [DEFAULT_CHAPTER] };
+  }
+
+  return {
+    chapters: chapters.map((ch) => ({
+      id: ch.id,
+      chapterTitle: ch.chapterTitle,
+      lessons: ch.lessons.map((ls): Lesson => {
+        if (ls.lessonTypeDisplayName === 'QUIZ') {
+          return {
+            id: ls.id,
+            lessonTitle: ls.lessonTitle,
+            lessonType: 'QUIZ',
+            isFreePreview: ls.isFreePreview,
+            mediaId: null,
+            quizQuestions: ls.quizQuestions || [],
+          };
+        }
+        // VIDEO 타입
+        return {
+          id: ls.id,
+          lessonTitle: ls.lessonTitle,
+          lessonType: 'VIDEO',
+          isFreePreview: ls.isFreePreview,
+          mediaId: null, // videoUrl이 없으므로 null로 설정
+          quizQuestions: null,
+        };
+      }),
+    })),
+  };
+}
 
 export default function CurriculumForm({ lecture }: CurriculumFormProps) {
   const router = useRouter();
@@ -54,11 +92,15 @@ export default function CurriculumForm({ lecture }: CurriculumFormProps) {
     openLessonsRef.current.delete(lessonPath);
   }, []);
 
+  // 기존 데이터를 폼 값으로 변환
+  const initialValues = useMemo(
+    () => convertChaptersToFormValues(lecture.chapters),
+    [lecture.chapters],
+  );
+
   const methods = useForm<CurriculumFormValues>({
     resolver: zodResolver(CurriculumFormSchema), // Zod 연결
-    defaultValues: {
-      chapters: [{ id: null, chapterTitle: '', lessons: [] }],
-    },
+    defaultValues: initialValues,
     mode: 'onChange', // 실시간 검증 활성화
   });
 

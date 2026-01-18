@@ -13,6 +13,7 @@ import {
   getCreatorLectures,
   getVideoUploadUrl,
   publishCreatorLecture,
+  updateBasicLecture,
   updateChapter,
   updateLesson,
   uploadThumbnail,
@@ -72,6 +73,51 @@ export async function createBasicLectureAction(
   };
 
   const state = await createBasicLecture(payload);
+  return state;
+}
+
+// 강의 기본 정보 수정
+export async function updateBasicLectureAction(
+  lectureId: number,
+  formData: FormData,
+): Promise<ActionState<any>> {
+  const title = formData.get('title') as string;
+  const categoryId = formData.get('categoryId') as Category;
+  const level = formData.get('level') as Level;
+  const description = formData.get('description') as string;
+  const file = formData.get('file') as File | null;
+
+  // 썸네일이 변경된 경우에만 업로드
+  let thumbnailUrl: string | undefined;
+  if (file) {
+    const thumbnailFormData = new FormData();
+    thumbnailFormData.append('file', file);
+    const thumbnailState = await uploadThumbnail(thumbnailFormData);
+    if (!thumbnailState.success) {
+      return thumbnailState;
+    }
+    thumbnailUrl = thumbnailState.data.uploadUrl;
+  }
+
+  const payload: any = {
+    title,
+    categoryId,
+    level,
+    description,
+  };
+
+  // 썸네일이 변경된 경우에만 포함
+  if (thumbnailUrl) {
+    payload.thumbnailUrl = thumbnailUrl;
+  }
+
+  const state = await updateBasicLecture(lectureId, payload);
+
+  // 수정 API가 id를 반환하지 않을 수 있으므로 id를 추가
+  if (state.success && !state.data?.id) {
+    state.data = { ...state.data, id: lectureId };
+  }
+
   return state;
 }
 

@@ -14,7 +14,6 @@ import {
 import { useConfirmStore } from '@/store/confirmStore';
 
 export const ConfirmProvider = () => {
-  // 개별적으로 구독하여 불필요한 전체 리렌더링 방지
   const isOpen = useConfirmStore((state) => state.isOpen);
   const title = useConfirmStore((state) => state.title);
   const description = useConfirmStore((state) => state.description);
@@ -35,7 +34,11 @@ export const ConfirmProvider = () => {
         }
       }}
     >
-      <AlertDialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+      <AlertDialogContent
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+        }}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription className={!description ? 'sr-only' : ''}>
@@ -46,7 +49,7 @@ export const ConfirmProvider = () => {
           <AlertDialogCancel onClick={() => handleAction(false)}>
             취소
           </AlertDialogCancel>
-          <AlertDialogAction onClick={() => handleAction(true)} autoFocus>
+          <AlertDialogAction onClick={() => handleAction(true)}>
             확인
           </AlertDialogAction>
         </AlertDialogFooter>
