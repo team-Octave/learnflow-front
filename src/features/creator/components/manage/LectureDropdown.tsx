@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { deleteCreatorLectureAction } from '../../actions';
 import { toast } from 'sonner';
+import { useConfirm } from '@/hooks/useConfirm';
 
 interface LectureDropdownProps {
   lectureId: number;
@@ -23,6 +24,7 @@ export default function LectureDropdown({
   lectureId,
   lectureTitle,
 }: LectureDropdownProps) {
+  const confirm = useConfirm();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -30,8 +32,9 @@ export default function LectureDropdown({
     router.push(`creator/${lectureId}?step=1`);
   };
 
-  const handleDelete = () => {
-    if (confirm(`${lectureTitle} 강의를 정말 삭제하시겠습니까?`)) {
+  const handleDelete = async () => {
+    const ok = await confirm(`${lectureTitle} 강의를 정말 삭제하시겠습니까?`);
+    if (ok) {
       startTransition(async () => {
         const state = await deleteCreatorLectureAction(lectureId);
         if (state.success) {
