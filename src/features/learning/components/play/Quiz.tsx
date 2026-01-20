@@ -30,7 +30,7 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
   // 서버 액션 실행 중 상태 관리
   const [isPending, startTransition] = useTransition();
 
-  // 4️⃣ 퀴즈 데이터 정리
+  // 4 퀴즈 데이터 정리
   // lesson.quizQuestions : lesson 객체 안에 있는 퀴즈 질문 목록
   // ?? : 왼쪽 값이 null 또는 undefined일 때만 오른쪽 값을 사용, 퀴즈가 없을 때 사용할 빈 배열
   //lesson.quizQuestions가 있으면 그대로 쓰고, 없으면 빈 배열을 써라

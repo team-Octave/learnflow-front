@@ -46,13 +46,29 @@ export async function getEnrollmentByIdAction(
   return state;
 }
 
+// export async function completeLessonAction(
+//   enrollmentId: number,
+//   lessonId: number,
+// ): Promise<ActionState<any>> {
+//   const state = await completeLesson(enrollmentId, lessonId);
+//   if (state.success) {
+//     revalidatePath(`/play/${enrollmentId}`);
+//   }
+//   return state;
+// }
+
 export async function completeLessonAction(
   enrollmentId: number,
   lessonId: number,
 ): Promise<ActionState<any>> {
-  const state = await completeLesson(enrollmentId, lessonId);
-  if (state.success) {
-    revalidatePath(`/play/${enrollmentId}`);
+  // 1) 완료 처리
+  const completeState = await completeLesson(enrollmentId, lessonId);
+
+  if (!completeState?.success) {
+    return completeState; // 실패면 그대로 반환
   }
-  return state;
+
+  // 2) ✅ 완료 후 최신 enrollment 재조회해서 반환
+  const enrollmentState = await getEnrollmentById(enrollmentId);
+  return enrollmentState;
 }
