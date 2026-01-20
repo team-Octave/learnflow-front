@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import UserInitializer from '@/features/auth/components/UserInitializer';
 import { getUserAction } from '@/features/auth/actions';
 import { Toaster } from '@/components/ui/sonner';
+import { ConfirmProvider } from '@/components/layout/ConfirmProvider';
 
 const pretendard = localFont({
   src: '../../public/fonts/PretendardVariable.woff2',
@@ -27,8 +28,8 @@ export default async function RootLayout({
         className={`${pretendard.variable} font-sans antialiased min-h-screen bg-background text-foreground`}
       >
         <UserInitializer user={user} />
-        {/* 모든 페이지(page.tsx) 내용을 여기에 렌더링. */}
         <Toaster position="top-center" />
+        <ConfirmProvider />
         {children}
       </body>
     </html>

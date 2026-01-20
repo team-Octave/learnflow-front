@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Check, X, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/shared/utils';
+import { toast } from 'sonner';
 
 export default function SignupForm() {
   const router = useRouter();
@@ -146,7 +147,7 @@ export default function SignupForm() {
       });
 
       if (state.success) {
-        alert('회원가입이 완료되었습니다.');
+        toast.success('회원가입이 완료되었습니다.');
         router.push('/login');
       } else {
         setServerError(

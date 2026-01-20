@@ -8,7 +8,7 @@ import ButtonComplete from './ButtonComplete';
 export interface VideoProps {
   enrollmentId: number;
   lesson: Lesson;
-  completedLessonIds: number[]; // ✅ 추가
+  completedLessonIds: number[];
 }
 
 export function Video({
@@ -16,10 +16,7 @@ export function Video({
   lesson,
   completedLessonIds,
 }: VideoProps) {
-  const src =
-    lesson.videoUrl ??
-    'https://www.youtube.com/embed/Axlxk_PaSOg?si=5mlhFbRzOXnGYtJb';
-
+  const src = lesson.videoUrl;
   return (
     <div className="flex flex-col w-full h-full justify-center items-center p-4 md:p-8 overflow-y-auto">
       <div className="w-full max-w-5xl">
@@ -27,12 +24,9 @@ export function Video({
           ratio={16 / 9}
           className="bg-black border border-zinc-800 rounded-xl overflow-hidden shadow-xl"
         >
-          <iframe
-            src={src}
-            title={lesson.lessonTitle}
-            allowFullScreen
-            className="w-full h-full"
-          />
+          <video controls className="w-full">
+            <source src={src ?? ''} />
+          </video>
         </AspectRatio>
 
         <div className="flex justify-between w-full items-center mt-6">

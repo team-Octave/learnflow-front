@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { approveAuditAction } from '@/features/audit/actions';
+import { useConfirm } from '@/hooks/useConfirm';
 
 interface AuditAcceptButtonProps {
   lectureId: number;
@@ -14,12 +15,11 @@ export default function AuditAcceptButton({
   lectureId,
 }: AuditAcceptButtonProps) {
   const router = useRouter();
-
+  const confirm = useConfirm();
   const onApprove = async () => {
-    const confirmed = confirm('강의를 승인하시겠습니까?');
+    const confirmed = await confirm('강의를 승인하시겠습니까?');
     if (!confirmed) return;
 
-    // ✅ string 변환 제거
     const state = await approveAuditAction(lectureId);
 
     if (!state.success) {

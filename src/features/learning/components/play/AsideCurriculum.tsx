@@ -35,7 +35,7 @@ export function AsideCurriculum({
   };
 
   return (
-    <aside className="flex flex-col w-96 border-l border-zinc-800 bg-zinc-900/50">
+    <aside className="flex flex-col w-96 h-[calc(100vh-64px)] border-l border-zinc-800 bg-zinc-900/50">
       <div className="p-4 border-b border-zinc-800">
         <h2 className="font-bold text-lg mb-1">커리큘럼</h2>
 
@@ -48,7 +48,12 @@ export function AsideCurriculum({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+      <div
+        className="flex-1 overflow-y-auto p-4
+      [&::-webkit-scrollbar]:hidden
+      [scrollbar-width:none]
+      [-ms-overflow-style:none]"
+      >
         <Accordion
           type="multiple"
           defaultValue={lecture.chapters?.map((c) => String(c.id))}

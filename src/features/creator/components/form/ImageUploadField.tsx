@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { ImagePlus, PenLine, X } from 'lucide-react';
 import Image from 'next/image';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { toast } from 'sonner';
 
 interface ImageUploadProps {
   value: File | null; // 새로 업로드하려는 파일 객체 (부모 상태)
@@ -38,7 +39,7 @@ export function ImageUploadField({
     const file = e.target.files?.[0];
     if (file) {
       if (!file.type.startsWith('image/jpeg')) {
-        alert('JPG/JPEG 파일만 업로드 가능합니다.');
+        toast.error('JPG/JPEG 파일만 업로드 가능합니다.');
         return;
       }
       onChange(file); // 부모에게 File 객체 전달

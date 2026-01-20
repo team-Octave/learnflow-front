@@ -1,13 +1,14 @@
-// src/features/learning/components/play/Quiz.tsx
 'use client';
 
 import { useState, useTransition } from 'react';
 import { PencilLine } from 'lucide-react';
+
 import { ButtonSubmit } from './ButtonSubmit';
 import { Question } from './Question';
 import { completeLessonAction } from '../../actions';
+
 import type { Lesson } from '@/features/lectures/types';
-import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface QuizProps {
   enrollmentId: number;
@@ -22,8 +23,6 @@ interface QuizProps {
 네 개의 값을 props로 받아서 사용한다
 */
 export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
-  const router = useRouter();
-
   //QuizProps 이 컴포넌트가 받는 props의 타입 정의
   // 문제ID → 사용자가 고른 true/false를 저장하는 상태 객체를 만든다
   const [selected, setSelected] = useState<Record<string, boolean>>({}); // Record< 키 string, 값 boolean> 객체 타입을 정의하는 방법
@@ -51,7 +50,7 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
     );
 
     if (unanswered.length > 0) {
-      alert('모든 문항에 대해 O 또는 X를 선택해 주세요.');
+      toast.error('모든 문항에 대해 O 또는 X를 선택해 주세요.');
       return;
     }
 
@@ -59,12 +58,8 @@ export function Quiz({ enrollmentId, lesson, isCompleted }: QuizProps) {
       const state = await completeLessonAction(enrollmentId, lesson.id);
 
       if (!state.success) {
-        alert(state.message || '레슨 완료 처리에 실패하였습니다.');
-        return;
+        toast.error(state.message || '레슨 완료 처리에 실패하였습니다.');
       }
-
-      // ✅ 추가: enrollment 최신화
-      router.refresh();
     });
   };
 

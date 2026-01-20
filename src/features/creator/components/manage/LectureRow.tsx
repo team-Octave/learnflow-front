@@ -1,7 +1,7 @@
 'use client';
 
 import { TableCell, TableRow } from '@/components/ui/table';
-import { CircleAlertIcon, CircleQuestionMarkIcon, Star } from 'lucide-react';
+import { CircleChevronDownIcon, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { CreatorLecture, LectureStatus } from '../../types';
@@ -12,34 +12,39 @@ import { useTransition } from 'react';
 import { publishCreatorLectureAction } from '../../actions';
 import { useRouter } from 'next/navigation';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
+import { useConfirm } from '@/hooks/useConfirm';
 
 interface LectureRowProps {
   lecture: CreatorLecture;
 }
 
 export default function LectureRow({ lecture }: LectureRowProps) {
+  const confirm = useConfirm();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const handlePublish = () => {
-    if (
-      !confirm(
-        `${lecture.title} 강의 검토를 신청하시겠습니까? 검토가 시작되면 강의 내용을 수정하실 수 없으며 공개된 후에는 강의를 삭제할 수 없습니다.`,
-      )
-    ) {
+  const handlePublish = async () => {
+    const ok = await confirm(
+      `${lecture.title} 강의 검토를 신청하시겠습니까?`,
+      '검토가 시작되면 강의 내용을 수정하실 수 없으며 공개된 후에는 강의를 삭제할 수 없습니다.',
+    );
+    if (!ok) {
       return;
     }
     startTransition(async () => {
       const state = await publishCreatorLectureAction(lecture.id);
       if (state.success) {
-        alert(`${lecture.title} 강의가 공개되었습니다.`);
+        toast.success(`강의 검토 신청이 완료되었습니다.`);
         router.refresh();
       } else {
-        alert(state.message || '강의 공개에 실패하였습니다.');
+        toast.error(state.message || '강의 공개에 실패하였습니다.');
       }
     });
   };
@@ -95,17 +100,32 @@ export default function LectureRow({ lecture }: LectureRowProps) {
                 검토 요청
               </span>
             </Button>
-            <Tooltip>
-              <TooltipTrigger>
-                <CircleQuestionMarkIcon
+            <Popover>
+              <PopoverTrigger>
+                <CircleChevronDownIcon
+                  strokeWidth={1}
                   size={24}
                   className="text-red-500 cursor-pointer"
                 />
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>반려 사유가 들어갈 자리</p>
-              </TooltipContent>
-            </Tooltip>
+              </PopoverTrigger>
+              <PopoverContent side="bottom" className="flex flex-col gap-3">
+                <h2 className="font-semibold text-md ">강의 반려 사유</h2>
+                <div className="flex flex-col pl-1 gap-1">
+                  {lecture.rejectCategories?.map((c, idx) => (
+                    <p className="text-sm" key={idx}>
+                      ✓ {c}
+                    </p>
+                  ))}
+                </div>
+                <Separator />
+                <h4 className="font-semibold text-md">상세 사유</h4>
+                <Textarea
+                  className="text-sm resize-none"
+                  value={lecture.rejectReason}
+                  disabled
+                />
+              </PopoverContent>
+            </Popover>
           </div>
         );
       }

@@ -18,6 +18,7 @@ import { useState, useTransition } from 'react';
 import StarRating from './StarRating';
 import { deleteReviewAction, writeReviewAction } from '../../actions';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface ReviewButtonProps {
   lectureId: number;
@@ -53,14 +54,14 @@ export default function ReviewButton({
         setRating(5);
         router.refresh();
       } else {
-        alert(state.message || '리뷰 저장에 실패하였습니다.');
+        toast.error(state.message || '리뷰 저장에 실패하였습니다.');
       }
     });
   };
 
   const handleDeleteReview = () => {
     if (!reviewId) {
-      alert('리뷰 정보가 유효하지 않습니다.');
+      toast.error('리뷰 정보가 유효하지 않습니다.');
       return;
     }
     startTransition(async () => {
@@ -71,7 +72,7 @@ export default function ReviewButton({
         setRating(5);
         router.refresh();
       } else {
-        alert(state.message || '리뷰 삭제에 실패하였습니다.');
+        toast.error(state.message || '리뷰 삭제에 실패하였습니다.');
       }
     });
   };

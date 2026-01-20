@@ -59,7 +59,7 @@ export type ApprovalDetail = {
 export type AdminQuizQuestion = {
   id: number;
   question: string;
-  orderIndex: number;
+  questionOrder: number;
   correct: boolean;
 };
 

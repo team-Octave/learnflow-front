@@ -13,11 +13,8 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
     audit.level === 'BEGINNER'
       ? '초급'
       : audit.level === 'INTERMEDIATE'
-      ? '중급'
-      : '고급';
-
-  // ✅ approvals 상세엔 thumbnailUrl이 명세에 없었음 -> 없으면 플레이스홀더 처리
-  const thumbnailUrl = undefined;
+        ? '중급'
+        : '고급';
 
   return (
     <Card className="overflow-hidden border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
@@ -28,9 +25,9 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
             className="bg-zinc-100 dark:bg-zinc-800 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800 overflow-hidden rounded-sm"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            {thumbnailUrl ? (
+            {audit.thumbnailUrl ? (
               <img
-                src={thumbnailUrl}
+                src={audit.thumbnailUrl}
                 alt={audit.title}
                 className="object-cover w-full h-full"
               />
