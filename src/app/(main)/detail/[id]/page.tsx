@@ -12,6 +12,7 @@ import {
 } from '@/features/lectures/actions';
 import { notFound, redirect } from 'next/navigation';
 import { getParam } from '@/shared/utils';
+import AISummaryBox from '@/features/lectures/components/detail/AISummaryBox';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -90,6 +91,7 @@ export default async function LectureDetailPage({
               {/* 커리큘럼 탭 */}
               <TabsContent value="curriculum" className="space-y-6">
                 <Curriculum curriculum={lecture.chapters!} />
+                {/* <AISummaryBox /> */}
               </TabsContent>
 
               {/* 수강평 탭 */}
