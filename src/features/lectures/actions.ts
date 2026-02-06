@@ -1,6 +1,7 @@
-'use server';
 // src/features/lectures/actions.ts
 // 강의 및 리뷰 관련 액션 함수 모음
+
+'use server';
 
 import {
   getLectureById,
@@ -23,6 +24,65 @@ export async function getLecturesAction(
 export async function getLectureByIdAction(
   lectureId: number,
 ): Promise<ActionState<any>> {
+  return {
+    success: true,
+    code: 'SUCCESS',
+    data: {
+      id: 1,
+      title: '프론트엔드 입문자를 위한 React 기초',
+      instructorId: 'instructor_001',
+      instructorDisplayName: '김코딩',
+      ratingAverage: 4.7,
+      enrollmentCount: 1240,
+      thumbnailUrl: 'https://example.com/thumbnails/react-basic.png',
+      categoryId: '1',
+      level: 'BEGINNER',
+      createdAt: '2025-01-10T09:00:00Z',
+      updatedAt: '2025-01-20T09:00:00Z',
+      description: 'React를 처음 시작하는 분들을 위한 기초 강의입니다.',
+      chapters: [
+        {
+          id: 101,
+          chapterTitle: 'React 시작하기',
+          lessons: [
+            {
+              id: 1001,
+              lessonTitle: 'React란 무엇인가?',
+              isFreePreview: true,
+              lessonOrder: 1,
+              lessonTypeDisplayName: 'VIDEO',
+              videoUrl: 'https://example.com/videos/react-intro.mp4',
+              duration: '08:32',
+              quizQuestions: null,
+            },
+            {
+              id: 1002,
+              lessonTitle: 'JSX 이해하기',
+              isFreePreview: false,
+              lessonOrder: 2,
+              lessonTypeDisplayName: 'QUIZ',
+              videoUrl: null,
+              duration: null,
+              quizQuestions: [
+                {
+                  id: 1,
+                  question: 'JSX는 JavaScript 확장 문법이다.',
+                  correct: true,
+                  questionOrder: 1,
+                },
+                {
+                  id: 2,
+                  question: 'JSX는 브라우저에서 바로 실행된다.',
+                  correct: false,
+                  questionOrder: 2,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  };
   const state = await getLectureById(lectureId);
   return state;
 }
@@ -31,6 +91,13 @@ export async function getReviewByIdAction(
   lectureId: number,
   page: number,
 ): Promise<ActionState<any>> {
+  return {
+    success: true,
+    code: 'SUCCESS',
+    data: {
+      contents: [],
+    },
+  };
   const state = await getReviewById(lectureId, page);
   return state;
 }
