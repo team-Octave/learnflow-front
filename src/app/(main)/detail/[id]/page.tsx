@@ -1,4 +1,5 @@
 // src/app/(main)/detail/[id]/page.tsx
+// 강의 상세 페이지
 
 import LectureSummary from '@/features/lectures/components/detail/LectureSummary';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';
@@ -89,8 +90,11 @@ export default async function LectureDetailPage({
               </TabsList>
 
               {/* 커리큘럼 탭 */}
+              {/* TabsTrigger value="curriculum" 이 눌렸을 때 이 안의 내용에 curriculum만 화면에 보여주는 영역 */}
               <TabsContent value="curriculum" className="space-y-6">
-                {/* lecture.chapters! “여기서는 null 아니라고 내가 보장함” */}
+                {/* lecture.chapters! ““이 값은 null도 아니고 undefined도 아님,
+                    내가 책임지고 보장할게.
+                    그러니까 에러 내지 마.”” */}
                 <Curriculum
                   lectureId={lectureId}
                   curriculum={lecture.chapters!}
