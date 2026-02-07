@@ -21,7 +21,7 @@ export async function getLecturesAction(
 }
 
 // 강의 ID를 받아서 해당 강의 정보를 비동기로 가져온 뒤 그대로 반환하는 함수
-export async function getLectureByIdAction(
+export async function getLectureByIdAction(// Promise가 resolve되면 결과 타입은 ActionState<any>
   lectureId: number,
 ): Promise<ActionState<any>> {
   return {

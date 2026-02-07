@@ -89,9 +89,10 @@ export default async function LectureDetailPage({
               </TabsList>
 
               {/* 커리큘럼 탭 */}
+              {/* value="curriculum" : 이 값이 TabsTrigger의 value와 일치할 때만 이 내용이 보임 */}
               <TabsContent value="curriculum" className="space-y-6">
+                {/* lecture.chapters! “여기서는 null 아니라고 내가 보장함” */}
                 <Curriculum curriculum={lecture.chapters!} />
-                {/* <AISummaryBox /> */}
               </TabsContent>
 
               {/* 수강평 탭 */}
