@@ -3,7 +3,6 @@
 import LectureSummary from '@/features/lectures/components/detail/LectureSummary';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';
 import Reviews from '@/features/lectures/components/detail/Reviews';
-import ButtonApply from '@/features/lectures/components/detail/ButtonApply';
 import AverageReview from '@/features/lectures/components/detail/AverageReview';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
@@ -26,12 +25,14 @@ export default async function LectureDetailPage({
   const pageParam = getParam((await searchParams).page) || '1';
 
   const page = pageParam ? parseInt(pageParam) : 1;
+  const lectureId = parseInt(id);
 
   // 강의 데이터 불러오기
   const [lectureState, reviewState] = await Promise.all([
-    getLectureByIdAction(parseInt(id)),
-    getReviewByIdAction(parseInt(id), page),
+    getLectureByIdAction(lectureId),
+    getReviewByIdAction(lectureId, page),
   ]);
+
   if (!lectureState.success || !reviewState.success) {
     console.log(lectureState.message || reviewState.message);
     return notFound();
@@ -88,12 +89,11 @@ export default async function LectureDetailPage({
               </TabsList>
 
               {/* 커리큘럼 탭 */}
-              {/* value="curriculum" : 이 값이 TabsTrigger의 value와 일치할 때만 이 내용이 보임 */}
               <TabsContent value="curriculum" className="space-y-6">
                 {/* lecture.chapters! “여기서는 null 아니라고 내가 보장함” */}
                 <Curriculum
+                  lectureId={lectureId}
                   curriculum={lecture.chapters!}
-                  aiLessonSummaries={lecture.aiLessonSummaries ?? []}
                 />
               </TabsContent>
 

@@ -81,20 +81,6 @@ export async function getLectureByIdAction( // Promise가 resolve되면 결과 �
           ],
         },
       ],
-      // ai요약추가
-      aiLessonSummaries: [
-        {
-          lessonId: 1001, // VIDEO 레슨 id랑 매칭
-          title: 'React란 무엇인가?',
-          summary:
-            '이 강의에서는 Next.js 14의 핵심 개념인 App Router와 Server Components에 대해 다룹니다. 또한 기존 Pages Router와의 차이점, 그리고 새로운 라우팅 시스템이 가져오는 성능상의 이점을 실습을 통해 상세히 알아봅니다.',
-          keyTakeaways: [
-            'App Router의 기본 구조 이해',
-            'Server Actions를 활용한 데이터 처리',
-            'Streaming과 Suspense 활용법',
-          ],
-        },
-      ],
     },
   };
   const state = await getLectureById(lectureId);
@@ -128,3 +114,32 @@ export async function getLessonByIdAction(
   return state;
 }
 
+/**
+ * AI 강의 요약 조회 (Mock)
+ * GET /api/v2/lectures/{lectureId}/lessons/{lessonId}/ai-summary
+ */
+export async function getAiLessonSummaryAction(
+  lectureId: number,
+  lessonId: number,
+): Promise<ActionState<any>> {
+  return {
+    success: true,
+    code: 'SUCCESS',
+    data: {
+      lectureId,
+      lessonId,
+      title: 'Next.js App Router 개요',
+      summary:
+        '이 강의에서는 Next.js 14의 핵심 기능인 App Router 구조를 중심으로 파일 기반 라우팅, 레이아웃 시스템, 그리고 기존 Pages Router와의 차이점을 설명합니다.',
+      keyTakeaways: [
+        'App Router 기본 폴더 구조 이해',
+        'layout.tsx와 page.tsx 역할',
+        'Pages Router와의 차이점',
+      ],
+    },
+  };
+
+  // 실제 API 연동 시
+  // const state = await getAiLessonSummary(lectureId, lessonId);
+  // return state;
+}
