@@ -14,15 +14,19 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import type { Chapter } from '../../types';
+import type { AILessonSummary, Chapter } from '../../types';
 import Lesson from './Lesson';
 import AISummaryBox from './AISummaryBox';
 
 interface CurriculumProps {
   curriculum: Chapter[];
+  aiLessonSummaries: AILessonSummary[];
 }
 
-export default function Curriculum({ curriculum }: CurriculumProps) {
+export default function Curriculum({
+  curriculum,
+  aiLessonSummaries,
+}: CurriculumProps) {
   // 지금 사용자가 클릭한 레슨의 id를 저장, 처음엔 아무 것도 선택 안 했으니까 null
   const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
 
@@ -38,7 +42,6 @@ export default function Curriculum({ curriculum }: CurriculumProps) {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* 왼쪽: 목차 */}
         <div className="lg:flex-[7]">
-
           {/* 커리큘럼이 있을 때 / 없을 때 분기 */}
           {curriculum.length > 0 ? (
             <Accordion
@@ -60,14 +63,24 @@ export default function Curriculum({ curriculum }: CurriculumProps) {
 
                   <AccordionContent className="pb-4">
                     <div className="space-y-2 pt-2">
-                      {chapter.lessons.map((lesson) => (
-                        <Lesson
-                          key={lesson.id}
-                          lesson={lesson}
-                          isActive={selectedLessonId === lesson.id}
-                          onClick={() => setSelectedLessonId(lesson.id)}
-                        />
-                      ))}
+                      {chapter.lessons.map((lesson) => {
+                        const isVideo =
+                          lesson.lessonTypeDisplayName === 'VIDEO';
+
+                        return (
+                          <Lesson
+                            key={lesson.id}
+                            lesson={lesson}
+                            isActive={selectedLessonId === lesson.id}
+                            onClick={
+                              isVideo
+                                ? () => setSelectedLessonId(lesson.id)
+                                : undefined
+                            }
+                            disabled={!isVideo}
+                          />
+                        );
+                      })}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -83,7 +96,10 @@ export default function Curriculum({ curriculum }: CurriculumProps) {
         {/* 오른쪽: AI 요약 */}
         <div className="lg:flex-[3]">
           {/* AI 요약 박스 연결 : selectedLessonId 보고 판단 */}
-          <AISummaryBox selectedLessonId={selectedLessonId} />
+          <AISummaryBox
+            selectedLessonId={selectedLessonId}
+            aiLessonSummaries={aiLessonSummaries}
+          />
         </div>
       </div>
     </section>

@@ -12,7 +12,6 @@ import {
 } from '@/features/lectures/actions';
 import { notFound, redirect } from 'next/navigation';
 import { getParam } from '@/shared/utils';
-import AISummaryBox from '@/features/lectures/components/detail/AISummaryBox';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -92,7 +91,10 @@ export default async function LectureDetailPage({
               {/* value="curriculum" : 이 값이 TabsTrigger의 value와 일치할 때만 이 내용이 보임 */}
               <TabsContent value="curriculum" className="space-y-6">
                 {/* lecture.chapters! “여기서는 null 아니라고 내가 보장함” */}
-                <Curriculum curriculum={lecture.chapters!} />
+                <Curriculum
+                  curriculum={lecture.chapters!}
+                  aiLessonSummaries={lecture.aiLessonSummaries ?? []}
+                />
               </TabsContent>
 
               {/* 수강평 탭 */}

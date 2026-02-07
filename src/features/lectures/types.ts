@@ -1,4 +1,4 @@
-// lxp3/src/features/lectures/types.ts
+// src/features/lectures/types.ts
 
 // ---------------- 연동 후 사용 중인 타입 ---------------
 
@@ -46,6 +46,7 @@ export interface Lecture {
   updatedAt?: string; //   updatedAt 추가
   description: string;
   chapters: Chapter[] | null;
+  aiLessonSummaries?: AILessonSummary[]; //ai 요약추가
 }
 
 export interface QuizQuestion {

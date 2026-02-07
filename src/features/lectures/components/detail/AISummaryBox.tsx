@@ -1,18 +1,21 @@
-// features/lectures/components/detail/AISummaryBox.tsx
-//  (AI 영상 요약 부분)
-
 'use client';
 
 import { Sparkles, PlayCircle } from 'lucide-react';
+import type { AILessonSummary } from '../../types';
 
 interface AISummaryBoxProps {
-  // 레슨 클릭 전 → null
-  // 레슨 클릭 후 → 1, 2, 3 같은 숫자
   selectedLessonId: number | null;
+  aiLessonSummaries: AILessonSummary[];
 }
 
-// { selectedLessonId } selectedLessonId를 props로 받음
-export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
+export default function AISummaryBox({
+  selectedLessonId,
+  aiLessonSummaries,
+}: AISummaryBoxProps) {
+  const matched = selectedLessonId
+    ? aiLessonSummaries.find((s) => s.lessonId === selectedLessonId)
+    : null;
+
   return (
     <div className="sticky top-24 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm">
       <div className="flex items-center gap-2 mb-4 text-yellow-400">
@@ -20,18 +23,23 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
         <h3 className="font-bold text-lg text-white">AI 영상 요약</h3>
       </div>
 
-{/*  조건부 렌더링 {selectedLessonId ? ( selectedLessonId가 있을때 ) : ( selectedLessonId없을때 )} */}
-      {selectedLessonId ? (
+      {selectedLessonId && matched ? (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
             <h4 className="font-medium text-indigo-300 mb-2 flex items-center gap-2">
               <PlayCircle className="w-4 h-4" />
-              선택된 레슨 요약
+              {matched.title}
             </h4>
+
             <p className="text-sm text-zinc-300 leading-relaxed">
-              {/* TODO: 나중에 API 연결해서 내용 넣기 */}
-              레슨 요약이 여기에 표시됩니다.
+              {matched.summary}
             </p>
+
+            <ul className="mt-3 list-disc pl-5 text-sm text-zinc-300 space-y-1">
+              {matched.keyTakeaways.map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
+            </ul>
           </div>
         </div>
       ) : (
