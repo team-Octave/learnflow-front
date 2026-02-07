@@ -17,39 +17,31 @@ export default function AISummaryBox({
   selectedLessonId,
 }: AISummaryBoxProps) {
   const [loading, setLoading] = useState(false);
-  const [showLoading, setShowLoading] = useState(false); // ✅ 1초 이상일 때만 true
   const [summary, setSummary] = useState<AILessonSummary | null>(null);
   const [notReady, setNotReady] = useState(false);
 
   useEffect(() => {
     let alive = true;
-    let timer: ReturnType<typeof setTimeout> | null = null;
 
     async function load() {
       if (!selectedLessonId) {
         setSummary(null);
         setNotReady(false);
         setLoading(false);
-        setShowLoading(false);
         return;
       }
 
-      // ✅ 새 레슨 클릭 시: 일단 상태 초기화
+      // 새 레슨 선택 시: 로딩 시작, 결과 초기화
       setLoading(true);
-      setShowLoading(false);
-      setNotReady(false);
       setSummary(null);
-
-      // ✅ 1초 이상 로딩이 지속될 때만 로딩 문구 표시
-      timer = setTimeout(() => {
-        if (alive) setShowLoading(true);
-      }, 1000);
+      setNotReady(false);
 
       try {
         const state = await getAiLessonSummaryAction(
           lectureId,
           selectedLessonId,
         );
+
         if (!alive) return;
 
         if (!state.success || !state.data) {
@@ -68,14 +60,7 @@ export default function AISummaryBox({
         setNotReady(true);
       } finally {
         if (!alive) return;
-
         setLoading(false);
-        setShowLoading(false);
-
-        if (timer) {
-          clearTimeout(timer);
-          timer = null;
-        }
       }
     }
 
@@ -83,7 +68,6 @@ export default function AISummaryBox({
 
     return () => {
       alive = false;
-      if (timer) clearTimeout(timer);
     };
   }, [lectureId, selectedLessonId]);
 
@@ -94,7 +78,7 @@ export default function AISummaryBox({
         <h3 className="font-bold text-lg text-white">AI 영상 요약</h3>
       </div>
 
-      {/* ✅ 레슨 선택 전 */}
+      {/* 레슨 선택 전 */}
       {!selectedLessonId ? (
         <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
           <div className="p-3 bg-zinc-800/50 rounded-full">
@@ -109,20 +93,6 @@ export default function AISummaryBox({
             </p>
           </div>
         </div>
-      ) : loading ? (
-        // ✅ 로딩 중: 1초 넘기 전엔 아무 UI도 안 바뀌게(깜빡임 방지)
-        showLoading ? (
-          <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
-            <p className="text-sm text-zinc-300">요약을 불러오는 중입니다...</p>
-          </div>
-        ) : (
-          // 1초 전까지는 빈 자리만 유지 (원하면 스켈레톤 넣어도 됨)
-          <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
-            <p className="text-sm text-zinc-300 opacity-0">
-              요약을 불러오는 중입니다...
-            </p>
-          </div>
-        )
       ) : summary ? (
         // ✅ 성공: 요약 표시
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -143,20 +113,16 @@ export default function AISummaryBox({
             </ul>
           </div>
         </div>
-      ) : notReady ? (
-        // ✅ 로딩 끝났는데 실패/없음일 때만
+      ) : !loading && notReady ? (
+        // ✅ 로딩 끝난 후 실패/없음일 때만 표시
         <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
           <p className="text-sm text-zinc-300">
-            요약이 아직 생성되지 않았습니다.
+            해당 레슨에 대한 요약이 아직 생성되지 않았습니다
           </p>
         </div>
       ) : (
-        // ✅ (예외) 여기까지 올 일 거의 없음: 안전망
-        <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
-          <p className="text-sm text-zinc-300">
-            요약이 아직 생성되지 않았습니다.
-          </p>
-        </div>
+        // ✅ 로딩 중 UI는 삭제 → 아무것도 안 보이게(빈 영역)
+        <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg" />
       )}
     </div>
   );
