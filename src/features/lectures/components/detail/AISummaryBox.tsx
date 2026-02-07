@@ -3,20 +3,24 @@
 
 'use client';
 
-import { Mic, PlayCircle } from 'lucide-react';
+import { Sparkles, PlayCircle } from 'lucide-react';
 
-interface Props {
+interface AISummaryBoxProps {
+  // 레슨 클릭 전 → null
+  // 레슨 클릭 후 → 1, 2, 3 같은 숫자
   selectedLessonId: number | null;
 }
 
-export default function AISummaryBox({ selectedLessonId }: Props) {
+// { selectedLessonId } selectedLessonId를 props로 받음
+export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
   return (
     <div className="sticky top-24 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm">
-      <div className="flex items-center gap-2 mb-4 text-indigo-400">
-        <Mic className="w-5 h-5" />
+      <div className="flex items-center gap-2 mb-4 text-yellow-400">
+        <Sparkles className="w-5 h-5" />
         <h3 className="font-bold text-lg text-white">AI 영상 요약</h3>
       </div>
 
+{/*  조건부 렌더링 {selectedLessonId ? ( selectedLessonId가 있을때 ) : ( selectedLessonId없을때 )} */}
       {selectedLessonId ? (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
