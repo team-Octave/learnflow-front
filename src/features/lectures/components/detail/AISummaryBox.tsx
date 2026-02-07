@@ -94,7 +94,6 @@ export default function AISummaryBox({
           </div>
         </div>
       ) : summary ? (
-        // ✅ 성공: 요약 표시
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
             <h4 className="font-medium text-indigo-300 mb-2 flex items-center gap-2">
@@ -105,23 +104,35 @@ export default function AISummaryBox({
             <p className="text-sm text-zinc-300 leading-relaxed">
               {summary.summary}
             </p>
+          </div>
 
-            <ul className="mt-3 list-disc pl-5 text-sm text-zinc-300 space-y-1">
-              {summary.keyTakeaways.map((t, i) => (
-                <li key={i}>{t}</li>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-medium text-zinc-500 uppercase tracking-wider">
+              Key Takeaways
+            </div>
+
+            <ul className="space-y-2">
+              {summary.keyTakeaways.map((item, i) => (
+                <li
+                  key={i}
+                  className="text-sm text-zinc-400 flex items-start gap-2"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 mt-1.5 shrink-0" />
+                  {item}
+                </li>
               ))}
             </ul>
           </div>
         </div>
       ) : !loading && notReady ? (
-        // ✅ 로딩 끝난 후 실패/없음일 때만 표시
+        // 로딩 끝난 후 실패/없음일 때만 표시
         <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
           <p className="text-sm text-zinc-300">
             해당 레슨에 대한 요약이 아직 생성되지 않았습니다
           </p>
         </div>
       ) : (
-        // ✅ 로딩 중 UI는 삭제 → 아무것도 안 보이게(빈 영역)
+        // 로딩 중 UI는 삭제 → 아무것도 안 보이게(빈 영역)
         <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg" />
       )}
     </div>
