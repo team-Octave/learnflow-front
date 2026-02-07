@@ -93,7 +93,8 @@ export default function AISummaryBox({
             </p>
           </div>
         </div>
-      ) : summary ? (
+      ) : loading ? // ✅ 로딩 중엔 아무것도 렌더링하지 않음(깜빡이는 보라 박스 제거)
+      null : summary ? (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
             <h4 className="font-medium text-indigo-300 mb-2 flex items-center gap-2">
@@ -124,17 +125,14 @@ export default function AISummaryBox({
             </ul>
           </div>
         </div>
-      ) : !loading && notReady ? (
+      ) : notReady ? (
         // 로딩 끝난 후 실패/없음일 때만 표시
         <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
           <p className="text-sm text-zinc-300">
             해당 레슨에 대한 요약이 아직 생성되지 않았습니다
           </p>
         </div>
-      ) : (
-        // 로딩 중 UI는 삭제 → 아무것도 안 보이게(빈 영역)
-        <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg" />
-      )}
+      ) : null}
     </div>
   );
 }
