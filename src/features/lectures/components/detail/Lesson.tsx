@@ -8,7 +8,7 @@ import type { Lesson as LessonType } from '../../types';
 interface LessonProps {
   lesson: LessonType;
   isActive?: boolean;
-  onClick?: () => void; // VIDEO만 내려오고 QUIZ는 undefined
+  onClick?: () => void; // VIDEO만 내려옴
 }
 
 export default function Lesson({
@@ -27,12 +27,11 @@ export default function Lesson({
         flex items-center justify-between
         p-3 rounded-md
         transition-colors
-        group
         text-left
         border
-        cursor-pointer
+        ${isVideo ? 'cursor-pointer group' : 'cursor-default'}
         border-transparent
-        hover:bg-zinc-800/50
+        ${isVideo && !isActive ? 'hover:bg-zinc-800/50' : ''}
         ${isActive ? 'bg-indigo-500/10 border-indigo-500/20' : ''}
       `}
     >
@@ -46,20 +45,16 @@ export default function Lesson({
             }`}
           />
         ) : (
-          <FileQuestion
-            className={`w-4 h-4 transition-colors ${
-              isActive
-                ? 'text-indigo-400'
-                : 'text-zinc-500 group-hover:text-indigo-400'
-            }`}
-          />
+          <FileQuestion className="w-4 h-4 text-zinc-500" />
         )}
 
         <span
           className={`text-sm transition-colors ${
             isActive
               ? 'text-white font-medium'
-              : 'text-zinc-300 group-hover:text-white'
+              : isVideo
+                ? 'text-zinc-300 group-hover:text-white'
+                : 'text-zinc-300'
           }`}
         >
           {lesson.lessonTitle}
