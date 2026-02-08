@@ -16,7 +16,9 @@ export default function AISummaryBox({
   lectureId,
   selectedLessonId,
 }: AISummaryBoxProps) {
+  // useState(false) loading: 처음부터 로딩 중이면 안 되니까, 일단 "로딩 아님(false)" 상태로 시작
   const [loading, setLoading] = useState(false);
+  // 초기값: null (처음에는 요약 데이터가 없기 때문)
   const [summary, setSummary] = useState<AILessonSummary | null>(null);
   const [notReady, setNotReady] = useState(false);
 
@@ -93,7 +95,7 @@ export default function AISummaryBox({
             </p>
           </div>
         </div>
-      ) : loading ? // ✅ 로딩 중엔 아무것도 렌더링하지 않음(깜빡이는 보라 박스 제거)
+      ) : loading ? // 로딩 중엔 아무것도 렌더링하지 않음(깜빡이는 보라 박스 제거)
       null : summary ? (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">

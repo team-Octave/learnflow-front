@@ -32,6 +32,7 @@ export default function Curriculum({ lectureId, curriculum }: CurriculumProps) {
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* 왼쪽: 목차 */}
+        {/* 커리큘럼이 있을 때 vs 없을 때 */}
         <div className="lg:flex-[7]">
           {curriculum.length > 0 ? (
             <Accordion

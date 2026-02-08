@@ -51,10 +51,10 @@ export default function Lesson({
         <span
           className={`text-sm transition-colors ${
             isActive
-              ? 'text-white font-medium'
+              ? 'text-white font-medium' //선택된 레슨인가?
               : isVideo
-                ? 'text-zinc-300 group-hover:text-white'
-                : 'text-zinc-300'
+                ? 'text-zinc-300 group-hover:text-white' //선택 안 됐고, VIDEO 레슨인가?
+                : 'text-zinc-300' //선택 안 됐고, VIDEO도 아님 (QUIZ 등)
           }`}
         >
           {lesson.lessonTitle}
