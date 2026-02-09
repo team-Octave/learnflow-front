@@ -13,8 +13,8 @@ export default async function MyPage() {
   const user = state.data!;
 
   return (
-    <div className="w-full flex justify-center my-12">
-      <div className="w-full max-w-2xl flex flex-col items-center">
+    <div className="w-full flex justify-center">
+      <div className="w-full flex flex-col items-center">
         <h1 className="text-2xl font-bold text-white mb-8 w-full px-2">
           내 정보
         </h1>

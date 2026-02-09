@@ -1,3 +1,5 @@
+import MyPageSidebar from '@/components/common/MyPageSidebar';
+
 export default function MyPageLayout({
   children,
 }: Readonly<{
@@ -5,7 +7,7 @@ export default function MyPageLayout({
 }>) {
   return (
     <div className="flex justify-center p-10 gap-10 max-w-7xl w-full">
-      {/* Sidebar 자리 */}
+      <MyPageSidebar />
       {children}
     </div>
   );
