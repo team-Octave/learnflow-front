@@ -14,11 +14,10 @@ import Lesson from './Lesson';
 import AISummaryBox from './AISummaryBox';
 
 interface CurriculumProps {
-  lectureId: number;
   curriculum: Chapter[];
 }
 
-export default function Curriculum({ lectureId, curriculum }: CurriculumProps) {
+export default function Curriculum({ curriculum }: CurriculumProps) {
   const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
 
   return (
@@ -33,7 +32,7 @@ export default function Curriculum({ lectureId, curriculum }: CurriculumProps) {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* 왼쪽: 목차 */}
         {/* 커리큘럼이 있을 때 vs 없을 때 */}
-        <div className="lg:flex-[7]">
+        <div className="lg:flex-7">
           {curriculum.length > 0 ? (
             <Accordion
               type="multiple"
@@ -85,11 +84,8 @@ export default function Curriculum({ lectureId, curriculum }: CurriculumProps) {
         </div>
 
         {/* 오른쪽: AI 요약 */}
-        <div className="lg:flex-[3]">
-          <AISummaryBox
-            lectureId={lectureId}
-            selectedLessonId={selectedLessonId}
-          />
+        <div className="lg:flex-3">
+          <AISummaryBox selectedLessonId={selectedLessonId} />
         </div>
       </div>
     </section>

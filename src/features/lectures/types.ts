@@ -91,16 +91,27 @@ export type LessonType = 'VIDEO' | 'QUIZ';
 
 export type Sort = 'LATEST' | 'POPULAR' | 'RATING';
 
+// ai 강의요약안내
+export type AISummaryStatus =
+  | 'COMPLETED'
+  | 'PROCESSING'
+  | 'READY'
+  | 'FAILED'
+  | 'NOT_FOUND';
+
+export type AILessonSummaryContent = {
+  overview: string;
+  keyTakeaways: string[];
+};
+
+export type AILessonSummaryResponse = {
+  lessonId: number;
+  status: AISummaryStatus;
+  content: AILessonSummaryContent | null;
+};
+
 export type AILessonSummary = {
   lessonId: number;
-  title: string;
-  summary: string;
-  keyTakeaways: string[]; //문자열 배열임 (string[])
+  status: AISummaryStatus;
+  content: AILessonSummaryContent | null;
 };
-/*
-keyTakeaways: [
-  "useEffect는 렌더링 이후 실행된다",
-  "의존성 배열에 따라 실행 횟수가 달라진다",
-  "cleanup 함수로 정리 작업을 할 수 있다"
-]
-  */

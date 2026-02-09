@@ -1,5 +1,5 @@
 // src/services/lectures.service.ts
-import type { Query } from '@/features/lectures/types';
+import type { Query, AILessonSummaryResponse } from '@/features/lectures/types';
 import { authFetch, commonFetch } from '@/shared/api';
 
 export async function getLectures({ category, level, sort, page }: Query) {
@@ -26,7 +26,7 @@ export async function getReviewById(lectureId: number, page: number) {
 }
 
 /**
- * ✅ 레슨 단건 조회 (V2)
+ *  레슨 단건 조회 (V2)
  * GET /api/v2/lectures/{lectureId}/lessons/{lessonId}
  */
 export async function getLessonById(lectureId: number, lessonId: number) {
@@ -34,4 +34,11 @@ export async function getLessonById(lectureId: number, lessonId: number) {
     `/api/v2/lectures/${lectureId}/lessons/${lessonId}`,
   );
   return response.json();
+}
+
+// ai 강의 요약 안내
+export async function getAILessonSummary(lessonId: number) {
+  const res = await commonFetch(`/api/ai/summary/${lessonId}`);
+
+  return res.json();
 }

@@ -1,65 +1,55 @@
-// src/features/lectures/components/detail/AISummaryBox.tsx
-
 'use client';
 
 import { useEffect, useState } from 'react';
 import { Sparkles, PlayCircle } from 'lucide-react';
-import type { AILessonSummary } from '../../types';
-import { getAiLessonSummaryAction } from '@/features/lectures/actions';
+import type { AILessonSummaryResponse } from '../../types';
+import { getAILessonSummaryAction } from '@/features/lectures/actions';
 
 interface AISummaryBoxProps {
-  lectureId: number;
   selectedLessonId: number | null;
 }
 
-export default function AISummaryBox({
-  lectureId,
-  selectedLessonId,
-}: AISummaryBoxProps) {
-  // useState(false) loading: 처음부터 로딩 중이면 안 되니까, 일단 "로딩 아님(false)" 상태로 시작
+export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
   const [loading, setLoading] = useState(false);
-  // 초기값: null (처음에는 요약 데이터가 없기 때문)
-  const [summary, setSummary] = useState<AILessonSummary | null>(null);
-  const [notReady, setNotReady] = useState(false);
+  const [data, setData] = useState<AILessonSummaryResponse | null>(null);
+  const [showMessage, setShowMessage] = useState(false); // FAILED/NOT_FOUND만 노출
 
   useEffect(() => {
     let alive = true;
 
     async function load() {
       if (!selectedLessonId) {
-        setSummary(null);
-        setNotReady(false);
+        setData(null);
+        setShowMessage(false);
         setLoading(false);
         return;
       }
 
-      // 새 레슨 선택 시: 로딩 시작, 결과 초기화
       setLoading(true);
-      setSummary(null);
-      setNotReady(false);
+      setData(null);
+      setShowMessage(false);
 
       try {
-        const state = await getAiLessonSummaryAction(
-          lectureId,
-          selectedLessonId,
-        );
-
+        const state = await getAILessonSummaryAction(selectedLessonId);
         if (!alive) return;
 
         if (!state.success || !state.data) {
-          setNotReady(true);
+          setShowMessage(true);
           return;
         }
 
-        setSummary({
-          lessonId: selectedLessonId,
-          title: state.data.title,
-          summary: state.data.summary,
-          keyTakeaways: state.data.keyTakeaways ?? [],
-        });
+        setData(state.data);
+
+        //  READY/PROCESSING은 아무 UI도 안 띄움
+        if (
+          state.data.status === 'FAILED' ||
+          state.data.status === 'NOT_FOUND'
+        ) {
+          setShowMessage(true);
+        }
       } catch {
         if (!alive) return;
-        setNotReady(true);
+        setShowMessage(true);
       } finally {
         if (!alive) return;
         setLoading(false);
@@ -67,20 +57,22 @@ export default function AISummaryBox({
     }
 
     load();
-
     return () => {
       alive = false;
     };
-  }, [lectureId, selectedLessonId]);
+  }, [selectedLessonId]);
+
+  const isCompleted = data?.status === 'COMPLETED' && data.content;
+  const shouldShowEmptyMessage =
+    !loading && selectedLessonId && showMessage && !isCompleted;
 
   return (
-    <div className="sticky top-24 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm">
-      <div className="flex items-center gap-2 mb-4 text-yellow-400">
-        <Sparkles className="w-5 h-5" />
+    <div className="sticky top-24 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm min-h-80">
+      <div className="flex items-center gap-2 mb-4 text-yellow-400 ">
+        <Sparkles className="w-5 h-5 fill-yellow-400" />
         <h3 className="font-bold text-lg text-white">AI 영상 요약</h3>
       </div>
 
-      {/* 레슨 선택 전 */}
       {!selectedLessonId ? (
         <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
           <div className="p-3 bg-zinc-800/50 rounded-full">
@@ -95,17 +87,16 @@ export default function AISummaryBox({
             </p>
           </div>
         </div>
-      ) : loading ? // 로딩 중엔 아무것도 렌더링하지 않음(깜빡이는 보라 박스 제거)
-      null : summary ? (
+      ) : loading ? null : isCompleted ? (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
             <h4 className="font-medium text-indigo-300 mb-2 flex items-center gap-2">
               <PlayCircle className="w-4 h-4" />
-              {summary.title}
+              AI 요약
             </h4>
 
             <p className="text-sm text-zinc-300 leading-relaxed">
-              {summary.summary}
+              {data!.content!.overview}
             </p>
           </div>
 
@@ -115,7 +106,7 @@ export default function AISummaryBox({
             </div>
 
             <ul className="space-y-2">
-              {summary.keyTakeaways.map((item, i) => (
+              {data!.content!.keyTakeaways.map((item, i) => (
                 <li
                   key={i}
                   className="text-sm text-zinc-400 flex items-start gap-2"
@@ -127,8 +118,7 @@ export default function AISummaryBox({
             </ul>
           </div>
         </div>
-      ) : notReady ? (
-        // 로딩 끝난 후 실패/없음일 때만 표시
+      ) : shouldShowEmptyMessage ? (
         <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
           <p className="text-sm text-zinc-300">
             해당 레슨에 대한 요약이 아직 생성되지 않았습니다
