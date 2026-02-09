@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import type { MembershipInfo } from '../types';
+import type { MembershipInfoResponse } from '../types';
 import { formatDateTime } from '@/shared/utils';
 
 // 멤버십 정보가 있으면 객체, 없으면 null**을 내려주는 구조
 interface MembershipInfoProps {
-  data: MembershipInfo | null;
+  data: MembershipInfoResponse | null;
 }
 
 export default function MembershipInfo({ data }: MembershipInfoProps) {
