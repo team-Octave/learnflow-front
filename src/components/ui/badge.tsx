@@ -33,6 +33,11 @@ const badgeVariants = cva(
 
         published: 'bg-green-500/15 text-green-500 border-green-500/30',
         submitted: 'bg-yellow-500/15 text-yellow-500 border-yellow-500/30',
+
+        // 결제 상태 추가
+        paymentDone: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+        paymentCanceled: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+        paymentAborted: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
       },
     },
     defaultVariants: {

@@ -48,7 +48,14 @@ export async function getPaymentHistoryAction(): Promise<
         paymentDate: '2026-02-07T11:45:39Z',
         planType: '1개월',
         amount: 9900,
-        status: 'DONE',
+        status: 'CANCELED',
+      },
+      {
+        id: 3,
+        paymentDate: '2026-03-07T11:45:39Z',
+        planType: '1개월',
+        amount: 9900,
+        status: 'ABORTED',
       },
     ],
   };

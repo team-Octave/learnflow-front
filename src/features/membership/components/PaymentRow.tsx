@@ -2,22 +2,28 @@
 
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import type { PaymentHistoryResponse } from '../types';
+import type { PaymentHistoryResponse, PaymentStatus } from '../types';
 
 interface PaymentRowProps {
   payment: PaymentHistoryResponse;
 }
 
+const statusLabel: Record<PaymentStatus, string> = {
+  DONE: '결제 완료',
+  CANCELED: '결제 취소',
+  ABORTED: '결제 실패',
+};
+
+const statusVariant: Record<
+  PaymentStatus,
+  'paymentDone' | 'paymentCanceled' | 'paymentAborted'
+> = {
+  DONE: 'paymentDone',
+  CANCELED: 'paymentCanceled',
+  ABORTED: 'paymentAborted',
+};
+
 export default function PaymentRow({ payment }: PaymentRowProps) {
-  const isDone = payment.status === 'DONE';
-
-  const statusText =
-    payment.status === 'DONE'
-      ? '결제완료'
-      : payment.status === 'CANCELED'
-        ? '취소'
-        : '실패';
-
   return (
     <TableRow className="border-zinc-800 hover:bg-zinc-800/30">
       <TableCell className="text-white">{payment.paymentDate}</TableCell>
@@ -26,15 +32,8 @@ export default function PaymentRow({ payment }: PaymentRowProps) {
         {payment.amount.toLocaleString()}원
       </TableCell>
       <TableCell>
-        <Badge
-          variant={isDone ? 'default' : 'secondary'}
-          className={
-            isDone
-              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-              : 'bg-zinc-500/20 text-zinc-300 border-zinc-500/30'
-          }
-        >
-          {statusText}
+        <Badge variant={statusVariant[payment.status]}>
+          {statusLabel[payment.status]}
         </Badge>
       </TableCell>
     </TableRow>
