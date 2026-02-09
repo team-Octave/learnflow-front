@@ -41,18 +41,19 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
 
         <div className="flex flex-col justify-center flex-1 space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge
-              variant="secondary"
-              className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20"
-            >
-              {CATEGORY_MAP[audit.categoryId]}
-            </Badge>
+            <Badge variant={'default'}>{CATEGORY_MAP[audit.categoryId]}</Badge>
 
             <Badge
               variant={audit.level as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'}
             >
               {levelText}
             </Badge>
+
+            {audit.paymentType === 'PAID' ? (
+              <Badge variant={'membership'}>멤버십</Badge>
+            ) : (
+              <Badge variant={'free'}>무료</Badge>
+            )}
           </div>
 
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 leading-tight">

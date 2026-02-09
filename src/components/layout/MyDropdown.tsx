@@ -23,19 +23,23 @@ import { useRouter } from 'next/navigation';
 import { logoutAction } from '@/features/auth/actions';
 import { useTransition } from 'react';
 import { User } from '@/features/auth/types';
+import { Badge } from '../ui/badge';
 
 interface MyDropdownProps {
-  user: Pick<User, 'email' | 'nickname' | 'role'>;
+  user: Pick<
+    User,
+    | 'email'
+    | 'nickname'
+    | 'role'
+    | 'isMembershipActive'
+    | 'membershipExpiryDate'
+  >;
 }
 
 export default function MyDropdown({ user }: MyDropdownProps) {
   const router = useRouter();
   const { clearUser } = useUserStore();
   const [isPending, startTransition] = useTransition();
-
-  // 관리자 메뉴 확인을 위한 가짜 역할
-  // 실제 사용에서는 user.role로 접근
-  const mockRole = 'ADMIN' as 'ADMIN' | 'MEMBER';
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -72,8 +76,13 @@ export default function MyDropdown({ user }: MyDropdownProps) {
         ) : (
           <>
             <DropdownMenuLabel>
-              <div>{user.nickname}</div>
-              <div className="text-xs text-zinc-400">{user.email}</div>
+              <div className="flex gap-1 items-center">
+                <div>{user.nickname}</div>
+                {user.isMembershipActive && (
+                  <Badge variant={'membership'}>멤버십</Badge>
+                )}
+              </div>
+              <div className="mt-1 text-xs text-zinc-400">{user.email}</div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>

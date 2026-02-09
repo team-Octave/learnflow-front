@@ -1,6 +1,4 @@
-import { Category, Chapter, LessonType, Level } from '../lectures/types';
-
-// --------------- 수정 후 -----------------
+import { Category, Chapter, Level, Payment } from '../lectures/types';
 
 export type LectureStatus =
   | 'PUBLISHED'
@@ -13,6 +11,7 @@ export interface BasicInfo {
   categoryId: Category | '';
   level: Level | '';
   description: string;
+  paymentType: Payment;
   file: File | null;
 }
 export interface CreatorLecture {
@@ -31,6 +30,7 @@ export interface CreatorLecture {
   createdAt: string;
   rejectCategories?: string[];
   rejectReason?: string;
+  paymentType: Payment;
 }
 
 // 폼 관련 타입은 schemas.ts에서 통합 관리

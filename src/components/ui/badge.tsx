@@ -10,15 +10,12 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          'border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90',
+          'border-primary/30 bg-primary/15  text-primary [a&]:hover:bg-primary/90',
         secondary:
           'border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90',
-        destructive:
-          'border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-        outline:
-          'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
+        destructive: 'bg-red-500/15 text-red-500 border-red-500/30',
+        outline: 'bg-zinc-500/15 text-zinc-500 border-zinc-500/30',
 
-        // level 추가
         BEGINNER: 'bg-emerald-900/30 text-emerald-300 border-emerald-800',
         INTERMEDIATE: 'bg-yellow-900/30 text-yellow-300 border-yellow-800',
         ADVANCED: 'bg-red-900/30 text-red-300 border-red-800',
@@ -30,6 +27,12 @@ const badgeVariants = cva(
         // 정답 o x 표시 추가
         O: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30 dark:text-emerald-400',
         X: 'bg-rose-500/15 text-rose-600 border-rose-500/30 dark:text-rose-400',
+
+        free: 'bg-green-500/15 text-green-500 border-green-500/30',
+        membership: 'bg-pink-500/15 text-pink-500 border-pink-500/30',
+
+        published: 'bg-green-500/15 text-green-500 border-green-500/30',
+        submitted: 'bg-yellow-500/15 text-yellow-500 border-yellow-500/30',
       },
     },
     defaultVariants: {

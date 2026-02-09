@@ -22,8 +22,9 @@ export default function LectureTable({ lecturesData }: LectureTableProps) {
         <TableHeader>
           <TableRow>
             <TableHead className="min-w-40 w-[10%]">썸네일</TableHead>
-            <TableHead className="w-[40%]">강의명</TableHead>
+            <TableHead className="w-[30%]">강의명</TableHead>
             <TableHead>카테고리</TableHead>
+            <TableHead>강의 유형</TableHead>
             <TableHead>상태</TableHead>
             <TableHead>수강생</TableHead>
             <TableHead>평점</TableHead>
@@ -37,7 +38,7 @@ export default function LectureTable({ lecturesData }: LectureTableProps) {
         </TableBody>
       </Table>
       <CreatorPagination
-        currentPage={lecturesData.pageable.pageNumber + 1}
+        currentPage={lecturesData.number + 1}
         totalPages={lecturesData.totalPages}
       />
     </>

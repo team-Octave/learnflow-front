@@ -16,8 +16,8 @@ export default function LectureCard({ lecture }: LectureCardProps) {
     lecture.level === 'BEGINNER'
       ? '초급'
       : lecture.level === 'INTERMEDIATE'
-      ? '중급'
-      : '고급';
+        ? '중급'
+        : '고급';
 
   return (
     <Link href={`/detail/${lecture.id}`} className="group">
@@ -67,15 +67,22 @@ export default function LectureCard({ lecture }: LectureCardProps) {
         </div>
 
         {/* 별점, 수강생수 */}
-        <div className="p-4 pt-0 flex items-center gap-2 mt-auto">
-          <div className="flex items-center gap-1">
-            <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-            <span>{lecture.ratingAverage.toFixed(1)}</span>
+        <div className="flex justify-between p-4 pt-0 mt-auto">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+              <span>{lecture.ratingAverage.toFixed(1)}</span>
+            </div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Users className="w-3 h-3" />
+              <span>{lecture.enrollmentCount.toLocaleString()}명</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Users className="w-3 h-3" />
-            <span>{lecture.enrollmentCount.toLocaleString()}명</span>
-          </div>
+          {lecture.paymentType === 'PAID' ? (
+            <Badge variant={'membership'}>멤버십</Badge>
+          ) : (
+            <Badge variant={'free'}>무료</Badge>
+          )}
         </div>
       </div>
     </Link>

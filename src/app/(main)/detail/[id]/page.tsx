@@ -92,9 +92,7 @@ export default async function LectureDetailPage({
               {/* 커리큘럼 탭 */}
               {/* TabsTrigger value="curriculum" 이 눌렸을 때 이 안의 내용에 curriculum만 화면에 보여주는 영역 */}
               <TabsContent value="curriculum" className="space-y-6">
-                {/* lecture.chapters! ““이 값은 null도 아니고 undefined도 아님,
-                    내가 책임지고 보장할게.
-                    그러니까 에러 내지 마.”” */}
+                {/* lecture.chapters! null이나 undefined가 절대 아님을 선언 */}
                 <Curriculum
                   lectureId={lectureId}
                   curriculum={lecture.chapters!}
