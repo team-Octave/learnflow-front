@@ -2,10 +2,10 @@
 
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import type { PaymentHistory } from '../types';
+import type { PaymentHistoryResponse } from '../types';
 
 interface PaymentRowProps {
-  payment: PaymentHistory;
+  payment: PaymentHistoryResponse;
 }
 
 export default function PaymentRow({ payment }: PaymentRowProps) {

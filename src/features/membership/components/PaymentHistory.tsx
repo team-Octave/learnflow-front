@@ -8,10 +8,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import PaymentRow from './PaymentRow';
-import { MembershipInfo } from '../types';
+import { MembershipInfoResponse } from '../types';
 
 interface PaymentHistoryProps {
-  data: MembershipInfo | null;
+  data: MembershipInfoResponse | null;
 }
 
 export default function PaymentHistory({ data }: PaymentHistoryProps) {
