@@ -1,8 +1,8 @@
 // src/app/(main)/mypage/membership/page.tsx
 
+import { notFound } from 'next/navigation';
 import { getPaymentHistoryAction } from '@/features/membership/actions';
 import { getUserAction } from '@/features/auth/actions';
-
 import MembershipInfo from '@/features/membership/components/MembershipInfo';
 import PaymentHistory from '@/features/membership/components/PaymentHistory';
 
@@ -17,10 +17,22 @@ export default async function MembershipPage() {
     getPaymentHistoryAction(),
   ]);
 
-  //  success라도 data?: any 일 수 있으니 null로 보정
-  const user = userState.success ? (userState.data ?? null) : null;
+  //  실패 처리 로직
+  if (!userState.success) {
+    console.log(userState.message);
+    return notFound();
+  }
 
-  //  membershipExpiryDate가 있을 때만 date 필드 주입
+  // 결제내역은 "페이지 자체"를 막을지, "결제내역만 비우고 진행"할지 선택 가능
+  // MyLearningPage 스타일대로라면 notFound()가 깔끔함.
+  if (!paymentState.success) {
+    console.log(paymentState.message);
+    return notFound();
+  }
+
+  //  여기부터는 성공이 보장됨
+  const user = userState.data ?? null;
+
   const membershipData: MembershipInfoResponse | null = user?.isMembershipActive
     ? {
         planType: '프리미엄', // UI용 mock (나중에 API 연결되면 교체)
@@ -34,9 +46,7 @@ export default async function MembershipPage() {
       }
     : null;
 
-  const paymentData: PaymentHistoryResponse[] = paymentState.success
-    ? (paymentState.data ?? [])
-    : [];
+  const paymentData: PaymentHistoryResponse[] = paymentState.data ?? [];
 
   return (
     <div className="w-full flex justify-center">
