@@ -54,15 +54,6 @@ export async function logoutAction() {
 }
 
 export async function getUserAction(): Promise<ActionState<any>> {
-  return {
-    success: true,
-    code: 'SUCCESS',
-    data: {
-      nickname: '세윤',
-      email: 'seun0714@naver.com',
-      role: 'MEMBER',
-    },
-  };
   const state = await getUser();
   return state;
 }
