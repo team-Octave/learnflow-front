@@ -1,6 +1,6 @@
 // src/features/audit/types.ts
 
-import { Category } from '../lectures/types';
+import { Category, Payment } from '../lectures/types';
 
 export type AuditApprovalItem = {
   approvalId: number;
@@ -52,6 +52,7 @@ export type ApprovalDetail = {
   categoryId: Category;
   thumbnailUrl: string | null;
   chapters: ApprovalChapter[];
+  paymentType: Payment;
 };
 
 // -------- 레슨 상세(admin lesson detail) --------

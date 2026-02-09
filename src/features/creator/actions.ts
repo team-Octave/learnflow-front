@@ -19,7 +19,7 @@ import {
   uploadThumbnail,
 } from '@/services/creator.service';
 import { CreatorLesson, CurriculumFormValues } from './types';
-import { Category, Lecture, Level } from '../lectures/types';
+import { Category, Level, Payment } from '../lectures/types';
 import { ActionState } from '@/shared/types/ActionState';
 
 export async function getCreatorLecturesAction(
@@ -62,6 +62,7 @@ export async function createBasicLectureAction(
   const categoryId = formData.get('categoryId') as Category;
   const level = formData.get('level') as Level;
   const description = formData.get('description') as string;
+  const paymentType = formData.get('paymentType') as Payment;
   const thumbnailUrl = thumbnailState.data.uploadUrl;
 
   const payload = {
@@ -69,6 +70,7 @@ export async function createBasicLectureAction(
     categoryId,
     level,
     description,
+    paymentType,
     thumbnailUrl,
   };
 
@@ -85,6 +87,7 @@ export async function updateBasicLectureAction(
   const categoryId = formData.get('categoryId') as Category;
   const level = formData.get('level') as Level;
   const description = formData.get('description') as string;
+  const paymentType = formData.get('paymentType') as Payment;
   const file = formData.get('file') as File | null;
 
   // 썸네일이 변경된 경우에만 업로드
@@ -104,6 +107,7 @@ export async function updateBasicLectureAction(
     categoryId,
     level,
     description,
+    paymentType,
   };
 
   // 썸네일이 변경된 경우에만 포함
@@ -112,11 +116,6 @@ export async function updateBasicLectureAction(
   }
 
   const state = await updateBasicLecture(lectureId, payload);
-
-  // 수정 API가 id를 반환하지 않을 수 있으므로 id를 추가
-  if (state.success && !state.data?.id) {
-    state.data = { ...state.data, id: lectureId };
-  }
 
   return state;
 }

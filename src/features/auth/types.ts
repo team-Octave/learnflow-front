@@ -4,7 +4,8 @@ export interface User {
   email: string;
   nickname: string;
   role: 'MEMBER' | 'ADMIN';
-  createdAt: string;
+  isMembershipActive: boolean;
+  membershipExpiryDate: string;
 }
 
 export interface LoginRequest {

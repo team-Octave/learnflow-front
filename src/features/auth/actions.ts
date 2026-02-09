@@ -37,6 +37,8 @@ export async function loginAction(user: {
       email: state.data.email,
       nickname: state.data.nickname,
       role: state.data.role,
+      isMembershipActive: state.data.isMembershipActive,
+      membershipExpiryDate: state.data.membershipExpiryDate,
     },
   };
 

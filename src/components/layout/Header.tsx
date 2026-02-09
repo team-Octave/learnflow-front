@@ -11,7 +11,14 @@ const MyDropdown = dynamic(() => import('./MyDropdown'), {
   loading: () => <div className="w-8 h-8 bg-muted rounded-full"></div>,
 });
 interface HeaderProps {
-  initialUser: Pick<User, 'email' | 'nickname' | 'role'>;
+  initialUser: Pick<
+    User,
+    | 'email'
+    | 'nickname'
+    | 'role'
+    | 'isMembershipActive'
+    | 'membershipExpiryDate'
+  >;
 }
 
 export default function Header({ initialUser }: HeaderProps) {
@@ -27,13 +34,7 @@ export default function Header({ initialUser }: HeaderProps) {
       </Link>
       <div>
         {isLoggedIn ? (
-          <MyDropdown
-            user={{
-              email: user.email,
-              nickname: user.nickname,
-              role: user.role,
-            }}
-          />
+          <MyDropdown user={user} />
         ) : (
           <Link href={'/login'}>
             <Button

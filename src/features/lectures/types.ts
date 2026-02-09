@@ -1,7 +1,3 @@
-// src/features/lectures/types.ts
-
-// ---------------- 연동 후 사용 중인 타입 ---------------
-
 export const CATEGORIES = [
   { id: '0', name: 'ALL', value: 'ALL' },
   { id: '1', name: 'FRONTEND', value: '1' },
@@ -17,11 +13,15 @@ export const CATEGORY_MAP = {
   4: 'GAME',
 };
 
-// 강의 난이도 레벨
 export type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 
-// 카테고리 타입 추가
 export type Category = '1' | '2' | '3' | '4';
+
+export type Payment = 'FREE' | 'PAID';
+
+export type LessonType = 'VIDEO' | 'QUIZ';
+
+export type Sort = 'LATEST' | 'POPULAR' | 'RATING';
 
 export interface Query {
   category: Category | 'ALL';
@@ -35,27 +35,28 @@ export interface Query {
 export interface Lecture {
   id: number;
   title: string;
-  instructorId: string; // instructor → creatorName + creatorId 로 변경
+  instructorId: string;
   instructorDisplayName: string;
   ratingAverage: number;
-  enrollmentCount: number; // / studentCount → enrollmentCount 변경됨
+  enrollmentCount: number;
   thumbnailUrl: string;
-  categoryId: Category; // 임시 string 타입
+  categoryId: Category;
   level: Level;
   createdAt: string;
-  updatedAt?: string; //   updatedAt 추가
+  updatedAt?: string;
   description: string;
   chapters: Chapter[] | null;
+
+  paymentType: Payment;
 }
 
 export interface QuizQuestion {
   id: number;
-  question: string; // 질문 텍스트
-  correct: boolean; // 정답 여부 (true/false)
-  questionOrder: number; // 백엔드와 동일하게
+  question: string;
+  correct: boolean;
+  questionOrder: number;
 }
 
-// 레슨 단위 (영상 또는 퀴즈)
 export interface Lesson {
   id: number;
   lessonTitle: string;
@@ -67,7 +68,6 @@ export interface Lesson {
   duration?: string;
 }
 
-// 챕터 단위 (레슨 여러 개 포함)
 export interface Chapter {
   id: number;
   chapterTitle: string;
@@ -81,14 +81,9 @@ export interface Review {
   userId: string;
   nickname: string;
   rating: number;
-  createdAt: string; // 변경됨 — date → createdAt
+  createdAt: string;
   content: string;
 }
-
-// 레슨 타입 (영상 또는 퀴즈)
-export type LessonType = 'VIDEO' | 'QUIZ';
-
-export type Sort = 'LATEST' | 'POPULAR' | 'RATING';
 
 // ai 강의요약안내 ( api명세대로 )
 export type AISummaryStatus =
