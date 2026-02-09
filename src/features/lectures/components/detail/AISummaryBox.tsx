@@ -9,50 +9,62 @@ interface AISummaryBoxProps {
   selectedLessonId: number | null;
 }
 
+type UiState = 'IDLE' | 'HIDDEN' | 'COMPLETED' | 'EMPTY';
+
 export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
-  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<AILessonSummaryResponse | null>(null);
-  const [showMessage, setShowMessage] = useState(false); // FAILED/NOT_FOUND만 노출
+  const [uiState, setUiState] = useState<UiState>('IDLE');
 
   useEffect(() => {
     let alive = true;
 
     async function load() {
+      // 레슨 선택 전: 안내 UI
       if (!selectedLessonId) {
         setData(null);
-        setShowMessage(false);
-        setLoading(false);
+        setUiState('IDLE');
         return;
       }
 
-      setLoading(true);
+      // 선택 직후: 일단 UI 숨김(READY/PROCESSING 포함 규칙을 지키기 위해)
       setData(null);
-      setShowMessage(false);
+      setUiState('HIDDEN');
 
       try {
         const state = await getAILessonSummaryAction(selectedLessonId);
         if (!alive) return;
 
         if (!state.success || !state.data) {
-          setShowMessage(true);
+          // 실패/없음 취급 → 메시지 노출
+          setUiState('EMPTY');
           return;
         }
 
-        setData(state.data);
+        const res = state.data;
+        setData(res);
 
-        //  READY/PROCESSING은 아무 UI도 안 띄움
-        if (
-          state.data.status === 'FAILED' ||
-          state.data.status === 'NOT_FOUND'
-        ) {
-          setShowMessage(true);
+        //  UI 대응 가이드
+        if (res.status === 'COMPLETED' && res.content) {
+          setUiState('COMPLETED');
+          return;
         }
+
+        if (res.status === 'FAILED' || res.status === 'NOT_FOUND') {
+          setUiState('EMPTY');
+          return;
+        }
+
+        // READY / PROCESSING → 아무 UI도 안 띄움
+        if (res.status === 'READY' || res.status === 'PROCESSING') {
+          setUiState('HIDDEN');
+          return;
+        }
+
+        // 혹시 모를 예외 status 방어
+        setUiState('HIDDEN');
       } catch {
         if (!alive) return;
-        setShowMessage(true);
-      } finally {
-        if (!alive) return;
-        setLoading(false);
+        setUiState('EMPTY');
       }
     }
 
@@ -62,9 +74,10 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
     };
   }, [selectedLessonId]);
 
-  const isCompleted = data?.status === 'COMPLETED' && data.content;
-  const shouldShowEmptyMessage =
-    !loading && selectedLessonId && showMessage && !isCompleted;
+  // READY/PROCESSING일 때는 “컨테이너(박스)” 자체를 렌더하지 않음
+  if (uiState === 'HIDDEN') return null;
+
+  const isCompleted = uiState === 'COMPLETED' && data?.content;
 
   return (
     <div className="sticky top-24 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm min-h-80">
@@ -73,7 +86,7 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
         <h3 className="font-bold text-lg text-white">AI 영상 요약</h3>
       </div>
 
-      {!selectedLessonId ? (
+      {uiState === 'IDLE' ? (
         <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
           <div className="p-3 bg-zinc-800/50 rounded-full">
             <PlayCircle className="w-8 h-8 text-zinc-600" />
@@ -87,7 +100,7 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
             </p>
           </div>
         </div>
-      ) : loading ? null : isCompleted ? (
+      ) : isCompleted ? (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
             <h4 className="font-medium text-indigo-300 mb-2 flex items-center gap-2">
@@ -118,13 +131,14 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
             </ul>
           </div>
         </div>
-      ) : shouldShowEmptyMessage ? (
+      ) : (
+        //  FAILED / NOT_FOUND 또는 요청 실패 → 문구 노출
         <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
           <p className="text-sm text-zinc-300">
-            해당 레슨에 대한 요약이 아직 생성되지 않았습니다
+            해당 레슨에 대한 요약이 아직 생성되지 않았습니다.
           </p>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

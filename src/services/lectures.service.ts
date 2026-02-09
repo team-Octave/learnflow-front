@@ -39,6 +39,5 @@ export async function getLessonById(lectureId: number, lessonId: number) {
 // ai 강의 요약 안내
 export async function getAILessonSummary(lessonId: number) {
   const res = await commonFetch(`/api/ai/summary/${lessonId}`);
-
   return res.json();
 }

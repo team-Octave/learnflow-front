@@ -124,41 +124,21 @@ export async function getLessonByIdAction(
 export async function getAILessonSummaryAction(
   lessonId: number,
 ): Promise<ActionState<AILessonSummaryResponse>> {
-  // 목업 유지용 (UI 작업 중)
-  if (process.env.NEXT_PUBLIC_USE_MOCK === 'true') {
-    return {
-      success: true,
-      code: 'SUCCESS',
-      data: {
-        lessonId,
-        status: 'COMPLETED',
-        content: {
-          overview:
-            '이 강의에서는 Next.js 14의 핵심 기능인 App Router 구조를 중심으로 파일 기반 라우팅, 레이아웃 시스템, 그리고 기존 Pages Router와의 차이점을 설명합니다.',
-          keyTakeaways: [
-            'App Router 기본 폴더 구조 이해',
-            'layout.tsx와 page.tsx 역할',
-            'Pages Router와의 차이점',
-          ],
-        },
-      },
-    };
-  }
-
-  // mock 아닐 때도 반드시 return
   return {
     success: true,
     code: 'SUCCESS',
     data: {
       lessonId,
-      status: 'NOT_FOUND',
-      content: null,
+      status: 'COMPLETED',
+      content: {
+        overview:
+          '이 강의에서는 Next.js 14의 핵심 기능인 App Router 구조를 중심으로 파일 기반 라우팅, 레이아웃 시스템, 그리고 기존 Pages Router와의 차이점을 설명합니다.',
+        keyTakeaways: [
+          'App Router 기본 폴더 구조 이해',
+          'layout.tsx와 page.tsx 역할',
+          'Pages Router와의 차이점',
+        ],
+      },
     },
   };
-
-  //  실제 API 연동
-  // const state = (await getAILessonSummary(
-  //   lessonId,
-  // )) as ActionState<AILessonSummaryResponse>;
-  // return state;
 }
