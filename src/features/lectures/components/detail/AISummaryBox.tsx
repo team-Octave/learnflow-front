@@ -9,68 +9,67 @@ interface AISummaryBoxProps {
   selectedLessonId: number | null;
 }
 
-/*IDLE: 레슨 선택 전(안내 UI 보여줌)
-HIDDEN: READY/PROCESSING이거나, 선택 직후 “규칙상 UI 숨김”(컴포넌트 return null
-COMPLETED: 요약 완료 UI
-EMPTY: 실패/없음 UI(문구 노출)*/
-
-type UiState = 'IDLE' | 'HIDDEN' | 'COMPLETED' | 'EMPTY';
+/* 3가지 상태만 유지
+IDLE: 레슨 아직 안 고름 /COMPLETED: 요약 보여줌 / EMPTY: 요약 없음/실패*/
+type UiState = 'IDLE' | 'COMPLETED' | 'EMPTY';
 
 export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
-  // data: 서버에서 내려온 AI 요약 데이터(성공 시 저장)
+  // 서버에서 받아온 요약 응답을 저장
   const [data, setData] = useState<AILessonSummaryResponse | null>(null);
   const [uiState, setUiState] = useState<UiState>('IDLE');
+  // READY/PROCESSING일 때 "아무 UI도 안 보이게" 처리
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    let alive = true; //이 effect가 살아있는지 표시하는 플래그
+    // 요청이 끝났을 때 alive가 false면 상태 업데이트를 막는 안전장치
+    let alive = true;
 
     async function load() {
-      // 레슨 선택 전: 안내 UI
+      // 레슨 선택 전
       if (!selectedLessonId) {
+        setHidden(false);
         setData(null);
         setUiState('IDLE');
         return;
       }
 
-      // 선택 직후: 일단 UI 숨김(READY/PROCESSING 포함 규칙을 지키기 위해)
+      // 선택 직후: 일단 이전 데이터 제거
       setData(null);
-      setUiState('HIDDEN');
+      setHidden(false);
 
       try {
+        // 서버에서 요약 가져오기 :요약 요청하고,
         const state = await getAILessonSummaryAction(selectedLessonId);
+        // effect가 아직 유효한지 확인.
         if (!alive) return;
 
-        // 실패/없음 취급 → 메시지 노출
+        // API 자체가 실패했거나 데이터가 비어있으면 “요약 없음” UI.
         if (!state.success || !state.data) {
           setUiState('EMPTY');
           return;
         }
 
-        // 성공이면 data 저장 + status로 분기
+        // 성공하면 data 저장
         const res = state.data;
         setData(res);
 
-        // COMPLETED + content 있음 → 완료 UI
+        // READY / PROCESSING이면 숨김 처리
+        if (res.status === 'READY' || res.status === 'PROCESSING') {
+          setHidden(true);
+          return;
+        }
+
+        // COMPLETED + content 있음 → 요약 보임
         if (res.status === 'COMPLETED' && res.content) {
           setUiState('COMPLETED');
           return;
         }
 
-        if (res.status === 'FAILED' || res.status === 'NOT_FOUND') {
-          setUiState('EMPTY');
-          return;
-        }
-
-        // READY / PROCESSING → 아무 UI도 안 띄움
-        if (res.status === 'READY' || res.status === 'PROCESSING') {
-          setUiState('HIDDEN');
-          return;
-        }
-
-        // 혹시 모를 예외 status 방어
-        setUiState('HIDDEN');
+        // FAILED / NOT_FOUND / 그 외 → 요약 없음
+        setUiState('EMPTY');
       } catch {
         if (!alive) return;
+        // 그 외는 EMPTY
         setUiState('EMPTY');
       }
     }
@@ -81,15 +80,15 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
     };
   }, [selectedLessonId]);
 
-  // READY/PROCESSING일 때는 “컨테이너(박스)” 자체를 렌더하지 않음
-  if (uiState === 'HIDDEN') return null;
+  // READY/PROCESSING일 때는 박스 자체를 숨김
+  if (hidden) return null;
 
-  // UI 상태가 완료(COMPLETED)이고, 데이터에 content가 있으면 그 content를 결과로 쓰고, 아니면 false(또는 undefined)로 둔다
+  // COMPLETED이면서 content가 있을 때만 “요약 UI”로 들어가게 하는 안전 체크.
   const isCompleted = uiState === 'COMPLETED' && data?.content;
 
   return (
     <div className="sticky top-24 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm min-h-80">
-      <div className="flex items-center gap-2 mb-4 text-yellow-400 ">
+      <div className="flex items-center gap-2 mb-4 text-yellow-400">
         <Sparkles className="w-5 h-5 fill-yellow-400" />
         <h3 className="font-bold text-lg text-white">AI 영상 요약</h3>
       </div>
@@ -140,7 +139,6 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
           </div>
         </div>
       ) : (
-        //  FAILED / NOT_FOUND 또는 요청 실패 → 문구 노출
         <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
           <p className="text-sm text-zinc-300">
             해당 레슨에 대한 요약이 아직 생성되지 않았습니다.
