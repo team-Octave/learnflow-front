@@ -4,6 +4,7 @@ import UserInitializer from '@/features/auth/components/UserInitializer';
 import { getUserAction } from '@/features/auth/actions';
 import { Toaster } from '@/components/ui/sonner';
 import { ConfirmProvider } from '@/components/common/ConfirmProvider';
+import AnalyticsTracker from '@/components/common/AnalyticsTracker';
 
 const pretendard = localFont({
   src: '../../public/fonts/PretendardVariable.woff2',
@@ -30,6 +31,7 @@ export default async function RootLayout({
         <UserInitializer user={user} />
         <Toaster position="top-center" />
         <ConfirmProvider />
+        <AnalyticsTracker />
         {children}
       </body>
     </html>
