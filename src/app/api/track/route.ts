@@ -10,7 +10,6 @@ export async function POST(req: Request) {
   let payload: any;
   try {
     payload = JSON.parse(raw);
-    console.log(payload);
   } catch {
     return new NextResponse(null, { status: 204 });
   }
