@@ -10,7 +10,6 @@ export type PaymentHistory = {
 };
 
 export type MembershipInfo = {
-  hasMembership: boolean;
   planName?: string;
   nextBillingDate?: string;
   nextBillingAmount?: number;

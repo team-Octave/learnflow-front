@@ -54,31 +54,19 @@ export function getUserRole(token: string | undefined): string | null {
 export function formatDateTime(iso: string) {
   const d = new Date(iso);
 
-  const date = new Intl.DateTimeFormat('en-CA', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(d);
-
-  const time = new Intl.DateTimeFormat('ko-KR', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(d);
-
-  return { date, time };
-}
-
-export function formatExpiryKorean(iso?: string): string | null {
-  if (!iso) return null;
-
-  const dt = new Date(iso);
-  if (Number.isNaN(dt.getTime())) return null;
-
-  // "2026년 3월 7일"
-  return dt.toLocaleDateString('ko-KR', {
+  //  날짜도 ko-KR로 (YYYY. M. D. 형태)
+  const date = new Intl.DateTimeFormat('ko-KR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  });
+  }).format(d);
+
+  // 시간은 필요할 때만 쓰면 됨
+  const time = new Intl.DateTimeFormat('ko-KR', {
+    hour: '2-digit', // 2자리 숫자
+    minute: '2-digit',
+    hour12: false, // 24시간제 사용
+  }).format(d);
+
+  return { date, time };
 }
