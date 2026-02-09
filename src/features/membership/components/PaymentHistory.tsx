@@ -11,11 +11,11 @@ import PaymentRow from './PaymentRow';
 import type { PaymentHistoryResponse } from '../types';
 
 interface PaymentHistoryProps {
-  data: PaymentHistoryResponse[]; // 배열로 변경
+  data: PaymentHistoryResponse[]; //  배열로 받음
 }
 
 export default function PaymentHistory({ data }: PaymentHistoryProps) {
-  const payments = data ?? [];
+  const payments = data ?? []; // data 자체가 배열
 
   return (
     <section className="w-full p-6 rounded-xl bg-zinc-900/40 border border-zinc-700 text-white">
@@ -34,14 +34,14 @@ export default function PaymentHistory({ data }: PaymentHistoryProps) {
             </TableHeader>
 
             <TableBody>
-              {payments.map((p) => (
-                <PaymentRow key={p.id} payment={p} />
+              {payments.map((payment) => (
+                <PaymentRow key={payment.id} payment={payment} />
               ))}
             </TableBody>
           </Table>
         </div>
       ) : (
-        <p className="text-zinc-400 text-center py-8">결제 내역이 없습니다.</p>
+        <p className="text-zinc-400">결제 내역이 없습니다.</p>
       )}
     </section>
   );

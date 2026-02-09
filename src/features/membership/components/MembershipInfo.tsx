@@ -32,15 +32,13 @@ export default function MembershipInfo({ data }: MembershipInfoProps) {
                 </Badge>
               </div>
 
-       
+              {expiryText && (
+                <div className="text-zinc-500 text-sm">
+                  멤버십 만료일 : {expiryText}
+                </div>
+              )}
             </div>
           </div>
-
-          {expiryText && (
-            <div className="text-zinc-500 text-sm">
-              * 멤버십 유효 기간: {expiryText}까지
-            </div>
-          )}
 
           <div className="text-zinc-500 text-sm">
             * 결제 및 이용 관련 문의는 고객센터를 이용해 주세요.
