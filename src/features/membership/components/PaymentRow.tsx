@@ -3,6 +3,7 @@
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import type { PaymentHistoryResponse, PaymentStatus } from '../types';
+import { formatDateTime } from '@/shared/utils';
 
 interface PaymentRowProps {
   payment: PaymentHistoryResponse;
@@ -24,10 +25,13 @@ const statusVariant: Record<
 };
 
 export default function PaymentRow({ payment }: PaymentRowProps) {
+  // "2026년 3월 7일"
+  const paymentDateText = formatDateTime(payment.paymentDate).date;
+
   return (
     <TableRow className="border-zinc-800 hover:bg-zinc-800/30">
-      <TableCell className="text-white">{payment.paymentDate}</TableCell>
-      <TableCell className="text-white">{payment.planType}</TableCell>
+      <TableCell className="text-white">{paymentDateText}</TableCell>
+      <TableCell className="text-white">{payment.planType} 멤버십</TableCell>
       <TableCell className="text-white">
         {payment.amount.toLocaleString()}원
       </TableCell>
