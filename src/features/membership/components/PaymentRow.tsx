@@ -2,28 +2,35 @@
 
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import type { Payment } from '../types';
+import type { PaymentHistory } from '../types';
 
 interface PaymentRowProps {
-  payment: Payment;
+  payment: PaymentHistory;
 }
 
 export default function PaymentRow({ payment }: PaymentRowProps) {
-  const isCompleted = payment.status === 'completed';
+  const isCompleted = payment.status === 'DONE';
 
   return (
     <TableRow className="border-zinc-800 hover:bg-zinc-800/30">
-      <TableCell className="text-white">{payment.date}</TableCell>
-      <TableCell className="text-white">{payment.plan}</TableCell>
+      <TableCell className="text-white">{payment.paymentDate}</TableCell>
+
+      <TableCell className="text-white">{payment.planType}</TableCell>
+
       <TableCell className="text-white">
         {payment.amount.toLocaleString()}원
       </TableCell>
+
       <TableCell>
         <Badge
           variant={isCompleted ? 'default' : 'secondary'}
-          className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+          className={
+            isCompleted
+              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+              : 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30'
+          }
         >
-          {isCompleted ? '결제완료' : '처리중'}
+          {isCompleted ? '결제완료' : '결제취소'}
         </Badge>
       </TableCell>
     </TableRow>

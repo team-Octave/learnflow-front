@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import type { MembershipInfo } from '../types';
-import { formatNextBillingText } from '../actions';
 import { formatDateTime } from '@/shared/utils';
 
 // 멤버십 정보가 있으면 객체, 없으면 null**을 내려주는 구조
@@ -33,12 +32,7 @@ export default function MembershipInfo({ data }: MembershipInfoProps) {
                 </Badge>
               </div>
 
-              <p className="text-zinc-400">
-                {formatNextBillingText(
-                  data.nextBillingDate,
-                  data.nextBillingAmount,
-                )}
-              </p>
+       
             </div>
           </div>
 

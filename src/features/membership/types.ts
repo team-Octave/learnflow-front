@@ -2,22 +2,18 @@
 
 export type PaymentStatus = 'DONE' | 'CANCELED' | 'ABORTED';
 
-export type PaymentHistory = {
+export type PaymentHistoryResponse = {
+  id: number;
   paymentDate: string; // ISO-8601의 형태
   planType: string; // "1개월"
   amount: number; // 9900
   status: PaymentStatus;
 };
 
-export type MembershipInfo = {
+export type MembershipInfoResponse = {
   nextBillingDate?: string;
   nextBillingAmount?: number;
-  paymentHistory?: Array<{
-    id: string;
-    date: string;
-    plan: string;
-    amount: number;
-    status: string;
-  }>;
   membershipExpiryDate?: string;
+  paymentHistory?: PaymentHistoryResponse[];
 };
+

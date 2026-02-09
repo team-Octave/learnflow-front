@@ -1,29 +1,50 @@
 // src/features/membership/actions.ts
+
 'use server';
 
 import type { ActionState } from '@/shared/types/ActionState';
-import type { PaymentHistory } from './types';
+import type { MembershipInfoResponse, PaymentHistoryResponse } from './types';
 
-function toKoreanDate(dateStr: string) {
-  // "2026-03-01" -> "2026년 3월 1일"
-  const [y, m, d] = dateStr.split('-').map((v) => parseInt(v, 10));
-  return `${y}년${m}월${d}일`;
+// 멤버십 정보
+export async function getMembershipInfoAction(): Promise<
+  ActionState<MembershipInfoResponse | null>
+> {
+  // TODO: 실제 API 연동 시 여기에서 fetch/authFetch 호출
+  // const state = await getMembershipInfo();
+  // return state;
+
+  return {
+    success: true,
+    code: 'SUCCESS',
+    data: {
+      nextBillingDate: '2026-03-01',
+      nextBillingAmount: 9900,
+      membershipExpiryDate: '2026-03-07T11:45:39Z',
+    },
+  };
 }
 
+// 결제 내역
 export async function getPaymentHistoryAction(): Promise<
-  ActionState<PaymentHistory[]>
+  ActionState<PaymentHistoryResponse[]>
 > {
+  // TODO: 실제 API 연동 시 여기에서 fetch/authFetch 호출
+  // const state = await getPaymentHistory();
+  // return state;
+
   return {
     success: true,
     code: 'SUCCESS',
     data: [
       {
+        id: 1,
         paymentDate: '2026-01-07T11:45:39Z',
         planType: '1개월',
         amount: 9900,
         status: 'DONE',
       },
       {
+        id: 2,
         paymentDate: '2026-02-07T11:45:39Z',
         planType: '1개월',
         amount: 9900,
@@ -31,13 +52,4 @@ export async function getPaymentHistoryAction(): Promise<
       },
     ],
   };
-
-  // TODO: 실제 API 연동 시 여기에서 fetch/authFetch 호출
-  // const state = await getPaymentHistory();
-  // return state;
-}
-
-export function formatNextBillingText(dateStr?: string, amount?: number) {
-  if (!dateStr || !amount) return '';
-  return `다음 결제일:${toKoreanDate(dateStr)} (${amount.toLocaleString()}원)`;
 }
