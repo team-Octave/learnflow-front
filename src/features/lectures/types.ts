@@ -1,4 +1,4 @@
-// lxp3/src/features/lectures/types.ts
+// src/features/lectures/types.ts
 
 // ---------------- 연동 후 사용 중인 타입 ---------------
 
@@ -89,3 +89,31 @@ export interface Review {
 export type LessonType = 'VIDEO' | 'QUIZ';
 
 export type Sort = 'LATEST' | 'POPULAR' | 'RATING';
+
+// ai 강의요약안내 ( api명세대로 )
+export type AISummaryStatus =
+  | 'COMPLETED'
+  | 'PROCESSING'
+  | 'READY'
+  | 'FAILED'
+  | 'NOT_FOUND';
+
+// “COMPLETED일 때
+export type AILessonSummaryContent = {
+  overview: string;
+  keyTakeaways: string[];
+};
+
+// API / 서버 액션에서 내려오는 “응답 형태”
+export type AILessonSummaryResponse = {
+  lessonId: number;
+  status: AISummaryStatus;
+  content: AILessonSummaryContent | null;
+};
+
+// 프론트 내부에서 사용하는 “도메인 모델”
+export type AILessonSummary = {
+  lessonId: number;
+  status: AISummaryStatus;
+  content: AILessonSummaryContent | null;
+};
