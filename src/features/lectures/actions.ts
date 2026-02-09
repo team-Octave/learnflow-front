@@ -119,7 +119,8 @@ export async function getLessonByIdAction(
 /**
  * AI 강의 요약 조회
  * GET /api/ai/summary/{lessonId}
- * - 상세페이지: 로그인 없이도 접근 가능
+ * - 상세페이지: 로그인 없이도 접근 가능(authFetch 같은 인증 로직이 필요 없음)
+ * lessonId를 받아서 => AI 강의 요약 데이터를 조회 => ActionState 형태로 반환
  */
 export async function getAILessonSummaryAction(
   lessonId: number,

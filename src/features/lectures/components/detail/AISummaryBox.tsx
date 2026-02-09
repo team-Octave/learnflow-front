@@ -9,14 +9,20 @@ interface AISummaryBoxProps {
   selectedLessonId: number | null;
 }
 
+/*IDLE: 레슨 선택 전(안내 UI 보여줌)
+HIDDEN: READY/PROCESSING이거나, 선택 직후 “규칙상 UI 숨김”(컴포넌트 return null
+COMPLETED: 요약 완료 UI
+EMPTY: 실패/없음 UI(문구 노출)*/
+
 type UiState = 'IDLE' | 'HIDDEN' | 'COMPLETED' | 'EMPTY';
 
 export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
+  // data: 서버에서 내려온 AI 요약 데이터(성공 시 저장)
   const [data, setData] = useState<AILessonSummaryResponse | null>(null);
   const [uiState, setUiState] = useState<UiState>('IDLE');
 
   useEffect(() => {
-    let alive = true;
+    let alive = true; //이 effect가 살아있는지 표시하는 플래그
 
     async function load() {
       // 레슨 선택 전: 안내 UI
@@ -34,16 +40,17 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
         const state = await getAILessonSummaryAction(selectedLessonId);
         if (!alive) return;
 
+        // 실패/없음 취급 → 메시지 노출
         if (!state.success || !state.data) {
-          // 실패/없음 취급 → 메시지 노출
           setUiState('EMPTY');
           return;
         }
 
+        // 성공이면 data 저장 + status로 분기
         const res = state.data;
         setData(res);
 
-        //  UI 대응 가이드
+        // COMPLETED + content 있음 → 완료 UI
         if (res.status === 'COMPLETED' && res.content) {
           setUiState('COMPLETED');
           return;
@@ -77,6 +84,7 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
   // READY/PROCESSING일 때는 “컨테이너(박스)” 자체를 렌더하지 않음
   if (uiState === 'HIDDEN') return null;
 
+  // UI 상태가 완료(COMPLETED)이고, 데이터에 content가 있으면 그 content를 결과로 쓰고, 아니면 false(또는 undefined)로 둔다
   const isCompleted = uiState === 'COMPLETED' && data?.content;
 
   return (
