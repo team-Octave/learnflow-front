@@ -46,7 +46,6 @@ export interface Lecture {
   updatedAt?: string; //   updatedAt 추가
   description: string;
   chapters: Chapter[] | null;
-  aiLessonSummaries?: AILessonSummary[]; //ai 요약추가
 }
 
 export interface QuizQuestion {
