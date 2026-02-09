@@ -4,11 +4,10 @@
 import type { ActionState } from '@/shared/types/ActionState';
 import type { MembershipData } from './types';
 
-// 날짜 포맷팅 함수
 function toKoreanDate(dateStr: string) {
   // "2026-03-01" -> "2026년 3월 1일"
   const [y, m, d] = dateStr.split('-').map((v) => parseInt(v, 10));
-  return `${y}년 ${m}월 ${d}일`;
+  return `${y}년${m}월${d}일`;
 }
 
 export async function getMembershipAction(): Promise<
@@ -17,7 +16,7 @@ export async function getMembershipAction(): Promise<
   const useMock = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
 
   if (useMock) {
-    const hasMembership = false; // 여기만 바꾸면 UI 상태 바로 확인 가능
+    const hasMembership = false; // ✅ 여기만 바꾸면 UI 상태 바로 확인 가능
 
     const data: MembershipData = hasMembership
       ? {
@@ -56,5 +55,5 @@ export async function getMembershipAction(): Promise<
 
 export function formatNextBillingText(dateStr?: string, amount?: number) {
   if (!dateStr || !amount) return '';
-  return `다음 결제일: ${toKoreanDate(dateStr)} (${amount.toLocaleString()}원)`;
+  return `다음 결제일:${toKoreanDate(dateStr)} (${amount.toLocaleString()}원)`;
 }
