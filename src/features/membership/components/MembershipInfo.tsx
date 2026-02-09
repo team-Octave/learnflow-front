@@ -27,9 +27,7 @@ export default function MembershipInfo({ data }: MembershipInfoProps) {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-6">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-lg font-semibold">
-                  {data.planName ?? '멤버십'}
-                </h3>
+                <h3 className="text-lg font-semibold">프리미엄 멤버십</h3>
                 <Badge className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 border-emerald-500/30">
                   이용 중
                 </Badge>

@@ -10,7 +10,6 @@ export type PaymentHistory = {
 };
 
 export type MembershipInfo = {
-  planName?: string;
   nextBillingDate?: string;
   nextBillingAmount?: number;
   paymentHistory?: Array<{
