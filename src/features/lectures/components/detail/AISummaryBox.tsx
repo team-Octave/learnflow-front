@@ -21,9 +21,6 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    // 요청이 끝났을 때 alive가 false면 상태 업데이트를 막는 안전장치
-    let alive = true;
-
     async function load() {
       // 레슨 선택 전
       if (!selectedLessonId) {
@@ -40,8 +37,6 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
       try {
         // 서버에서 요약 가져오기 :요약 요청하고,
         const state = await getAILessonSummaryAction(selectedLessonId);
-        // effect가 아직 유효한지 확인.
-        if (!alive) return;
 
         // API 자체가 실패했거나 데이터가 비어있으면 “요약 없음” UI.
         if (!state.success || !state.data) {
@@ -68,16 +63,11 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
         // FAILED / NOT_FOUND / 그 외 → 요약 없음
         setUiState('EMPTY');
       } catch {
-        if (!alive) return;
-        // 그 외는 EMPTY
         setUiState('EMPTY');
       }
     }
 
     load();
-    return () => {
-      alive = false;
-    };
   }, [selectedLessonId]);
 
   // READY/PROCESSING일 때는 박스 자체를 숨김
