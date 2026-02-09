@@ -8,14 +8,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import PaymentRow from './PaymentRow';
-import { MembershipInfoResponse } from '../types';
+import type { PaymentHistoryResponse } from '../types';
 
 interface PaymentHistoryProps {
-  data: MembershipInfoResponse | null;
+  data: PaymentHistoryResponse[]; // 배열로 변경
 }
 
 export default function PaymentHistory({ data }: PaymentHistoryProps) {
-  const payments = data?.paymentHistory ?? [];
+  const payments = data ?? [];
 
   return (
     <section className="w-full p-6 rounded-xl bg-zinc-900/40 border border-zinc-700 text-white">
