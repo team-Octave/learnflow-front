@@ -16,12 +16,13 @@ export async function getMembershipInfoAction(): Promise<
   return {
     success: true,
     code: 'SUCCESS',
-    data: {
-      planType: '프리미엄',
-      nextBillingDate: '2026-03-01',
-      nextBillingAmount: 9900,
-      membershipExpiryDate: '2026-03-07T11:45:39Z',
-    },
+    // data: {
+    //   planType: '프리미엄',
+    //   nextBillingDate: '2026-03-01',
+    //   nextBillingAmount: 9900,
+    //   membershipExpiryDate: '2026-03-07T11:45:39Z',
+    // },
+    data: null,
   };
 }
 
@@ -36,28 +37,34 @@ export async function getPaymentHistoryAction(): Promise<
   return {
     success: true,
     code: 'SUCCESS',
-    data: [
-      {
-        id: 1,
-        paymentDate: '2026-01-07T11:45:39Z',
-        planType: '프리미엄',
-        amount: 9900,
-        status: 'DONE',
-      },
-      {
-        id: 2,
-        paymentDate: '2026-02-07T11:45:39Z',
-        planType: '프리미엄',
-        amount: 9900,
-        status: 'CANCELED',
-      },
-      {
-        id: 3,
-        paymentDate: '2026-03-07T11:45:39Z',
-        planType: '프리미엄',
-        amount: 9900,
-        status: 'ABORTED',
-      },
-    ],
+    data: [], // 구독권 결제 안 한 상태
   };
+
+  // return {
+  //   success: true,
+  //   code: 'SUCCESS',
+  //   data: [
+  //     {
+  //       id: 1,
+  //       paymentDate: '2026-01-07T11:45:39Z',
+  //       planType: '프리미엄',
+  //       amount: 9900,
+  //       status: 'DONE',
+  //     },
+  //     {
+  //       id: 2,
+  //       paymentDate: '2026-02-07T11:45:39Z',
+  //       planType: '프리미엄',
+  //       amount: 9900,
+  //       status: 'CANCELED',
+  //     },
+  //     {
+  //       id: 3,
+  //       paymentDate: '2026-03-07T11:45:39Z',
+  //       planType: '프리미엄',
+  //       amount: 9900,
+  //       status: 'ABORTED',
+  //     },
+  //   ],
+  // };
 }
