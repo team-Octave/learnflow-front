@@ -1,7 +1,7 @@
 'use client';
 
 import { TableCell, TableRow } from '@/components/ui/table';
-import { CircleChevronDownIcon, Star } from 'lucide-react';
+import { ChevronDownIcon, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { CreatorLecture, LectureStatus } from '../../types';
@@ -67,24 +67,10 @@ export default function LectureRow({ lecture }: LectureRowProps) {
         );
       }
       case 'SUBMITTED': {
-        return (
-          <Badge
-            variant="secondary"
-            className="w-16 border border-yellow-500 bg-yellow-500/10 text-yellow-500"
-          >
-            검토 중
-          </Badge>
-        );
+        return <Badge variant={'submitted'}>검토 중</Badge>;
       }
       case 'PUBLISHED': {
-        return (
-          <Badge
-            variant="secondary"
-            className="w-16 border border-green-500 bg-green-500/10 text-green-500"
-          >
-            공개
-          </Badge>
-        );
+        return <Badge variant={'published'}>공개</Badge>;
       }
       case 'REJECTED': {
         return (
@@ -93,7 +79,7 @@ export default function LectureRow({ lecture }: LectureRowProps) {
               variant={'none'}
               onClick={handlePublish}
               disabled={isPending}
-              className="group w-16 h-6 rounded-xl border border-red-500 bg-red-500/10 text-red-500 hover:border-gray-400 hover:text-white hover:bg-white/10  text-xs cursor-pointer transition-all"
+              className="group w-16 h-6 rounded-xl border border-red-500/30 bg-red-500/15 text-red-500 hover:border-gray-400 hover:text-white hover:bg-white/10  text-xs cursor-pointer transition-all"
             >
               <span className="block group-hover:hidden">반려 됨</span>
               <span className="hidden group-hover:block font-bold">
@@ -102,11 +88,13 @@ export default function LectureRow({ lecture }: LectureRowProps) {
             </Button>
             <Popover>
               <PopoverTrigger>
-                <CircleChevronDownIcon
-                  strokeWidth={1}
-                  size={24}
-                  className="text-red-500 cursor-pointer"
-                />
+                <div className="flex items-center justify-center rounded-full h-6 w-6 border border-red-500/30 bg-red-500/15">
+                  <ChevronDownIcon
+                    strokeWidth={1}
+                    size={20}
+                    className="text-red-500 cursor-pointer"
+                  />
+                </div>
               </PopoverTrigger>
               <PopoverContent side="bottom" className="flex flex-col gap-3">
                 <h2 className="font-semibold text-md ">강의 반려 사유</h2>
@@ -145,7 +133,14 @@ export default function LectureRow({ lecture }: LectureRowProps) {
       </TableCell>
       <TableCell>{lecture.title}</TableCell>
       <TableCell>
-        <Badge variant="secondary">{CATEGORY_MAP[lecture.categoryId]}</Badge>
+        <Badge variant="default">{CATEGORY_MAP[lecture.categoryId]}</Badge>
+      </TableCell>
+      <TableCell>
+        {lecture.paymentType === 'PAID' ? (
+          <Badge variant={'membership'}>멤버십</Badge>
+        ) : (
+          <Badge variant={'free'}>무료</Badge>
+        )}
       </TableCell>
       <TableCell>{lectureStatus(lecture.statusDisplayName)}</TableCell>
       <TableCell>
@@ -154,7 +149,7 @@ export default function LectureRow({ lecture }: LectureRowProps) {
       </TableCell>
       <TableCell>
         <div className="text-amber-300 flex h-full items-center gap-1">
-          <Star className="fill-amber-300 text-amber-300" />
+          <Star className="fill-amber-300 text-amber-300" size={16} />
           {lecture.ratingAverage ? lecture.ratingAverage.toFixed(1) : '0.0'}
         </div>
       </TableCell>

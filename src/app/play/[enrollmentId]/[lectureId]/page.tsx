@@ -36,20 +36,20 @@ export default async function PlayPage({
   const { enrollmentId, lectureId } = await params; // await : Server Component에서 params는 Promise
   const { lessonId } = await searchParams; //쿼리스트링 처리
 
-  // 4️⃣ 필수 값 검증 (가드)
+  // 4 필수 값 검증 (가드)
   // 하나라도 없으면 정상적인 수강 페이지가 아님
   // 잘못된 접근 → 내 학습 페이지로 강제 이동
   if (!enrollmentId || !lectureId || !lessonId) {
     redirect('/mylearning');
   }
 
-  // 5️⃣ 레슨 + 수강 정보 동시 호출
+  // 5 레슨 + 수강 정보 동시 호출
   const [lessonState, enrollmentState] = await Promise.all([
     getLessonByIdAction(parseInt(lectureId), parseInt(lessonId)), //현재 레슨 단건 조회
     getEnrollmentByIdAction(parseInt(enrollmentId)), //수강 진행 정보 조회
   ]);
 
-  // 6️⃣ 레슨 조회 실패 처리
+  // 6 레슨 조회 실패 처리
   // 레슨이 없으면 페이지 자체가 성립 불가 → 404 페이지 출력
   //lessonState가 없거나, 요청이 성공이 아니거나, data가 없으면 → 404 페이지로 보낸다
   if (!lessonState?.success || !lessonState.data) {
@@ -57,7 +57,7 @@ export default async function PlayPage({
     return notFound();
   }
 
-  // 7️⃣ 수강 정보 실패 처리
+  // 7 수강 정보 실패 처리
   // enrollmentId = “내가 그 강의를 수강 중이다”라는 기록의 ID
   // 수강 정보가 없다는 건
   if (!enrollmentState?.success || !enrollmentState.data) {
@@ -68,7 +68,7 @@ export default async function PlayPage({
     redirect('/mylearning'); //→ 내 학습 페이지로 쫓아냄
   }
 
-  // 8️⃣ 타입 명확화(API 응답을 실제로 쓰기 위한 타입 확정 단계)
+  // 8 타입 명확화(API 응답을 실제로 쓰기 위한 타입 확정 단계)
   // 이 시점부터 이 값은 확실히 Lesson / Enrollment다
   // 타입스크립트에게 확정 선언하는 코드
   // as Lesson / as Enrollment => 타입 단언
@@ -76,7 +76,7 @@ export default async function PlayPage({
   const currentLesson = lessonState.data as Lesson;
   const enrollmentInfo = enrollmentState.data as Enrollment;
 
-  // 9️⃣ 레슨 완료 여부 계산
+  // 9 레슨 완료 여부 계산
   // 완료된 레슨 ID 목록 안에 현재 lessonId(숫자로 변환한 값)가 있으면 → 이 레슨은 이미 완료됨
   // enrollmentInfo.completedLessonIds: 수강 정보(enrollment) 안에 들어있는 이미 완료한 레슨 ID 목록
   const isCompleted = enrollmentInfo.completedLessonIds.includes(

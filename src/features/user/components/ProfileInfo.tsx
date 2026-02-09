@@ -1,4 +1,4 @@
-// src/features/user/components/ProfileInfo.tsx 
+// src/features/user/components/ProfileInfo.tsx
 'use client';
 
 import { Input } from '@/components/ui/input';

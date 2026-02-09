@@ -1,9 +1,9 @@
 // src/app/(main)/detail/[id]/page.tsx
+// 강의 상세 페이지
 
 import LectureSummary from '@/features/lectures/components/detail/LectureSummary';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';
 import Reviews from '@/features/lectures/components/detail/Reviews';
-import ButtonApply from '@/features/lectures/components/detail/ButtonApply';
 import AverageReview from '@/features/lectures/components/detail/AverageReview';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
@@ -26,12 +26,14 @@ export default async function LectureDetailPage({
   const pageParam = getParam((await searchParams).page) || '1';
 
   const page = pageParam ? parseInt(pageParam) : 1;
+  const lectureId = parseInt(id);
 
   // 강의 데이터 불러오기
   const [lectureState, reviewState] = await Promise.all([
-    getLectureByIdAction(parseInt(id)),
-    getReviewByIdAction(parseInt(id), page),
+    getLectureByIdAction(lectureId),
+    getReviewByIdAction(lectureId, page),
   ]);
+
   if (!lectureState.success || !reviewState.success) {
     console.log(lectureState.message || reviewState.message);
     return notFound();
@@ -88,8 +90,13 @@ export default async function LectureDetailPage({
               </TabsList>
 
               {/* 커리큘럼 탭 */}
+              {/* TabsTrigger value="curriculum" 이 눌렸을 때 이 안의 내용에 curriculum만 화면에 보여주는 영역 */}
               <TabsContent value="curriculum" className="space-y-6">
-                <Curriculum curriculum={lecture.chapters!} />
+                {/* lecture.chapters! null이나 undefined가 절대 아님을 선언 */}
+                <Curriculum
+                  lectureId={lectureId}
+                  curriculum={lecture.chapters!}
+                />
               </TabsContent>
 
               {/* 수강평 탭 */}
