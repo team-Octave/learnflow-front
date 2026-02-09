@@ -37,6 +37,7 @@ export async function getLessonById(lectureId: number, lessonId: number) {
 }
 
 // ai 강의 요약 안내
+// 레슨 ID를 받아서 → 해당 레슨의 AI 요약을 서버 API로 요청 → JSON 결과를 그대로 반환하는 함수
 export async function getAILessonSummary(lessonId: number) {
   const res = await commonFetch(`/api/ai/summary/${lessonId}`);
   return res.json();
