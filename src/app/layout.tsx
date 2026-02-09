@@ -3,7 +3,7 @@ import localFont from 'next/font/local';
 import UserInitializer from '@/features/auth/components/UserInitializer';
 import { getUserAction } from '@/features/auth/actions';
 import { Toaster } from '@/components/ui/sonner';
-import { ConfirmProvider } from '@/components/layout/ConfirmProvider';
+import { ConfirmProvider } from '@/components/common/ConfirmProvider';
 
 const pretendard = localFont({
   src: '../../public/fonts/PretendardVariable.woff2',
