@@ -29,9 +29,7 @@ export default function MembershipInfo({ data }: MembershipInfoProps) {
                 <h3 className="text-lg font-semibold">
                   {data.planType} 멤버십
                 </h3>
-                <Badge className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 border-emerald-500/30">
-                  이용 중
-                </Badge>
+                <Badge variant={'membership'}>이용 중</Badge>
               </div>
 
               {expiryText && (
@@ -48,7 +46,7 @@ export default function MembershipInfo({ data }: MembershipInfoProps) {
         </div>
       ) : (
         // 없으면 → 멤버십 없음 UI”
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-start justify-between gap-4">
           <p className="text-zinc-400">이용 중인 멤버십이 없어요.</p>
 
           <Link href="/subscription">

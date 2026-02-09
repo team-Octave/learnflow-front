@@ -1,5 +1,4 @@
 // src/features/membership/types.ts
-
 export type PaymentStatus = 'DONE' | 'CANCELED' | 'ABORTED';
 
 export type PaymentHistoryResponse = {
@@ -15,5 +14,4 @@ export type MembershipInfoResponse = {
   nextBillingDate?: string;
   nextBillingAmount?: number;
   membershipExpiryDate?: string;
-  paymentHistory?: PaymentHistoryResponse[];
 };

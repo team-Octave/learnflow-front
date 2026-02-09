@@ -1,9 +1,7 @@
 // src/app/(main)/mypage/membership/page.tsx
 
-import {
-  getMembershipInfoAction,
-  getPaymentHistoryAction,
-} from '@/features/membership/actions';
+import { getPaymentHistoryAction } from '@/features/membership/actions';
+import { getUserAction } from '@/features/auth/actions';
 
 import MembershipInfo from '@/features/membership/components/MembershipInfo';
 import PaymentHistory from '@/features/membership/components/PaymentHistory';
@@ -14,14 +12,26 @@ import type {
 } from '@/features/membership/types';
 
 export default async function MembershipPage() {
-  const [membershipState, paymentState] = await Promise.all([
-    getMembershipInfoAction(),
+  const [userState, paymentState] = await Promise.all([
+    getUserAction(),
     getPaymentHistoryAction(),
   ]);
 
-  // ActionState의 data?: T 때문에 undefined가 섞일 수 있어서 null/[]로 보정
-  const membershipData: MembershipInfoResponse | null = membershipState.success
-    ? (membershipState.data ?? null)
+  //  success라도 data?: any 일 수 있으니 null로 보정
+  const user = userState.success ? (userState.data ?? null) : null;
+
+  //  membershipExpiryDate가 있을 때만 date 필드 주입
+  const membershipData: MembershipInfoResponse | null = user?.isMembershipActive
+    ? {
+        planType: '프리미엄', // UI용 mock (나중에 API 연결되면 교체)
+        nextBillingAmount: 9900,
+        ...(user.membershipExpiryDate
+          ? {
+              nextBillingDate: user.membershipExpiryDate,
+              membershipExpiryDate: user.membershipExpiryDate,
+            }
+          : {}),
+      }
     : null;
 
   const paymentData: PaymentHistoryResponse[] = paymentState.success

@@ -25,7 +25,6 @@ const statusVariant: Record<
 };
 
 export default function PaymentRow({ payment }: PaymentRowProps) {
-  // "2026년 3월 7일"
   const paymentDateText = formatDateTime(payment.paymentDate).date;
 
   return (
