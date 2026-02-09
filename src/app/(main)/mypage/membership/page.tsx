@@ -1,11 +1,11 @@
 // src/app/(main)/mypage/membership/page.tsx
 
-import { getMembershipAction } from '@/features/membership/actions';
+import { getPaymentHistoryAction } from '@/features/membership/actions';
 import MembershipInfo from '@/features/membership/components/MembershipInfo';
 import PaymentHistory from '@/features/membership/components/PaymentHistory';
 
 export default async function MembershipPage() {
-  const state = await getMembershipAction();
+  const state = await getPaymentHistoryAction();
   const data = state.success ? state.data : null;
 
   return (

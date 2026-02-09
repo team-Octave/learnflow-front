@@ -61,6 +61,8 @@ export async function getUserAction(): Promise<ActionState<any>> {
       nickname: '세윤',
       email: 'seun0714@naver.com',
       role: 'MEMBER',
+      isMembershipActive: true,
+      membershipExpiryDate: '2026-03-07T11:45:39Z',
     },
   };
   const state = await getUser();

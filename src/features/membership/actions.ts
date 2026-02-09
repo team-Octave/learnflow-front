@@ -2,7 +2,7 @@
 'use server';
 
 import type { ActionState } from '@/shared/types/ActionState';
-import type { MembershipData } from './types';
+import type { PaymentHistory } from './types';
 
 function toKoreanDate(dateStr: string) {
   // "2026-03-01" -> "2026년 3월 1일"
@@ -10,47 +10,31 @@ function toKoreanDate(dateStr: string) {
   return `${y}년${m}월${d}일`;
 }
 
-export async function getMembershipAction(): Promise<
-  ActionState<MembershipData>
+export async function getPaymentHistoryAction(): Promise<
+  ActionState<PaymentHistory[]>
 > {
-  const useMock = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
-
-  if (useMock) {
-    const hasMembership = false; // ✅ 여기만 바꾸면 UI 상태 바로 확인 가능
-
-    const data: MembershipData = hasMembership
-      ? {
-          hasMembership: true,
-          planName: '프리미엄 멤버십',
-          nextBillingDate: '2026-03-01',
-          nextBillingAmount: 9900,
-          paymentHistory: [
-            {
-              id: 'p1',
-              date: '2026-02-01',
-              plan: '프리미엄',
-              amount: 9900,
-              status: 'completed',
-            },
-          ],
-        }
-      : {
-          hasMembership: false,
-          paymentHistory: [],
-        };
-
-    return { success: true, code: 'SUCCESS', data };
-  }
+  return {
+    success: true,
+    code: 'SUCCESS',
+    data: [
+      {
+        paymentDate: '2026-01-07T11:45:39Z',
+        planType: '1개월',
+        amount: 9900,
+        status: 'DONE',
+      },
+      {
+        paymentDate: '2026-02-07T11:45:39Z',
+        planType: '1개월',
+        amount: 9900,
+        status: 'DONE',
+      },
+    ],
+  };
 
   // TODO: 실제 API 연동 시 여기에서 fetch/authFetch 호출
-  // const state = await getMembership();
+  // const state = await getPaymentHistory();
   // return state;
-
-  return {
-    success: false,
-    code: 'NOT_IMPLEMENTED',
-    message: 'API 연동 전입니다.',
-  };
 }
 
 export function formatNextBillingText(dateStr?: string, amount?: number) {

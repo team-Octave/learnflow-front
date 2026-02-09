@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { MembershipData } from '../types';
 import PaymentRow from './PaymentRow';
 
 interface PaymentHistoryProps {
