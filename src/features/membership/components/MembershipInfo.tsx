@@ -2,16 +2,17 @@
 
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import type { MembershipData } from '../types';
-import CancelButton from './CancelButton';
+import type { MembershipInfo } from '../types';
 import { formatNextBillingText } from '../actions';
+import { formatExpiryKorean } from '@/shared/utils';
 
 interface MembershipInfoProps {
-  data: MembershipData | null;
+  data: MembershipInfo | null;
 }
 
 export default function MembershipInfo({ data }: MembershipInfoProps) {
   const hasMembership = !!data?.hasMembership;
+  const expiryText = formatExpiryKorean(data?.membershipExpiryDate);
 
   return (
     <section className="w-full p-6 rounded-xl bg-zinc-900/40 border border-zinc-700 text-white">
@@ -37,9 +38,14 @@ export default function MembershipInfo({ data }: MembershipInfoProps) {
                 )}
               </p>
             </div>
-
-            <CancelButton />
           </div>
+
+          {/* 멤버십 유효 기간 (요구한 디자인과 동일 톤) */}
+          {expiryText && (
+            <div className="text-zinc-500 text-sm">
+              * 멤버십 유효 기간: {expiryText}까지
+            </div>
+          )}
 
           <div className="text-zinc-500 text-sm">
             * 결제 및 이용 관련 문의는 고객센터를 이용해 주세요.

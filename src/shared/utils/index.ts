@@ -68,3 +68,17 @@ export function formatDateTime(iso: string) {
 
   return { date, time };
 }
+
+export function formatExpiryKorean(iso?: string): string | null {
+  if (!iso) return null;
+
+  const dt = new Date(iso);
+  if (Number.isNaN(dt.getTime())) return null;
+
+  // "2026년 3월 7일"
+  return dt.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}

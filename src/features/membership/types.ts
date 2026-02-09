@@ -8,3 +8,18 @@ export type PaymentHistory = {
   amount: number; // 9900
   status: PaymentStatus;
 };
+
+export type MembershipInfo = {
+  hasMembership: boolean;
+  planName?: string;
+  nextBillingDate?: string;
+  nextBillingAmount?: number;
+  paymentHistory?: Array<{
+    id: string;
+    date: string;
+    plan: string;
+    amount: number;
+    status: string;
+  }>;
+  membershipExpiryDate?: string;
+};
