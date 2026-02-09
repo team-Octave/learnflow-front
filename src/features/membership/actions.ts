@@ -4,6 +4,7 @@
 import type { ActionState } from '@/shared/types/ActionState';
 import type { MembershipData } from './types';
 
+// 날짜 포맷팅 함수
 function toKoreanDate(dateStr: string) {
   // "2026-03-01" -> "2026년 3월 1일"
   const [y, m, d] = dateStr.split('-').map((v) => parseInt(v, 10));
