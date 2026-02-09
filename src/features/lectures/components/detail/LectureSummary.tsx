@@ -15,8 +15,8 @@ export default function LectureSummary({ lecture }: Props) {
     lecture.level === 'BEGINNER'
       ? '입문'
       : lecture.level === 'INTERMEDIATE'
-      ? '중급'
-      : '고급';
+        ? '중급'
+        : '고급';
 
   return (
     <div className="relative border-b border-zinc-800 w-full">
@@ -36,16 +36,16 @@ export default function LectureSummary({ lecture }: Props) {
         <div className="w-full flex-1 space-y-6">
           {/* Category + Level + Rating */}
           <div className="flex items-center gap-2">
-            <Badge
-              variant="secondary"
-              className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20"
-            >
-              {CATEGORY_MAP[lecture.categoryId]}
-            </Badge>
+            <Badge variant="default">{CATEGORY_MAP[lecture.categoryId]}</Badge>
             <Badge variant={lecture.level as Level}>{levelText}</Badge>
+            {lecture.paymentType === 'PAID' ? (
+              <Badge variant={'membership'}>멤버십</Badge>
+            ) : (
+              <Badge variant={'free'}>무료</Badge>
+            )}
 
             <div className="flex items-center gap-1 text-yellow-500 text-sm font-medium">
-              <Star className="w-4 h-4 fill-current" />
+              <Star className="w-4 h-4 fill-current" size={16} />
               <span>
                 {lecture.ratingAverage
                   ? lecture.ratingAverage.toFixed(1)

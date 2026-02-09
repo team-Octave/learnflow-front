@@ -1,3 +1,5 @@
+import { Payment } from '../lectures/types';
+
 export interface LearningLecture {
   lectureId: number;
   enrollmentId: number;
@@ -14,6 +16,8 @@ export interface LearningLecture {
   updatedAt: string;
   reviewRating: number | null;
   reviewContent: string | null;
+
+  paymentType: Payment;
 }
 
 export type LearningSortOptions = 'RECENT-LEARNED' | 'RECEND-ENROLLED';
