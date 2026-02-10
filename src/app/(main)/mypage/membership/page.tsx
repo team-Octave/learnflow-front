@@ -30,6 +30,7 @@ export default async function MembershipPage() {
   //  여기부터는 성공이 보장됨
   const userData = userState.data!;
 
+  // 왼쪽(paymentState.data)이 null 혹은 undefined일 때: 빈 바구니인 빈 배열([])을 paymentData에 할당
   const paymentData: PaymentHistoryResponse[] = paymentState.data ?? [];
 
   return (
