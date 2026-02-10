@@ -6,10 +6,7 @@ import { getUserAction } from '@/features/auth/actions';
 import MembershipInfo from '@/features/membership/components/MembershipInfo';
 import PaymentHistory from '@/features/membership/components/PaymentHistory';
 
-import type {
-  MembershipInfoResponse,
-  PaymentHistoryResponse,
-} from '@/features/membership/types';
+import type { PaymentHistoryResponse } from '@/features/membership/types';
 
 export default async function MembershipPage() {
   const [userState, paymentState] = await Promise.all([
@@ -31,20 +28,7 @@ export default async function MembershipPage() {
   }
 
   //  여기부터는 성공이 보장됨
-  const user = userState.data ?? null;
-
-  const membershipData: MembershipInfoResponse | null = user?.isMembershipActive
-    ? {
-        planType: '프리미엄', // UI용 mock (나중에 API 연결되면 교체)
-        nextBillingAmount: 9900,
-        ...(user.membershipExpiryDate
-          ? {
-              nextBillingDate: user.membershipExpiryDate,
-              membershipExpiryDate: user.membershipExpiryDate,
-            }
-          : {}),
-      }
-    : null;
+  const userData = userState.data!;
 
   const paymentData: PaymentHistoryResponse[] = paymentState.data ?? [];
 
@@ -56,7 +40,10 @@ export default async function MembershipPage() {
         </h1>
 
         <div className="w-full flex flex-col gap-6">
-          <MembershipInfo data={membershipData} />
+          <MembershipInfo
+            isMembershipActive={userData.isMembershipActive}
+            membershipExpiryDate={userData.membershipExpiryDate}
+          />
           <PaymentHistory data={paymentData} />
         </div>
       </div>

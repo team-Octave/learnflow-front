@@ -10,13 +10,11 @@ import {
 import PaymentRow from './PaymentRow';
 import type { PaymentHistoryResponse } from '../types';
 
-interface PaymentHistoryProps {
-  data: PaymentHistoryResponse[]; //  배열로 받음
+interface Props {
+  payments: PaymentHistoryResponse[]; //  배열로 받음
 }
 
-export default function PaymentHistory({ data }: PaymentHistoryProps) {
-  const payments = data ?? []; // data 자체가 배열
-
+export default function PaymentHistory({ payments }: Props) {
   return (
     <section className="w-full p-6 rounded-xl bg-zinc-900/40 border border-zinc-700 text-white">
       <h2 className="text-xl font-bold text-white mb-6">결제 내역</h2>

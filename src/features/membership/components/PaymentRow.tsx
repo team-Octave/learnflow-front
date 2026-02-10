@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import type { PaymentHistoryResponse, PaymentStatus } from '../types';
 import { formatDateTime } from '@/shared/utils';
 
-interface PaymentRowProps {
+interface Props {
   payment: PaymentHistoryResponse;
 }
 
@@ -24,7 +24,7 @@ const statusVariant: Record<
   ABORTED: 'paymentAborted',
 };
 
-export default function PaymentRow({ payment }: PaymentRowProps) {
+export default function PaymentRow({ payment }: Props) {
   const paymentDateText = formatDateTime(payment.paymentDate).date;
 
   return (

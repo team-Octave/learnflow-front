@@ -8,10 +8,3 @@ export type PaymentHistoryResponse = {
   amount: number; // 9900
   status: PaymentStatus;
 };
-
-export type MembershipInfoResponse = {
-  planType: string;
-  nextBillingDate?: string;
-  nextBillingAmount?: number;
-  membershipExpiryDate?: string;
-};

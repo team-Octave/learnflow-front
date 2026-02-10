@@ -14,6 +14,7 @@ const AUTH_ROUTES = ['/login', '/signup'];
 
 // 현재 경로가 보호된 경로인지 체크하는 함수
 const checkIsProtectedRoute = (pathname: string) => {
+  return false;
   if (
     PROTECTED_ROUTES['ADMIN'].some((route) => pathname.startsWith(route)) ||
     PROTECTED_ROUTES['MEMBER'].some((route) => pathname.startsWith(route))
@@ -90,9 +91,9 @@ export async function proxy(request: NextRequest) {
   }
 
   // 권한이 없는 페이지에 접근하려고 하는경우 홈페이지로 리다이렉트
-  if (requireRole !== null && requireRole !== userRole) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
+  // if (requireRole !== null && requireRole !== userRole) {
+  //   return NextResponse.redirect(new URL('/', request.url));
+  // }
 
   // 이미 로그인된 유저가 로그인/회원가입 페이지에 접근하려는 경우
   if (
