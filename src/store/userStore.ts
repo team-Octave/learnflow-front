@@ -2,10 +2,7 @@ import { User } from '@/features/auth/types';
 import { create } from 'zustand';
 
 // 전역에 저장할 정보
-type UserState = Pick<
-  User,
-  'email' | 'nickname' | 'role' | 'isMembershipActive' | 'membershipExpiryDate'
-> | null;
+type UserState = User | null;
 
 interface UserStore {
   user: UserState; // 전역으로 관리할 유저 정보(이메일, 닉네임, 역할(MEMBER or ADMIN))

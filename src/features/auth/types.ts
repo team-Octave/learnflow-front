@@ -1,6 +1,6 @@
 // src/features/auth/types.ts
 export interface User {
-  userId: string;
+  id: string;
   email: string;
   nickname: string;
   role: 'MEMBER' | 'ADMIN';

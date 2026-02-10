@@ -26,14 +26,7 @@ import { User } from '@/features/auth/types';
 import { Badge } from '../ui/badge';
 
 interface MyDropdownProps {
-  user: Pick<
-    User,
-    | 'email'
-    | 'nickname'
-    | 'role'
-    | 'isMembershipActive'
-    | 'membershipExpiryDate'
-  >;
+  user: User;
 }
 
 export default function MyDropdown({ user }: MyDropdownProps) {
