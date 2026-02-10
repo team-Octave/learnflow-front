@@ -14,9 +14,9 @@ export default function MyPageSidebar() {
       key: 'membership',
       icon: <CrownIcon size={20} />,
       label: '멤버십 관리',
-      href: 'mypage/membership',
+      href: '/mypage/membership',
     },
   ];
 
-  return <Sidebar title="마이페이지" items={items} />;
+  return <Sidebar title="마이페이지" items={items} exact />;
 }
