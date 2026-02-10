@@ -2,16 +2,26 @@
 import { cn } from '@/shared/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import path from 'path';
 import { toast } from 'sonner';
 
 interface SidebarMenuProps {
   href?: string;
   children: React.ReactNode;
+  exact: boolean;
 }
 
-export default function SidebarMenu({ href, children }: SidebarMenuProps) {
+export default function SidebarMenu({
+  href,
+  children,
+  exact,
+}: SidebarMenuProps) {
   const pathname = usePathname();
-  const isActive = href ? pathname.startsWith(href) : false;
+  const isActive = exact
+    ? pathname === href
+    : pathname === href || pathname.startsWith(href + '/');
+
+  console.log(pathname, href);
   return (
     <>
       {href ? (
