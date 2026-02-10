@@ -44,7 +44,7 @@ export default async function MembershipPage() {
             isMembershipActive={userData.isMembershipActive}
             membershipExpiryDate={userData.membershipExpiryDate}
           />
-          <PaymentHistory data={paymentData} />
+          <PaymentHistory payments={paymentData} />
         </div>
       </div>
     </div>
