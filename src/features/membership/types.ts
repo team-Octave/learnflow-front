@@ -8,3 +8,8 @@ export type PaymentHistoryResponse = {
   amount: number; // 9900
   status: PaymentStatus;
 };
+export interface PaymentInfo {
+  paymentKey: string;
+  orderId: string;
+  amount: number;
+}
