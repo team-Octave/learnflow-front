@@ -5,9 +5,15 @@ interface SidebarProps {
   title?: string;
   items: SidebarItem[];
   className?: string;
+  exact?: boolean;
 }
 
-export default function Sidebar({ title, items, className }: SidebarProps) {
+export default function Sidebar({
+  title,
+  items,
+  className,
+  exact = false,
+}: SidebarProps) {
   return (
     <div
       className={[
@@ -23,7 +29,7 @@ export default function Sidebar({ title, items, className }: SidebarProps) {
 
       <nav className="flex flex-col gap-2">
         {items.map((item) => (
-          <SidebarMenu key={item.key} href={item.href}>
+          <SidebarMenu key={item.key} href={item.href} exact={exact}>
             {item.icon}
             <span className="hidden lg:flex">{item.label}</span>
           </SidebarMenu>

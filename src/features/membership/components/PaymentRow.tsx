@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import type { PaymentHistoryResponse, PaymentStatus } from '../types';
 import { formatDateTime } from '@/shared/utils';
 
+// , 딱 '한 건'의 데이터만 받겠다
 interface Props {
   payment: PaymentHistoryResponse;
 }
