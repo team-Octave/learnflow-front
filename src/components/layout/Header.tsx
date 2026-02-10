@@ -11,14 +11,7 @@ const MyDropdown = dynamic(() => import('./MyDropdown'), {
   loading: () => <div className="w-8 h-8 bg-muted rounded-full"></div>,
 });
 interface HeaderProps {
-  initialUser: Pick<
-    User,
-    | 'email'
-    | 'nickname'
-    | 'role'
-    | 'isMembershipActive'
-    | 'membershipExpiryDate'
-  >;
+  initialUser: User;
 }
 
 export default function Header({ initialUser }: HeaderProps) {
