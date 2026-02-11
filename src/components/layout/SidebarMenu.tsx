@@ -2,7 +2,6 @@
 import { cn } from '@/shared/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import path from 'path';
 import { toast } from 'sonner';
 
 interface SidebarMenuProps {
@@ -20,8 +19,6 @@ export default function SidebarMenu({
   const isActive = exact
     ? pathname === href
     : pathname === href || pathname.startsWith(href + '/');
-
-  console.log(pathname, href);
   return (
     <>
       {href ? (
