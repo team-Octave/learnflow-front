@@ -44,9 +44,10 @@ export function checkIsExpired(token: string | undefined): boolean {
 export function getUserRole(token: string | undefined): string | null {
   if (!token) return null;
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.role; // 토큰에 담긴 role 필드명에 맞춰 수정!
+    const payload = decodeJwt(token) as any;
+    return payload.role;
   } catch (e) {
+    console.error(e);
     return null;
   }
 }
