@@ -11,7 +11,6 @@ interface AuditBasicInfoProps {
 }
 
 export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
-  console.log(audit.thumbnailUrl);
   const levelText =
     audit.level === 'BEGINNER'
       ? '초급'
@@ -30,11 +29,10 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             {audit.thumbnailUrl ? (
               <Image
-                src={audit.thumbnailUrl}
+                src={audit.thumbnailUrl || '/images/placeholder.jpg'}
                 alt={audit.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
-                quality={75}
                 className="object-cover"
                 priority
               />

@@ -26,13 +26,13 @@ export default async function AuditDetailPage({
 
   if (!id) return <ErrorState message="잘못된 접근입니다. (id가 없습니다)" />;
 
-  // ✅ string -> number 변환
+  // string -> number 변환
   const lectureId = parseInt(id, 10);
   if (Number.isNaN(lectureId)) {
     return <ErrorState message="잘못된 접근입니다. (id가 숫자가 아닙니다)" />;
   }
 
-  // ✅ getAuditDetailAction은 number 받도록 변경됨
+  // getAuditDetailAction은 number 받도록 변경됨
   const state = await getAuditDetailAction(lectureId);
 
   if (!state.success || !state.data) {

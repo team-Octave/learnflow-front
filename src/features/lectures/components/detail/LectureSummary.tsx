@@ -1,9 +1,12 @@
+// 강의 상세 페이지 상단 썸네일부분
+
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 import type { Lecture, Level } from '../../types';
 import { CATEGORY_MAP } from '../../types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import ButtonApply from './ButtonApply';
+import Image from 'next/image';
 
 interface Props {
   lecture: Lecture;
@@ -20,14 +23,16 @@ export default function LectureSummary({ lecture }: Props) {
 
   return (
     <div className="relative border-b border-zinc-800 w-full">
-      {/* 🔥 Background Image Layer */}
+      {/* Background Image Layer */}
       <div className="absolute inset-0">
-        <img
-          src={lecture.thumbnailUrl}
+        <Image
+          src={lecture.thumbnailUrl || '/images/placeholder.jpg'}
           alt={lecture.title}
-          className="w-full h-full object-cover opacity-60"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-60"
         />
-
         <div className="absolute inset-0 bg-linear-to-r from-zinc-950/70 via-zinc-950/50 to-zinc-950/20" />
       </div>
 
