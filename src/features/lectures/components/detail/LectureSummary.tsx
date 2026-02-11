@@ -90,7 +90,11 @@ export default function LectureSummary({ lecture }: Props) {
 
         {/* Action Button */}
         <div className="md:absolute right-8 w-full md:w-80 shrink-0">
-          <ButtonApply lectureId={lecture.id} lectureTitle={lecture.title} />
+          <ButtonApply
+            lectureId={lecture.id}
+            lectureTitle={lecture.title}
+            paymentType={lecture.paymentType}
+          />
         </div>
       </div>
     </div>
