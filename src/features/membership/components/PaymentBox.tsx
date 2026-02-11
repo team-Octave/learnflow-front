@@ -16,7 +16,7 @@ import {
 import { cn, isMobileUA } from '@/shared/utils';
 import { CheckIcon, CreditCardIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
+import { ANONYMOUS, loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { paymentConfirmAction } from '../actions';
 import { useUserStore } from '@/store/userStore';
@@ -27,7 +27,7 @@ export default function PaymentBox() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const userId = useUserStore((state) => state.user?.id!);
+  const userId = useUserStore((state) => state.user?.userId!);
 
   const [paymentMethod, setPaymentMethod] = useState('tosspay');
   const [isAgree, setIsAgree] = useState<boolean>(false);
@@ -134,7 +134,7 @@ export default function PaymentBox() {
 
       const tossPayments = await loadTossPayments(clientKey);
       const payment = tossPayments.payment({
-        customerKey: userId,
+        customerKey: userId || ANONYMOUS,
       });
 
       // 모바일 처리

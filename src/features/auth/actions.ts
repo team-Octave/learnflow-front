@@ -45,7 +45,7 @@ export async function loginAction(user: {
       nickname: state.data.nickname,
       role: state.data.role,
       isMembershipActive: state.data.isMembershipActive,
-      membershipExpiryDate: state.data.membershipExpiryDate,
+      membershipExpired: state.data.membershipExpired,
     },
   };
 
