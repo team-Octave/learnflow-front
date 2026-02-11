@@ -8,17 +8,17 @@ import { formatDateTime } from '@/shared/utils';
 interface Props {
   // 현재 유저가 멤버십을 이용 중인지 여부
   isMembershipActive: boolean;
-  membershipExpiryDate: string;
+  membershipExpired: string;
 }
 
 export default function MembershipInfo({
   isMembershipActive,
-  membershipExpiryDate,
+  membershipExpired,
 }: Props) {
   // 만료일 포맷 처리
-  const expiryText = membershipExpiryDate
+  const expiryText = membershipExpired
     ? // 멤버십 만료일이 있으면→ 유틸 함수로 한국 날짜 형식 문자열로 바꾸고
-      formatDateTime(membershipExpiryDate).date
+      formatDateTime(membershipExpired).date
     : // → 없으면 그냥 null”
       null;
 
