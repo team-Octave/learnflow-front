@@ -72,10 +72,10 @@ export default async function PlayLayout({
     <div className="flex flex-col min-h-screen bg-background">
       <TitleBar lectureTitle={lecture.title} />
 
-      <div className="flex flex-1 mx-auto w-full">
+      <main className="flex flex-1 mx-auto w-full">
         {children}
         <AsideCurriculum lecture={lecture} enrollmentInfo={enrollmentInfo} />
-      </div>
+      </main>
     </div>
   );
 }
