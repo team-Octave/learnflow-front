@@ -12,7 +12,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'storage.googleapis.com' }],
     deviceSizes: [360, 390, 430, 640, 768, 1024, 1280],
-    imageSizes: [128, 256],
+    imageSizes: [16, 24, 32, 40, 48, 56, 64, 80, 96, 128, 256],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
   },
 };
 
