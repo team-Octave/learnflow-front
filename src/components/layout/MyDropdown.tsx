@@ -81,7 +81,8 @@ export default function MyDropdown({ user }: MyDropdownProps) {
             <DropdownMenuGroup>
               <Link href="/mypage">
                 <DropdownMenuItem className="cursor-pointer">
-                  <UserIcon />내 정보
+                  <UserIcon />
+                  마이페이지
                 </DropdownMenuItem>
               </Link>
               <Link href="/mylearning">
