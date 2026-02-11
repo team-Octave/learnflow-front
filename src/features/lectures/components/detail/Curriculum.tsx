@@ -32,7 +32,7 @@ export default function Curriculum({ curriculum }: CurriculumProps) {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* 왼쪽: 목차 */}
         {/* 커리큘럼이 있을 때 vs 없을 때 */}
-        <section className="lg:flex-7" aria-labelledby="커리큘럼">
+        <section className="lg:flex-7">
           {curriculum.length > 0 ? (
             <Accordion
               type="multiple"
@@ -82,7 +82,7 @@ export default function Curriculum({ curriculum }: CurriculumProps) {
         </section>
 
         {/* 오른쪽: AI 요약 */}
-        <section className="lg:flex-3" aria-labelledby="ai-summary">
+        <section className="lg:flex-3">
           <AISummaryBox selectedLessonId={selectedLessonId} />
         </section>
       </div>

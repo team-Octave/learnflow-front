@@ -3,10 +3,7 @@
 
 export default function MainVisual() {
   return (
-    <section
-      className="py-20 md:py-32 overflow-hidden flex justify-center items-center"
-      aria-labelledby="main-visual-title"
-    >
+    <section className="py-20 md:py-32 overflow-hidden flex justify-center items-center">
       <div className="container px-4 md:px-8 relative z-10">
         <div className="flex flex-col items-center text-center space-y-8 max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
