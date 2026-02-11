@@ -7,6 +7,7 @@ import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
 import { loginAction } from '../actions';
+import Link from 'next/link';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md bg-zinc-900/40 border border-zinc-800 rounded-xl p-8 shadow-lg">
+    <section className="w-full max-w-md bg-zinc-900/40 border border-zinc-800 rounded-xl p-8 shadow-lg">
       <h1 className="text-center text-2xl font-semibold mb-2 text-white">
         로그인
       </h1>
@@ -90,16 +91,14 @@ export default function LoginForm() {
       </form>
 
       <div className="mt-8 text-center text-sm  text-zinc-500">
-        계정이 없으신가요?{' '}
-        <a href="/signup" className="text-indigo-500 font-semibold">
+        계정이 없으신가요?
+        <Link href="/signup" className="ml-1  text-indigo-500 font-semibold">
           회원가입
-        </a>
-        <div className="mt-3">
-          <a href="/" className=" text-zinc-500 hover:text-white transition">
-            홈으로 돌아가기
-          </a>
-        </div>
+        </Link>
+        <Link href="/" className="mt-3 block text-zinc-500 hover:text-white">
+          홈으로 돌아가기
+        </Link>
       </div>
-    </div>
+    </section>
   );
 }
