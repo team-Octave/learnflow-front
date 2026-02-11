@@ -51,7 +51,7 @@ export default function PaymentBox() {
   const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
 
   const amountValue = 9900;
-  const orderName = '프리미엄 멤버십 월간 구독';
+  const orderName = '1개월';
 
   const origin = useMemo(() => {
     if (typeof window === 'undefined') return '';

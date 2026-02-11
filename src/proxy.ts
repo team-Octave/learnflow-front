@@ -6,7 +6,7 @@ import type { NextRequest } from 'next/server';
 // 보호된 경로 정의
 const PROTECTED_ROUTES = {
   ADMIN: ['/admin'],
-  MEMBER: ['/mypage', '/mylearning', '/play', '/creator'],
+  MEMBER: ['/mypage', '/mylearning', '/play', '/creator', '/payment'],
 };
 
 // 로그인/회원가입 경로 정의
@@ -40,8 +40,9 @@ export async function proxy(request: NextRequest) {
   let accessToken = request.cookies.get('accessToken')?.value;
   const refreshToken = request.cookies.get('refreshToken')?.value;
 
-  // 토큰에서 User Role 가져옴
-  const userRole = getUserRole(accessToken);
+  // User Role 가져옴
+  const userRole =
+    request.cookies.get('userRole')?.value || getUserRole(accessToken);
 
   // 현재 경로가 어떤 Role이 요구되는지 확인
   const found = Object.entries(PROTECTED_ROUTES).find(([role, routes]) =>
@@ -69,6 +70,16 @@ export async function proxy(request: NextRequest) {
           sameSite: 'lax',
           path: '/',
         });
+        const role = getUserRole(body.data.accessToken);
+        if (role) {
+          response.cookies.set('userRole', role, {
+            httpOnly: true,
+            maxAge: 60 * 60,
+            secure: true,
+            sameSite: 'lax',
+            path: '/',
+          });
+        }
       }
     } catch (error) {
       console.error('proxy:', error);
@@ -76,6 +87,7 @@ export async function proxy(request: NextRequest) {
       // 갱신 실패 시 기존 쿠키 삭제 및 상태 초기화
       response.cookies.delete('accessToken');
       response.cookies.delete('refreshToken');
+      response.cookies.delete('userRole');
       accessToken = undefined;
 
       // 보호된 경로 접근 중이었다면 즉시 로그인 페이지로 리다이렉트
@@ -84,6 +96,7 @@ export async function proxy(request: NextRequest) {
         const redirectResponse = NextResponse.redirect(loginUrl);
         redirectResponse.cookies.delete('accessToken');
         redirectResponse.cookies.delete('refreshToken');
+        redirectResponse.cookies.delete('userRole');
         return redirectResponse;
       }
     }

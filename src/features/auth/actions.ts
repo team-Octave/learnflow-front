@@ -30,6 +30,13 @@ export async function loginAction(user: {
     sameSite: 'lax',
     path: '/',
   });
+  cookieStore.set('userRole', state.data.role, {
+    httpOnly: true,
+    maxAge: 60 * 60,
+    secure: true,
+    sameSite: 'lax',
+    path: '/',
+  });
 
   const stateWithoutToken = {
     ...state,
@@ -51,6 +58,7 @@ export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete('accessToken');
   cookieStore.delete('refreshToken');
+  cookieStore.delete('userRole');
 
   return state;
 }
