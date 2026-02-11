@@ -32,7 +32,7 @@ export default function Curriculum({ curriculum }: CurriculumProps) {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* 왼쪽: 목차 */}
         {/* 커리큘럼이 있을 때 vs 없을 때 */}
-        <div className="lg:flex-7">
+        <section className="lg:flex-7" aria-labelledby="커리큘럼">
           {curriculum.length > 0 ? (
             <Accordion
               type="multiple"
@@ -46,9 +46,7 @@ export default function Curriculum({ curriculum }: CurriculumProps) {
                   className="border border-zinc-800 rounded-lg px-4 bg-zinc-900/30"
                 >
                   <AccordionTrigger className="hover:no-underline py-4 text-left">
-                    <span className="font-semibold">
-                      {chapter.chapterTitle}
-                    </span>
+                    <p className="font-semibold">{chapter.chapterTitle}</p>
                   </AccordionTrigger>
 
                   <AccordionContent className="pb-4">
@@ -81,12 +79,12 @@ export default function Curriculum({ curriculum }: CurriculumProps) {
               커리큘럼 준비 중입니다.
             </div>
           )}
-        </div>
+        </section>
 
         {/* 오른쪽: AI 요약 */}
-        <div className="lg:flex-3">
+        <section className="lg:flex-3" aria-labelledby="ai-summary">
           <AISummaryBox selectedLessonId={selectedLessonId} />
-        </div>
+        </section>
       </div>
     </section>
   );

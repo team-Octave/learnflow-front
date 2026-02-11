@@ -12,7 +12,7 @@ interface ReviewsProps {
 export default function Reviews({ reviewData }: ReviewsProps) {
   const reviews: Review[] = reviewData.content;
   return (
-    <section className="space-y-6">
+    <section className="space-y-6" aria-label="리뷰 목록">
       {/* 리뷰 없는 경우 */}
       {reviews.length === 0 && (
         <div className="text-center py-12 text-zinc-400 bg-zinc-900/30 rounded-lg border border-zinc-800 border-dashed">

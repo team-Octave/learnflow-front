@@ -80,7 +80,7 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
     <div className="sticky top-24 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 backdrop-blur-sm min-h-80">
       <div className="flex items-center gap-2 mb-4 text-yellow-400">
         <Sparkles className="w-5 h-5 fill-yellow-400" />
-        <h3 className="font-bold text-lg text-white">AI 영상 요약</h3>
+        <h2 className="font-bold text-lg text-white">AI 영상 요약</h2>
       </div>
 
       {uiState === 'IDLE' ? (
