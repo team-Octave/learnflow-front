@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Star, Users, PlayCircle } from 'lucide-react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { CATEGORY_MAP, type Lecture } from '@/features/lectures/types';
+import Image from 'next/image';
 
 interface LectureCardProps {
   lecture: Lecture;
@@ -24,16 +25,20 @@ export default function LectureCard({ lecture }: LectureCardProps) {
       {/* 카드 컨테이너 */}
       <div className="flex flex-col h-full overflow-hidden border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg rounded-lg">
         {/* 썸네일 영역 */}
+
         <AspectRatio
           ratio={16 / 9}
           className="relative overflow-hidden bg-muted"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={lecture.thumbnailUrl}
+          {/* grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 */}
+          <Image
+            src={lecture.thumbnailUrl || '/images/placeholder.jpg'}
             alt={lecture.title}
-            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
+
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <PlayCircle className="w-12 h-12 text-white opacity-80" />
           </div>

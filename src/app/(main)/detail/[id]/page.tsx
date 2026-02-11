@@ -1,5 +1,4 @@
 // src/app/(main)/detail/[id]/page.tsx
-// 강의 상세 페이지
 
 import LectureSummary from '@/features/lectures/components/detail/LectureSummary';
 import Curriculum from '@/features/lectures/components/detail/Curriculum';

@@ -3,7 +3,9 @@ import { Card } from '@/components/ui/card';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import type { ApprovalDetail } from '@/features/audit/types';
 import { CATEGORY_MAP } from '@/features/lectures/types';
+import Image from 'next/image';
 
+// 강의 검토 상세페이지
 interface AuditBasicInfoProps {
   audit: ApprovalDetail;
 }
@@ -26,10 +28,13 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             {audit.thumbnailUrl ? (
-              <img
-                src={audit.thumbnailUrl}
+              <Image
+                src={audit.thumbnailUrl || '/images/placeholder.jpg'}
                 alt={audit.title}
-                className="object-cover w-full h-full"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover"
+                priority
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-xs text-zinc-500">

@@ -5,7 +5,7 @@ import MyLectureCard from './MyLectureCard';
 
 interface ProcessingProps {
   lectures: LearningLecture[];
-}
+} 
 
 export default function Processing({ lectures }: ProcessingProps) {
   const isMembershipActive = useUserStore(

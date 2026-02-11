@@ -4,16 +4,15 @@ import ReviewButton from './ReviewButton';
 import Link from 'next/link';
 import { LearningLecture } from '../../types';
 import { Play } from 'lucide-react';
+import Image from 'next/image';
 
+// 내학습
 interface MyLectureCardProps {
   lecture: LearningLecture;
   isBlocked: boolean;
 }
 
-export default function MyLectureCard({
-  lecture,
-  isBlocked,
-}: MyLectureCardProps) {
+export default function ({ lecture, isBlocked }: MyLectureCardProps) {
   const lessonId =
     lecture.completedLessonIds.length === 0
       ? lecture.firstLessonId
@@ -30,10 +29,13 @@ export default function MyLectureCard({
           ratio={16 / 9}
           className="bg-muted rounded-lg hover:-translate-y-1 transition-all group relative overflow-hidden"
         >
-          <img
-            src={lecture.lectureThumbnail}
+          <Image
+            src={lecture.lectureThumbnail || '/images/placeholder.jpg'}
             alt="강의 썸네일"
-            className="h-full w-full rounded-lg object-cover transition-all duration-300 group-hover:brightness-95 group-hover:grayscale-[0.3]"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover rounded-lg transition-all duration-300 group-hover:brightness-95 group-hover:grayscale-[0.3]"
           />
           {isBlocked && (
             <div className="absolute bg-zinc-950/70 inset-0 flex flex-col items-center justify-center gap-1 text-xs">

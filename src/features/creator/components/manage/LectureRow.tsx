@@ -20,6 +20,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { useConfirm } from '@/hooks/useConfirm';
+import Image from 'next/image';
 
 interface LectureRowProps {
   lecture: CreatorLecture;
@@ -123,11 +124,16 @@ export default function LectureRow({ lecture }: LectureRowProps) {
   return (
     <TableRow>
       <TableCell>
-        <AspectRatio ratio={16 / 9} className="bg-muted rounded-lg">
-          <img
-            src={lecture.thumbnailUrl}
+        <AspectRatio
+          ratio={16 / 9}
+          className="bg-muted rounded-lg overflow-hidden"
+        >
+          <Image
+            src={lecture.thumbnailUrl || '/images/placeholder.jpg'} // fallback
             alt="강의 썸네일"
-            className="h-full w-full rounded-lg object-cover "
+            fill
+            sizes="128px"
+            className="object-cover"
           />
         </AspectRatio>
       </TableCell>

@@ -1,14 +1,15 @@
 // src/features/audit/components/main/AuditRow.tsx
-import { ImageIcon, Calendar, Clock } from 'lucide-react';
+import Image from 'next/image';
+import { Calendar, Clock } from 'lucide-react';
 
 import type { AuditLecture } from '@/features/audit/types';
 import { TableCell, TableRow } from '@/components/ui/table';
 import AuditButton from './AuditButton';
 import { formatDateTime } from '@/shared/utils';
 
-type Props = {
+interface Props {
   lecture: AuditLecture;
-};
+}
 
 export default function AuditRow({ lecture }: Props) {
   const { date, time } = formatDateTime(lecture.requestDate);
@@ -17,19 +18,14 @@ export default function AuditRow({ lecture }: Props) {
     <TableRow className="border-white/10 hover:bg-white/5">
       {/* 썸네일 */}
       <TableCell className="py-4 px-6">
-        <div className="aspect-video w-[120px] rounded-lg overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center">
-          {lecture.thumbnailUrl ? (
-            <img
-              src={lecture.thumbnailUrl}
-              alt={`${lecture.lectureTitle} 썸네일`}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="text-white/30 flex flex-col items-center gap-1">
-              <ImageIcon size={18} />
-              <span className="text-[10px]">No Image</span>
-            </div>
-          )}
+        <div className="aspect-video w-[120px] rounded-lg overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center relative">
+          <Image
+            src={lecture.thumbnailUrl || '/images/placeholder.jpg'}
+            alt={`${lecture.lectureTitle} 썸네일`}
+            fill
+            className="object-cover"
+            sizes="128px"
+          />
         </div>
       </TableCell>
 
@@ -59,7 +55,7 @@ export default function AuditRow({ lecture }: Props) {
         </div>
       </TableCell>
 
-      {/* 검토 버튼 → 클라이언트 컴포넌트 분리 */}
+      {/* 검토 버튼 */}
       <TableCell className="px-6">
         <AuditButton lectureId={lecture.lectureId} />
       </TableCell>
