@@ -5,10 +5,11 @@ import type { AuditLecture } from '@/features/audit/types';
 import { TableCell, TableRow } from '@/components/ui/table';
 import AuditButton from './AuditButton';
 import { formatDateTime } from '@/shared/utils';
+import Image from 'next/image';
 
-type Props = {
+interface Props {
   lecture: AuditLecture;
-};
+}
 
 export default function AuditRow({ lecture }: Props) {
   const { date, time } = formatDateTime(lecture.requestDate);
@@ -19,10 +20,14 @@ export default function AuditRow({ lecture }: Props) {
       <TableCell className="py-4 px-6">
         <div className="aspect-video w-[120px] rounded-lg overflow-hidden border border-white/10 bg-white/5 flex items-center justify-center">
           {lecture.thumbnailUrl ? (
-            <img
+            <Image
               src={lecture.thumbnailUrl}
               alt={`${lecture.lectureTitle} 썸네일`}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="120px"
+              loading="lazy"
+              quality={70}
             />
           ) : (
             <div className="text-white/30 flex flex-col items-center gap-1">

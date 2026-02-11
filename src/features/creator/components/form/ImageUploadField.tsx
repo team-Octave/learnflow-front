@@ -54,6 +54,8 @@ export function ImageUploadField({
 
   // 새 파일이 있으면 그 파일의 미리보기를, 없으면 초기(서버/기본) 이미지를 보여줌
   const displaySrc = newFilePreview || initialImage;
+  const isObjectUrl =
+    typeof displaySrc === 'string' && displaySrc.startsWith('blob:');
 
   return (
     <div className="space-y-2">
@@ -68,7 +70,7 @@ export function ImageUploadField({
               htmlFor="image-upload"
               className="block w-full h-full cursor-pointer relative"
             >
-              {displaySrc ? (
+              {/* {displaySrc ? (
                 <img
                   src={displaySrc}
                   alt="Thumbnail"
@@ -78,6 +80,30 @@ export function ImageUploadField({
                 />
               ) : (
                 // 만약 initialImage조차 없을 때를 대비한 Fallback (선택사항)
+                <div className="flex items-center justify-center w-full h-full text-gray-400">
+                  <ImagePlus size={40} />
+                </div>
+              )} */}
+
+              {displaySrc ? (
+                isObjectUrl ? (
+                  // 로컬 미리보기(blob:)는 next/image보다 <img>가 안전
+                  <img
+                    src={displaySrc}
+                    alt="Thumbnail"
+                    className="w-full h-full object-cover transition-opacity group-hover:opacity-90"
+                  />
+                ) : (
+                  // 서버/정적 이미지 URL은 next/image로 최적화
+                  <Image
+                    src={displaySrc}
+                    alt="Thumbnail"
+                    fill
+                    className="object-cover transition-opacity group-hover:opacity-90"
+                    sizes="(max-width: 768px) 100vw, 800px"
+                  />
+                )
+              ) : (
                 <div className="flex items-center justify-center w-full h-full text-gray-400">
                   <ImagePlus size={40} />
                 </div>
