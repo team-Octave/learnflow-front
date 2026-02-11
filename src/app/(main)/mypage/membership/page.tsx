@@ -43,7 +43,7 @@ export default async function MembershipPage() {
         <div className="w-full flex flex-col gap-6">
           <MembershipInfo
             isMembershipActive={userData.isMembershipActive}
-            membershipExpiryDate={userData.membershipExpiryDate}
+            membershipExpired={userData.membershipExpired}
           />
           <PaymentHistory payments={paymentData} />
         </div>

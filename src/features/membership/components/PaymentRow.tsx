@@ -17,6 +17,10 @@ const statusLabel: Record<PaymentStatus, string> = {
   DONE: '결제 완료',
   CANCELED: '결제 취소',
   ABORTED: '결제 실패',
+  WAITING_FOR_DEPOSIT: '결제 대기',
+  IN_PROGRESS: '결제 진행 중',
+  PARTIAL_CANCELED: '부분 취소',
+  EXPIRED: '결제 만료',
 };
 
 // 결제 상태 → Badge 스타일 매핑
@@ -30,6 +34,10 @@ const statusVariant: Record<
   DONE: 'paymentDone',
   CANCELED: 'paymentCanceled',
   ABORTED: 'paymentAborted',
+  WAITING_FOR_DEPOSIT: 'paymentCanceled',
+  IN_PROGRESS: 'paymentCanceled',
+  PARTIAL_CANCELED: 'paymentCanceled',
+  EXPIRED: 'paymentAborted',
 };
 
 // 결제 1건을 받아서 렌더링

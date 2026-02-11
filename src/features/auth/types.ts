@@ -1,11 +1,11 @@
 // src/features/auth/types.ts
 export interface User {
-  id: string;
+  userId: string;
   email: string;
   nickname: string;
   role: 'MEMBER' | 'ADMIN';
   isMembershipActive: boolean;
-  membershipExpiryDate: string;
+  membershipExpired: string;
 }
 
 export interface LoginRequest {

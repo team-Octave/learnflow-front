@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { useUserStore } from '@/store/userStore';
 import { User } from '@/features/auth/types';
 import dynamic from 'next/dynamic';
+import MembershipInduceButton from '@/features/membership/components/MembershipInduceButton';
 
 const MyDropdown = dynamic(() => import('./MyDropdown'), {
   ssr: false,
@@ -27,7 +28,10 @@ export default function Header({ initialUser }: HeaderProps) {
       </Link>
       <div>
         {isLoggedIn ? (
-          <MyDropdown user={user} />
+          <div className="flex gap-4">
+            {!user.isMembershipActive && <MembershipInduceButton />}
+            <MyDropdown user={user} />
+          </div>
         ) : (
           <Link href={'/login'}>
             <Button
