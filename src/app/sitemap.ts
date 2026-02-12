@@ -34,7 +34,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 1. 동적 페이지 경로 생성 (/detail/[id])
   const ids = await getAllLectureIds();
-  console.log(ids);
   const detailUrls = ids.map((id) => ({
     url: `${baseUrl}/detail/${id}`,
     lastModified: new Date(),
