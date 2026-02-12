@@ -7,12 +7,12 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { CATEGORY_MAP, type Lecture } from '@/features/lectures/types';
 import Image from 'next/image';
 
-interface LectureCardProps {
+interface Props {
   lecture: Lecture;
-  index: number;
+  priority?: boolean; // ✅ 추가
 }
 
-export default function LectureCard({ lecture, index }: LectureCardProps) {
+export default function LectureCard({ lecture, priority = false }: Props) {
   // 난이도를 한글로 변환
   const levelText =
     lecture.level === 'BEGINNER'
@@ -21,14 +21,11 @@ export default function LectureCard({ lecture, index }: LectureCardProps) {
         ? '중급'
         : '고급';
 
-  const isAboveFold = index < 4;
-
   return (
     <Link href={`/detail/${lecture.id}`} className="group">
       {/* 카드 컨테이너 */}
       <article className="flex flex-col h-full overflow-hidden border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg rounded-lg">
         {/* 썸네일 영역 */}
-
         <AspectRatio
           ratio={16 / 9}
           className="relative w-full aspect-video overflow-hidden rounded-lg"
@@ -38,12 +35,12 @@ export default function LectureCard({ lecture, index }: LectureCardProps) {
             src={lecture.thumbnailUrl || '/images/placeholder.jpg'}
             alt={lecture.title}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 290px"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
-            priority={isAboveFold}
-            loading={isAboveFold ? 'eager' : 'lazy'}
-            fetchPriority={isAboveFold ? 'high' : 'auto'} // 가능하면
-            quality={65}
+            quality={60}
+            priority={priority}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
           />
 
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
