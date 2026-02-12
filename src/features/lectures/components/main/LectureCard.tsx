@@ -9,9 +9,10 @@ import Image from 'next/image';
 
 interface LectureCardProps {
   lecture: Lecture;
+  index: number;
 }
 
-export default function LectureCard({ lecture }: LectureCardProps) {
+export default function LectureCard({ lecture, index }: LectureCardProps) {
   // 난이도를 한글로 변환
   const levelText =
     lecture.level === 'BEGINNER'
@@ -19,6 +20,8 @@ export default function LectureCard({ lecture }: LectureCardProps) {
       : lecture.level === 'INTERMEDIATE'
         ? '중급'
         : '고급';
+
+  const isAboveFold = index < 4;
 
   return (
     <Link href={`/detail/${lecture.id}`} className="group">
@@ -28,7 +31,7 @@ export default function LectureCard({ lecture }: LectureCardProps) {
 
         <AspectRatio
           ratio={16 / 9}
-          className="relative overflow-hidden bg-muted"
+          className="relative w-full aspect-video overflow-hidden rounded-lg"
         >
           {/* grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 */}
           <Image
@@ -37,6 +40,10 @@ export default function LectureCard({ lecture }: LectureCardProps) {
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
+            priority={isAboveFold}
+            loading={isAboveFold ? 'eager' : 'lazy'}
+            fetchPriority={isAboveFold ? 'high' : 'auto'} // 가능하면
+            quality={65}
           />
 
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
