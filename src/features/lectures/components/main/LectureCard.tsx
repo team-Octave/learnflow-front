@@ -23,7 +23,7 @@ export default function LectureCard({ lecture }: LectureCardProps) {
   return (
     <Link href={`/detail/${lecture.id}`} className="group">
       {/* 카드 컨테이너 */}
-      <div className="flex flex-col h-full overflow-hidden border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg rounded-lg">
+      <article className="flex flex-col h-full overflow-hidden border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg rounded-lg">
         {/* 썸네일 영역 */}
 
         <AspectRatio
@@ -89,7 +89,7 @@ export default function LectureCard({ lecture }: LectureCardProps) {
             <Badge variant={'free'}>무료</Badge>
           )}
         </div>
-      </div>
+      </article>
     </Link>
   );
 }

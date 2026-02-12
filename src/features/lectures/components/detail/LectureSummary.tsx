@@ -22,7 +22,7 @@ export default function LectureSummary({ lecture }: Props) {
         : '고급';
 
   return (
-    <div className="relative border-b border-zinc-800 w-full">
+    <article className="relative border-b border-zinc-800 w-full">
       {/* Background Image Layer */}
       <div className="absolute inset-0">
         <Image
@@ -102,6 +102,6 @@ export default function LectureSummary({ lecture }: Props) {
           />
         </div>
       </div>
-    </div>
+    </article>
   );
 }

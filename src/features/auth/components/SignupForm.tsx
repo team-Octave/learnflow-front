@@ -158,8 +158,11 @@ export default function SignupForm() {
     });
   };
 
+  // 이메일 에러
+  const emailErrorId = 'email-error';
+
   return (
-    <div className="w-full max-w-md bg-zinc-900/40 border border-zinc-800 rounded-xl p-8 shadow-lg">
+    <section className="w-full max-w-md bg-zinc-900/40 border border-zinc-800 rounded-xl p-8 shadow-lg">
       <h1 className="text-center text-2xl font-semibold mb-2 text-white">
         회원가입
       </h1>
@@ -170,9 +173,14 @@ export default function SignupForm() {
       <form onSubmit={handleSignup} className="space-y-6">
         {/* 이메일 */}
         <div className="space-y-2">
-          <Label className="text-white">이메일</Label>
+          <Label htmlFor="email" className="text-white">
+            이메일
+          </Label>
           <Input
-            type="text"
+            id="email"
+            type="email"
+            aria-invalid={!!(email && emailError)}
+            aria-describedby={email && emailError ? emailErrorId : undefined} //input의 에러 설명은 email-error
             placeholder="name@example.com"
             value={email}
             onChange={handleChangeEmail}
@@ -182,17 +190,26 @@ export default function SignupForm() {
             )}
           />
           {email && emailError && (
-            <p className="text-red-400 text-sm px-2">{emailError}</p>
+            <p
+              id={emailErrorId}
+              role="alert"
+              className="text-red-400 text-sm px-2"
+            >
+              {emailError}
+            </p>
           )}
         </div>
 
         {/* 비밀번호 */}
         <div className="space-y-2">
-          <Label className="text-white">비밀번호</Label>
+          <Label className="text-white" htmlFor="password">
+            비밀번호
+          </Label>
 
           <Input
             type="password"
             placeholder="비밀번호"
+            id="password"
             value={password}
             onChange={handleChangePassword}
             className={`bg-zinc-800 text-white placeholder:text-zinc-500 border border-zinc-800
@@ -201,7 +218,7 @@ export default function SignupForm() {
               }`}
           />
 
-          <div className="px-1 space-y-1">
+          <div className="px-1 space-y-1" aria-live="polite">
             <p
               className={cn(
                 `text-sm flex items-center gap-1 text-zinc-500`,
@@ -241,10 +258,13 @@ export default function SignupForm() {
 
         {/* 비밀번호 확인 */}
         <div className="space-y-2">
-          <Label className="text-white">비밀번호 확인</Label>
+          <Label className="text-white" htmlFor="passwordCheck">
+            비밀번호 확인
+          </Label>
 
           <Input
             type="password"
+            id="passwordCheck"
             placeholder="비밀번호 확인"
             value={passwordCheck}
             onChange={handleChangePasswordCheck}
@@ -262,12 +282,15 @@ export default function SignupForm() {
 
         {/* 닉네임 */}
         <div className="space-y-2">
-          <Label className="text-white">닉네임</Label>
+          <Label htmlFor="nickname" className="text-white">
+            닉네임
+          </Label>
 
           <div className="flex gap-2">
             <Input
               type="text"
               placeholder="닉네임"
+              id="nickname"
               value={nickname}
               onChange={handleChangeNickname}
               className={`bg-zinc-800 text-white placeholder:text-zinc-500 border border-zinc-800 ${
@@ -313,16 +336,14 @@ export default function SignupForm() {
 
       {/* 로그인 + 홈 링크 */}
       <div className="mt-6 text-center text-sm text-zinc-500">
-        이미 계정이 있으신가요?{' '}
-        <Link href="/login" className="text-indigo-500 font-semibold">
+        이미 계정이 있으신가요?
+        <Link href="/login" className="text-indigo-500 font-semibold ml-1">
           로그인
         </Link>
-        <div className="mt-3">
-          <Link href="/" className="text-zinc-500 hover:text-white">
-            홈으로 돌아가기
-          </Link>
-        </div>
+        <Link href="/" className="text-zinc-500 block mt-3 hover:text-white">
+          홈으로 돌아가기
+        </Link>
       </div>
-    </div>
+    </section>
   );
 }

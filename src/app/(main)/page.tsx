@@ -68,14 +68,17 @@ export default async function MainPage({ searchParams }: PageProps) {
       <div className="py-12 md:py-20 flex justify-center">
         <div className="container px-4 md:px-8">
           {/* 필터 */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+          <section
+            className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10"
+            aria-label="강의 필터"
+          >
             <Categories />
 
             <div className="flex items-center gap-4">
               <LevelFilter />
               <SortSelect />
             </div>
-          </div>
+          </section>
 
           {/* 리스트 */}
           {lectures.length === 0 ? (
