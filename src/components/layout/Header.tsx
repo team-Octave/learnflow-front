@@ -29,7 +29,9 @@ export default function Header({ initialUser }: HeaderProps) {
       <div>
         {isLoggedIn ? (
           <div className="flex gap-4">
-            {!user.isMembershipActive && <MembershipInduceButton />}
+            {!user.isMembershipActive && user.role === 'MEMBER' && (
+              <MembershipInduceButton />
+            )}
             <MyDropdown user={user} />
           </div>
         ) : (

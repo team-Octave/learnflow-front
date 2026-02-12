@@ -41,11 +41,7 @@ export default async function LectureEditPage({
               </Link>
               <div className="text-2xl font-bold text-white">강의 수정</div>
             </div>
-            <Button
-              type="submit"
-              className="bg-white hover:bg-white/90 cursor-pointer"
-              form="basic-form"
-            >
+            <Button type="submit" variant={'default'} form="basic-form">
               저장하고 다음
             </Button>
           </>
@@ -59,11 +55,7 @@ export default async function LectureEditPage({
             </div>{' '}
             <div className="flex gap-2">
               <PreviousButton lectureId={lecture.id} />
-              <Button
-                type="submit"
-                className="bg-white hover:bg-white/90 cursor-pointer"
-                form="curriculum-form"
-              >
+              <Button type="submit" variant={'default'} form="curriculum-form">
                 저장하기
               </Button>
             </div>
