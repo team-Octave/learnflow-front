@@ -5,7 +5,7 @@ import type { ApprovalDetail } from '@/features/audit/types';
 import { CATEGORY_MAP } from '@/features/lectures/types';
 import Image from 'next/image';
 
-// 강의 검토 상세페이지
+// 강의 검토 상세페이지 -강의 기본 정보 (썸네일 부분)
 interface AuditBasicInfoProps {
   audit: ApprovalDetail;
 }
@@ -27,20 +27,14 @@ export default function AuditBasicInfo({ audit }: AuditBasicInfoProps) {
             className="bg-zinc-100 dark:bg-zinc-800 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800 overflow-hidden rounded-sm"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            {audit.thumbnailUrl ? (
-              <Image
-                src={audit.thumbnailUrl || '/images/placeholder.jpg'}
-                alt={audit.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover"
-                priority
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-xs text-zinc-500">
-                No Thumbnail
-              </div>
-            )}
+            <Image
+              src={audit.thumbnailUrl || '/images/placeholder.jpg'}
+              alt={audit.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover"
+              priority
+            />
           </AspectRatio>
         </div>
 
