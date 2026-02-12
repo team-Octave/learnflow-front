@@ -16,7 +16,7 @@ import {
 } from '@/services/audit.service';
 
 /**
- * ✅ 강의 검토 목록 조회
+ * 강의 검토 목록 조회
  * GET /api/v1/admin/approvals?page=&size=
  *
  * lectures/actions.ts 스타일: 서비스 호출 → 그대로 반환
@@ -31,7 +31,7 @@ export async function getApprovalsAction(
 }
 
 /**
- * ✅ 강의 검토 상세 조회(챕터/레슨 목록)
+ * 강의 검토 상세 조회(챕터/레슨 목록)
  * GET /api/v1/admin/approvals/{lectureId}
  */
 export async function getAuditDetailAction(
@@ -44,7 +44,7 @@ export async function getAuditDetailAction(
 }
 
 /**
- * ✅ 관리자 레슨 상세 조회(영상/퀴즈)
+ * 관리자 레슨 상세 조회(영상/퀴즈)
  * GET /api/... (admin lesson detail)
  */
 export async function getAdminLessonDetailAction(
@@ -59,7 +59,7 @@ export async function getAdminLessonDetailAction(
 }
 
 /**
- * ✅ 승인
+ * 승인
  * PATCH /api/v1/admin/approvals/{lectureId}
  */
 export async function approveAuditAction(
@@ -73,7 +73,7 @@ export async function approveAuditAction(
 }
 
 /**
- * ✅ 반려
+ * 반려
  * PATCH /api/v1/admin/approvals/{lectureId}
  */
 export async function rejectAuditAction(
