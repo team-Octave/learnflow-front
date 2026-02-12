@@ -14,11 +14,12 @@ async function getAllLectureIds() {
       page: page,
       limit: 16,
     });
+
     if (!state.success) {
       break;
     }
 
-    const ids = state.data.contents.map((lecture: Lecture) => lecture.id);
+    const ids = state.data.content.map((lecture: Lecture) => lecture.id);
     allIds = [...allIds, ...ids];
 
     hasNextPage = state.data.pageable.pageNumber + 1 < state.data.totalPages;
@@ -33,6 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 1. 동적 페이지 경로 생성 (/detail/[id])
   const ids = await getAllLectureIds();
+  console.log(ids);
   const detailUrls = ids.map((id) => ({
     url: `${baseUrl}/detail/${id}`,
     lastModified: new Date(),
