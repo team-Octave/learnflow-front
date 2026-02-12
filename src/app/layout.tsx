@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://learnflow.shop'),
 
   title: {
-    default: 'LearnFlow LXP',
+    default: 'LearnFlow',
     template: '%s | 프로그래밍 맞춤형 학습 플랫폼',
   },
 
