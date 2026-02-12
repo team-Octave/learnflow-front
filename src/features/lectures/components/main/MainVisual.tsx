@@ -10,11 +10,11 @@ export default function MainVisual() {
             성장을 위한 <span className="text-indigo-500">최고의 선택</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
+          <h3 className="text-lg md:text-xl text-muted-foreground max-w-2xl">
             자유롭게 학습하고 지식을 공유하세요.
             <br className="hidden md:block" />
             당신의 커리어 성장을 LearnFlow가 함께합니다.
-          </p>
+          </h3>
         </div>
       </div>
     </section>

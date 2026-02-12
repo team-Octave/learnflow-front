@@ -18,7 +18,7 @@ export default function Categories() {
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <nav className="flex flex-wrap gap-2" aria-label="카테고리">
       {CATEGORIES.map((item: { id: string; name: string; value: string }) => (
         <Category
           key={item.id}
@@ -28,6 +28,6 @@ export default function Categories() {
           onClick={() => update(item.value.toUpperCase())}
         />
       ))}
-    </div>
+    </nav>
   );
 }

@@ -11,7 +11,7 @@ interface Props {
 
 export default function ReviewItem({ review }: Props) {
   return (
-    <div className="bg-zinc-900/30 rounded-lg border border-zinc-800 p-6">
+    <article className="bg-zinc-900/30 rounded-lg border border-zinc-800 p-6">
       {/* 사용자 정보 */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -40,13 +40,13 @@ export default function ReviewItem({ review }: Props) {
         </div>
 
         {/* 날짜 */}
-        <span className="text-xs text-zinc-500">
+        <time  className="text-xs text-zinc-500">
           {review.createdAt.split('T')[0]}
-        </span>
+        </time>
       </div>
 
       {/* 리뷰 내용 */}
       <p className="text-zinc-300 leading-relaxed">{review.content}</p>
-    </div>
+    </article>
   );
 }
