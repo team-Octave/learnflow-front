@@ -20,6 +20,7 @@ import { ANONYMOUS, loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { paymentConfirmAction } from '../actions';
 import { useUserStore } from '@/store/userStore';
+import { getUserAction } from '@/features/auth/actions';
 
 const RETURN_PATH = '/payment';
 
@@ -28,6 +29,7 @@ export default function PaymentBox() {
   const searchParams = useSearchParams();
 
   const userId = useUserStore((state) => state.user?.userId!);
+  const setUser = useUserStore((state) => state.setUser);
 
   const [paymentMethod, setPaymentMethod] = useState('tosspay');
   const [isAgree, setIsAgree] = useState<boolean>(false);
@@ -100,6 +102,11 @@ export default function PaymentBox() {
             );
             router.replace(RETURN_PATH);
             return;
+          }
+
+          const userState = await getUserAction();
+          if (userState.success) {
+            setUser(userState.data);
           }
 
           // 승인 성공
@@ -186,6 +193,11 @@ export default function PaymentBox() {
       if (!state.success) {
         openFail(state.message ?? '결제 승인에 실패했습니다.', '승인 실패');
         return;
+      }
+
+      const userState = await getUserAction();
+      if (userState.success) {
+        setUser(userState.data);
       }
 
       router.replace('/mypage/membership');
