@@ -11,10 +11,61 @@ import {
 } from '@/features/lectures/actions';
 import { notFound, redirect } from 'next/navigation';
 import { getParam } from '@/shared/utils';
+import { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+// 동적 메타데이터 생성 함수
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const lectureId = Number((await params).id);
+  // 최신 next.js에서는 await를써줘야함
+  // id가 숫자가 아니면 기본 메타
+  if (Number.isNaN(lectureId)) {
+    notFound();
+  }
+
+  const lectureState = await getLectureByIdAction(lectureId);
+
+  // 조회 실패 시 기본 메타 (없는 강의 등)
+  if (!lectureState.success || !lectureState.data) notFound();
+
+  const lecture = lectureState.data;
+  const url = `https://learnflow.shop/detail/${lecture.id}`;
+
+  return {
+    title: `${lecture.title} | LearnFlow`,
+    description: lecture.description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: 'website',
+      url,
+      title: lecture.title,
+      description: lecture.description,
+      images: [
+        {
+          url: lecture.thumbnailUrl,
+          width: 800,
+          height: 500,
+          alt: lecture.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${lecture.title} | LearnFlow`,
+      description: lecture.description,
+      images: [lecture.thumbnailUrl],
+    },
+  };
 }
 
 export default async function LectureDetailPage({
