@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 interface Props {
   lecture: Lecture;
-  priority?: boolean; // ✅ 추가
+  priority?: boolean; // 추가
 }
 
 export default function LectureCard({ lecture, priority = false }: Props) {
@@ -35,7 +35,7 @@ export default function LectureCard({ lecture, priority = false }: Props) {
             src={lecture.thumbnailUrl || '/images/placeholder.jpg'}
             alt={lecture.title}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 290px"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             quality={60}
             priority={priority}
