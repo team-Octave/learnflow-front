@@ -11,7 +11,7 @@ import { notFound } from 'next/navigation';
 
 interface LectureEditPageProps {
   params: Promise<{ id: string }>;
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function LectureEditPage({
@@ -19,9 +19,10 @@ export default async function LectureEditPage({
   searchParams,
 }: LectureEditPageProps) {
   const { id } = await params;
-  const stepString = getParam((await searchParams).step) || '1';
-  const step = parseInt(stepString);
+  const sp = await searchParams;
 
+  const stepString = getParam(sp.step) || '1';
+  const step = parseInt(stepString);
   const state = await getLectureByIdAction(parseInt(id));
   if (!state.success) {
     console.log(state.message);
