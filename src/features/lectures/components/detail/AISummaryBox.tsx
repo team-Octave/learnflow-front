@@ -70,9 +70,6 @@ export default function AISummaryBox({ selectedLessonId }: AISummaryBoxProps) {
     load();
   }, [selectedLessonId]);
 
-  // READY/PROCESSING일 때는 박스 자체를 숨김
-  if (hidden) return null;
-
   // COMPLETED이면서 content가 있을 때만 “요약 UI”로 들어가게 하는 안전 체크.
   const isCompleted = uiState === 'COMPLETED' && data?.content;
 
