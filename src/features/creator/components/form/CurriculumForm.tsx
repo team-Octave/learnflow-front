@@ -104,11 +104,7 @@ export default function CurriculumForm({ lecture }: CurriculumFormProps) {
     mode: 'onChange', // 실시간 검증 활성화
   });
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = methods;
+  const { control, handleSubmit } = methods;
 
   const { fields, append, remove } = useFieldArray({
     control,

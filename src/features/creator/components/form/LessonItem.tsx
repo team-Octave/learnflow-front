@@ -45,7 +45,7 @@ export default function LessonItem({
   unregisterOpenLesson,
 }: LessonItemProps) {
   const confirm = useConfirm();
-  const { register, watch, setValue, getValues, control } =
+  const { register, setValue, getValues, control } =
     useFormContext<CurriculumFormValues>();
 
   const lessonPath = `chapters.${chapterIndex}.lessons.${lessonIndex}` as const;
@@ -68,26 +68,22 @@ export default function LessonItem({
     };
   }, [isOpen, lessonPath, registerOpenLesson, unregisterOpenLesson]);
 
-  const currentLessonData = useWatch({
+  const [lessonId, lessonType, lessonTitle] = useWatch({
     control,
-    name: lessonPath,
+    name: [
+      `${lessonPath}.id`,
+      `${lessonPath}.lessonType`,
+      `${lessonPath}.lessonTitle`,
+    ] as const,
   });
-  const lessonId = currentLessonData?.id;
-  const lessonType = currentLessonData?.lessonType;
-  const lessonTitle = currentLessonData?.lessonTitle;
 
   const baseSnapshot = useRef(JSON.stringify(getValues(lessonPath)));
 
-  const isDirty = useMemo(() => {
-    return JSON.stringify(currentLessonData) !== baseSnapshot.current;
-  }, [currentLessonData]);
-
   /// LessonItem.tsx 내부 저장 로직 수정
   const handleSaveLesson = async () => {
-    const dataToSave = watch(lessonPath);
-
+    const dataToSave = getValues(lessonPath);
     // 기존 레슨이고 변경이 없으면 검증 없이 바로 닫기
-    if (lessonId && !isDirty) {
+    if (lessonId) {
       setIsOpen(false);
       return;
     }
@@ -110,11 +106,6 @@ export default function LessonItem({
     if (!validation.success) {
       const firstError = validation.error.issues[0].message;
       toast.error(firstError);
-      return;
-    }
-
-    if (!isDirty) {
-      setIsOpen(false);
       return;
     }
 

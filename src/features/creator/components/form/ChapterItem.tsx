@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext, useFieldArray, useWatch } from 'react-hook-form';
 import { CurriculumFormValues, Lesson } from '../../schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -51,7 +51,7 @@ export default function ChapterItem({
   const confirm = useConfirm();
   const [isPending, startTransition] = useTransition();
   const chapterTitleRef = useRef('');
-  const { register, control, watch, setValue } =
+  const { register, control, getValues, setValue } =
     useFormContext<CurriculumFormValues>();
 
   const { fields, append, remove } = useFieldArray({
@@ -60,23 +60,26 @@ export default function ChapterItem({
   });
 
   // 현재 챕터 데이터 관찰
-  const chapterId = watch(`chapters.${chapterIndex}.id`);
-  const chapterTitle = watch(`chapters.${chapterIndex}.chapterTitle`);
+  const chapterId = useWatch({
+    control,
+    name: `chapters.${chapterIndex}.id`,
+  });
 
   const handleBlur = () => {
-    if (chapterTitleRef.current === chapterTitle) return;
-    if (!chapterTitle?.trim()) {
+    const currentTitle = getValues(`chapters.${chapterIndex}.chapterTitle`);
+    if (chapterTitleRef.current === currentTitle) return;
+    if (!currentTitle?.trim()) {
       toast.error('챕터 제목을 입력해주세요.');
       return;
     }
     if (chapterId) {
-      handleUpdateChapter();
+      handleUpdateChapter(currentTitle);
     } else {
-      handleCreateChapter();
+      handleCreateChapter(currentTitle);
     }
   };
 
-  const handleCreateChapter = () => {
+  const handleCreateChapter = (chapterTitle: string) => {
     startTransition(async () => {
       const state = await createChapterAction(lectureId, {
         chapterTitle,
@@ -90,7 +93,7 @@ export default function ChapterItem({
     });
   };
 
-  const handleUpdateChapter = () => {
+  const handleUpdateChapter = (chapterTitle: string) => {
     if (!chapterId) {
       toast.error('등록되지 않은 챕터입니다.');
       removeChapter();

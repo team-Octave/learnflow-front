@@ -23,7 +23,7 @@ export default function VideoItem({
   lessonPath,
   hasExistingVideo = false,
 }: VideoItemProps) {
-  const { watch, setValue } = useFormContext<CurriculumFormValues>();
+  const { setValue } = useFormContext<CurriculumFormValues>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
